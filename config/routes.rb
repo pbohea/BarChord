@@ -1,8 +1,11 @@
 Rails.application.routes.draw do
   devise_for :artists
   devise_for :owners
-  root to: event#index
   devise_for :users
+
+  root to: "events#index"
+
+
   resources :venues
   resources :events
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html

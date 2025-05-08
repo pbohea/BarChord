@@ -13,4 +13,9 @@
 #  owner_id     :integer
 #
 class Venue < ApplicationRecord
+  belongs_to :owner
+  has_many :events
+  has_many :venue_follows
+  has_many :followers, through: :venue_follows, source: :user
+
 end

@@ -10,9 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_08_003308) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_08_005039) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
+
+  create_table "artist_follows", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "artist_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["artist_id"], name: "index_artist_follows_on_artist_id"
+    t.index ["user_id"], name: "index_artist_follows_on_user_id"
+  end
 
   create_table "artists", force: :cascade do |t|
     t.string "email", default: "", null: false
@@ -227,6 +236,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_08_003308) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "venue_follows", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "venue_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_venue_follows_on_user_id"
+    t.index ["venue_id"], name: "index_venue_follows_on_venue_id"
+  end
+
   create_table "venues", force: :cascade do |t|
     t.string "address"
     t.string "category"
@@ -238,6 +256,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_08_003308) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "artist_follows", "artists"
+  add_foreign_key "artist_follows", "users"
   add_foreign_key "follows", "artists"
   add_foreign_key "follows", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
@@ -246,4 +266,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_08_003308) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
+  add_foreign_key "venue_follows", "users"
+  add_foreign_key "venue_follows", "venues"
 end

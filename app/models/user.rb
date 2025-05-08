@@ -24,6 +24,9 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-  has_many :follows
-  has_many :followed_artists, through: :follows, source: :artist
+  has_many :artist_follows
+  has_many :followed_artists, through: :artist_follows, source: :artist
+  has_many :venue_follows
+  has_many :followed_venues, through: :venue_follows, source: :venue
+
 end
