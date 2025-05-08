@@ -27,7 +27,8 @@ task sample_data: :environment do
   10.times do
     User.create!(
       email: "#{Faker::Name.first_name.downcase}_user@example.com",
-      password: "password"
+      password: "password",
+      username: "#{Faker::Username}"
     )
   end
 
@@ -41,7 +42,9 @@ task sample_data: :environment do
       password: "password",
       genre: Faker::Music.genre,
       website: "www.google.com",
-      image: Faker::LoremFlickr.image(size: "50x60")
+      image: Faker::LoremFlickr.image(size: "50x60"),
+      username: "#{Faker::Username}"
+
     )
   end
 
