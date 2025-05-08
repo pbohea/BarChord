@@ -26,4 +26,7 @@ class Artist < ApplicationRecord
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
+  has_many :events, foreign_key: "event_id"
+  has_many :played_at, class_name: "Venue", foreign_key: "venue_id"
+
 end
