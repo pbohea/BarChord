@@ -16,4 +16,5 @@
 #  venue_id    :integer
 #
 class Event < ApplicationRecord
+  belongs_to :venue
 end

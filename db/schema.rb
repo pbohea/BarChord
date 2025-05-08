@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_08_000306) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_08_003308) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,6 +43,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_08_000306) do
     t.integer "venue_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "follows", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "artist_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["artist_id"], name: "index_follows_on_artist_id"
+    t.index ["user_id"], name: "index_follows_on_user_id"
   end
 
   create_table "owners", force: :cascade do |t|
@@ -229,6 +238,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_08_000306) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "follows", "artists"
+  add_foreign_key "follows", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
