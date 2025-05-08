@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :owners
   devise_for :users
 
-  root to: "events#index"
+  root to: "events#active"
 
 
   resources :venues
