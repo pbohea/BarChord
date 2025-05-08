@@ -1,0 +1,47 @@
+<%= form_with(model: venue) do |form| %>
+  <% if venue.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(venue.errors.count, "error") %> prohibited this venue from being saved:</h2>
+
+      <ul>
+        <% venue.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :address, style: "display: block" %>
+    <%= form.text_field :address %>
+  </div>
+
+  <div>
+    <%= form.label :category, style: "display: block" %>
+    <%= form.text_field :category %>
+  </div>
+
+  <div>
+    <%= form.label :events_count, style: "display: block" %>
+    <%= form.number_field :events_count %>
+  </div>
+
+  <div>
+    <%= form.label :name, style: "display: block" %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div>
+    <%= form.label :website, style: "display: block" %>
+    <%= form.text_field :website %>
+  </div>
+
+  <div>
+    <%= form.label :owner_id, style: "display: block" %>
+    <%= form.number_field :owner_id %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

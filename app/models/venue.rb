@@ -1,0 +1,16 @@
+# == Schema Information
+#
+# Table name: venues
+#
+#  id           :bigint           not null, primary key
+#  address      :string
+#  category     :string
+#  events_count :integer
+#  name         :string
+#  website      :string
+#  created_at   :datetime         not null
+#  updated_at   :datetime         not null
+#  owner_id     :integer
+#
+class Venue < ApplicationRecord
+end
