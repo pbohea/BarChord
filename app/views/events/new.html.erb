@@ -11,8 +11,8 @@
 
     <!-- Artist Search/Free Entry -->
     <div class="mb-3">
-      <%= f.label :artist_id, "Select Existing Artist", class: "form-label" %>
-      <%= f.collection_select :artist_id, Artist.all, :id, :username, include_blank: true, class: "form-select" %>
+      <%= f.label :artist_id, "Select or Search Artist", class: "form-label" %>
+      <%= f.select :artist_id, [], { prompt: "Search for an artist..." }, class: "form-select artist-select", data: { controller: "artist-select" } %>
     </div>
 
     <div class="mb-3">
@@ -68,3 +68,5 @@
 
   <% end %>
 </div>
+
+

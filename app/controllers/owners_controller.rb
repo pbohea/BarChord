@@ -3,6 +3,7 @@ class OwnersController < ApplicationController
   before_action :set_owner
 
   def dashboard
+    @venues = @owner.venues
   end
 
   private

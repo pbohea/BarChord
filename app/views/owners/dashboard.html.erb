@@ -1,1 +1,21 @@
-<h1> owner dashboard </h1>
+<!-- app/views/owners/dashboard.html.erb -->
+
+<div class="container my-5">
+  <h1 class="mb-4">Welcome, <%= @owner.firstname || @owner.email %> </h1>
+
+  <div class="mb-4 d-flex gap-3">
+    <%= link_to "Add a Venue", new_venue_path, class: "btn btn-success" %>
+    <%= link_to "Add an Event", new_event_path, class: "btn btn-primary" %>
+  </div>
+
+  <% if @venues.any? %>
+    <h3 class="mb-3">Your Venues</h3>
+    <div class="list-group">
+      <% @venues.each do |venue| %>
+        <%= link_to venue.name, venue_path(venue), class: "list-group-item list-group-item-action" %>
+      <% end %>
+    </div>
+  <% else %>
+    <p>You haven’t added any venues yet.</p>
+  <% end %>
+</div>
