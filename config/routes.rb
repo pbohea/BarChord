@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users, skip: [:sessions]
-  devise_for :owners, skip: [:sessions]
-  devise_for :artists, skip: [:sessions]
+  devise_for :users 
+  devise_for :owners  
+  devise_for :artists 
 
   root to: "events#active"
 
