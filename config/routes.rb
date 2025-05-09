@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
-  devise_for :users 
-  devise_for :owners  
-  devise_for :artists 
+  devise_for :owners, controllers: { registrations: "owners/registrations" }
+  devise_for :users,  controllers: { registrations: "users/registrations" }
+  devise_for :artists, controllers: { registrations: "artists/registrations" } 
 
   root to: "events#active"
 
