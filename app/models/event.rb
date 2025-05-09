@@ -18,4 +18,13 @@
 #
 class Event < ApplicationRecord
   belongs_to :venue
+  belongs_to :artist, optional: true
+
+  validate :artist_presence
+
+  def artist_presence
+    if artist_id.blank? && artist_name.blank?
+      errors.add(:base, "Please select an artist or enter a name.")
+    end
+  end
 end
