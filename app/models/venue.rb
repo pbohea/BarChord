@@ -6,6 +6,8 @@
 #  address      :string
 #  category     :string
 #  events_count :integer
+#  latitude     :float
+#  longitude    :float
 #  name         :string
 #  website      :string
 #  created_at   :datetime         not null
