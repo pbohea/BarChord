@@ -23,7 +23,7 @@
     <!-- Category Dropdown -->
     <div class="mb-3">
       <%= f.label :category, class: "form-label" %>
-      <%= f.select :category, ["Guitar", "Piano", "Band"], {}, class: "form-select", required: true %>
+      <%= f.select :category, ["Guitar", "Piano", "Band", "DJ"], {}, class: "form-select", required: true %>
     </div>
 
     <!-- Description -->
@@ -35,7 +35,13 @@
     <!-- Date Dropdown (Next 14 Days) -->
     <div class="mb-3">
       <%= f.label :date, class: "form-label" %>
-      <%= f.select :date, (0..13).map { |i| [Date.today + i.days, (Date.today + i.days).to_s] }, {}, class: "form-select", required: true %>
+      <%= f.select :date,
+        (0..13).map { |i|
+        date = Date.today + i.days
+        [date.strftime("%A, %B %-d"), date.to_s]
+        },
+        {},
+      class: "form-select", required: true %>    
     </div>
 
     <!-- Start Time Dropdown -->
@@ -68,5 +74,3 @@
 
   <% end %>
 </div>
-
-
