@@ -7,10 +7,12 @@
 #  encrypted_password     :string           default(""), not null
 #  firstname              :string
 #  genre                  :string
+#  image                  :string
 #  lastname               :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
+#  type                   :string
 #  username               :string
 #  website                :string
 #  created_at             :datetime         not null
