@@ -58,6 +58,7 @@ class EventsController < ApplicationController
     end
   end
 
+
   private
 
     def set_event
@@ -67,7 +68,8 @@ class EventsController < ApplicationController
     def event_params
       params.require(:event).permit(
         :category, :cover, :date, :description,
-        :start_time, :end_time, :indoors, :artist_id, :venue_id
+        :start_time, :end_time, :indoors,
+        :venue_id, :artist_id, :artist_name
       )
     end
 

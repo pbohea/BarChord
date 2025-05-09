@@ -3,6 +3,7 @@
 # Table name: events
 #
 #  id          :bigint           not null, primary key
+#  artist_name :string
 #  category    :string
 #  cover       :boolean
 #  date        :date

@@ -1,11 +1,70 @@
-<% content_for :title, "New event" %>
+<div class="container mt-5" style="max-width: 600px;">
+  <h2 class="mb-4 text-center">Create New Event</h2>
 
-<h1>New event</h1>
+  <%= form_with model: @event, local: true, class: "needs-validation" do |f| %>
 
-<%= render "form", event: @event %>
+    <!-- Venue Dropdown (owned by current_owner) -->
+    <div class="mb-3">
+      <%= f.label :venue_id, "Venue", class: "form-label" %>
+      <%= f.select :venue_id, current_owner.venues.pluck(:name, :id), {}, class: "form-select", required: true %>
+    </div>
 
-<br>
+    <!-- Artist Search/Free Entry -->
+    <div class="mb-3">
+      <%= f.label :artist_id, "Select Existing Artist", class: "form-label" %>
+      <%= f.collection_select :artist_id, Artist.all, :id, :username, include_blank: true, class: "form-select" %>
+    </div>
 
-<div>
-  <%= link_to "Back to events", events_path %>
+    <div class="mb-3">
+      <%= f.label :artist_name, "Or Enter Artist Name", class: "form-label" %>
+      <%= f.text_field :artist_name, class: "form-control", placeholder: "e.g. John Doe (if not in system)" %>
+    </div>
+
+    <!-- Category Dropdown -->
+    <div class="mb-3">
+      <%= f.label :category, class: "form-label" %>
+      <%= f.select :category, ["Guitar", "Piano", "Band"], {}, class: "form-select", required: true %>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <%= f.label :description, class: "form-label" %>
+      <%= f.text_area :description, class: "form-control", placeholder: "Describe the event", rows: 3 %>
+    </div>
+
+    <!-- Date Dropdown (Next 14 Days) -->
+    <div class="mb-3">
+      <%= f.label :date, class: "form-label" %>
+      <%= f.select :date, (0..13).map { |i| [Date.today + i.days, (Date.today + i.days).to_s] }, {}, class: "form-select", required: true %>
+    </div>
+
+    <!-- Start Time Dropdown -->
+    <div class="mb-3">
+      <%= f.label :start_time, "Start Time", class: "form-label" %>
+      <%= f.select :start_time, time_options, {}, class: "form-select", required: true %>
+    </div>
+
+    <!-- End Time Dropdown -->
+    <div class="mb-3">
+      <%= f.label :end_time, "End Time", class: "form-label" %>
+      <%= f.select :end_time, time_options, {}, class: "form-select", required: true %>
+    </div>
+
+    <!-- Cover Checkbox -->
+    <div class="form-check mb-3">
+      <%= f.check_box :cover, class: "form-check-input" %>
+      <%= f.label :cover, "Cover Charge?", class: "form-check-label" %>
+    </div>
+
+    <!-- Indoors Checkbox -->
+    <div class="form-check mb-4">
+      <%= f.check_box :indoors, class: "form-check-input" %>
+      <%= f.label :indoors, "Indoors?", class: "form-check-label" %>
+    </div>
+
+    <div class="d-grid">
+      <%= f.submit "Create Event", class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
 </div>
