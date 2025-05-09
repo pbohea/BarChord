@@ -1,25 +1,27 @@
 import { Controller } from "@hotwired/stimulus"
-import $ from "jquery"
-import "select2"
 
 export default class extends Controller {
   connect() {
-    $(this.element).select2({
-      placeholder: "Search for an artist...",
-      allowClear: true,
-      width: '100%',
-      ajax: {
-        url: "/artists/search",
-        dataType: "json",
-        delay: 200,
-        data: function (params) {
-          return { q: params.term }
-        },
-        processResults: function (data) {
-          return { results: data }
-        },
-        cache: true
+    // Wait until jQuery + Select2 are available
+    const interval = setInterval(() => {
+      if (window.$ && typeof window.$.fn.select2 === "function") {
+        clearInterval(interval)
+
+        console.log("✅ artist-select connected, Select2 ready")
+        window.$(this.element).select2({
+          placeholder: "Search for an artist...",
+          allowClear: true,
+          width: '100%',
+          ajax: {
+            url: "/artists/search",
+            dataType: "json",
+            delay: 200,
+            data: params => ({ q: params.term }),
+            processResults: data => ({ results: data }),
+            cache: true
+          }
+        })
       }
-    })
+    }, 50)
   }
 }
