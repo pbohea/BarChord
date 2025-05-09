@@ -1,13 +1,17 @@
 Rails.application.routes.draw do
-  devise_for :artists
-  devise_for :owners
-  devise_for :users
+  devise_for :users, skip: [:sessions]
+  devise_for :owners, skip: [:sessions]
+  devise_for :artists, skip: [:sessions]
 
   root to: "events#active"
 
 
   resources :venues
   resources :events
+
+  get  "/login",  to: "sessions#new"
+  post "/login",  to: "sessions#create"
+
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
 
   # Reveal health status on /up that returns 200 if the app boots with no exceptions, otherwise 500.

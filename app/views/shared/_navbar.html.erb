@@ -7,7 +7,6 @@
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
       <ul class="navbar-nav">
-
         <li class="nav-item">
           <%= link_to "Home", root_path, class: "nav-link" %>
         </li>
@@ -51,25 +50,63 @@
           </li>
 
         <% else %>
-          <!-- Sign In Button -->
           <li class="nav-item">
-            <%= link_to "Sign In", new_session_path, class: "nav-link btn btn-outline-primary px-3 ms-2" %>
+            <button class="btn btn-outline-primary px-3 ms-2" type="button" data-bs-toggle="modal" data-bs-target="#signInModal">
+              Sign In
+            </button>
           </li>
 
-          <!-- Sign Up Dropdown -->
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle btn btn-outline-secondary px-3 ms-2" href="#" role="button" data-bs-toggle="dropdown">
+          <li class="nav-item">
+            <button class="btn btn-outline-secondary px-3 ms-2" type="button" data-bs-toggle="modal" data-bs-target="#signUpModal">
               Sign Up
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><%= link_to "As User", new_user_registration_path, class: "dropdown-item" %></li>
-              <li><%= link_to "As Owner", new_owner_registration_path, class: "dropdown-item" %></li>
-              <li><%= link_to "As Artist", new_artist_registration_path, class: "dropdown-item" %></li>
-            </ul>
+            </button>
           </li>
         <% end %>
-
       </ul>
     </div>
   </div>
 </nav>
+
+<!-- Sign In Modal -->
+<div class="modal fade" id="signInModal" tabindex="-1" aria-labelledby="signInModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <%= form_with url: login_path, method: :post, local: true do %>
+        <div class="modal-header">
+          <h5 class="modal-title" id="signInModalLabel">Sign In</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="mb-3">
+            <%= label_tag :email, "Email", class: "form-label" %>
+            <%= email_field_tag :email, nil, class: "form-control", required: true %>
+          </div>
+          <div class="mb-3">
+            <%= label_tag :password, "Password", class: "form-label" %>
+            <%= password_field_tag :password, nil, class: "form-control", required: true %>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <%= submit_tag "Login", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!-- Sign Up Modal -->
+<div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="signUpModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signUpModalLabel">Sign Up As</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <%= link_to "User", new_user_registration_path, class: "btn btn-primary mb-2 w-100" %>
+        <%= link_to "Owner", new_owner_registration_path, class: "btn btn-secondary mb-2 w-100" %>
+        <%= link_to "Artist", new_artist_registration_path, class: "btn btn-dark w-100" %>
+      </div>
+    </div>
+  </div>
+</div>
