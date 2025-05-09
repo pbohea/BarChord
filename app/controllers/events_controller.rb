@@ -1,12 +1,13 @@
 class EventsController < ApplicationController
-  before_action :set_event, only: %i[ show edit update destroy ]
+  before_action :set_event, only: %i[show edit update destroy]
+  before_action :authorize_owner_or_admin!, only: %i[edit update destroy]
 
-  # GET /events or /events.json
+  # GET /events
   def index
     @events = Event.all
   end
 
-  # GET /events/1 or /events/1.json
+  # GET /events/1
   def show
   end
 
@@ -19,7 +20,7 @@ class EventsController < ApplicationController
   def edit
   end
 
-  # POST /events or /events.json
+  # POST /events
   def create
     @event = Event.new(event_params)
 
@@ -34,7 +35,7 @@ class EventsController < ApplicationController
     end
   end
 
-  # PATCH/PUT /events/1 or /events/1.json
+  # PATCH/PUT /events/1
   def update
     respond_to do |format|
       if @event.update(event_params)
@@ -47,7 +48,7 @@ class EventsController < ApplicationController
     end
   end
 
-  # DELETE /events/1 or /events/1.json
+  # DELETE /events/1
   def destroy
     @event.destroy!
 
@@ -58,13 +59,28 @@ class EventsController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
+
     def set_event
-      @event = Event.find(params.expect(:id))
+      @event = Event.find(params[:id])
     end
 
-    # Only allow a list of trusted parameters through.
     def event_params
-      params.expect(event: [ :category, :cover, :date, :description, :start_time, :end_time, :indoors, :artist_id, :venue_id ])
+      params.require(:event).permit(
+        :category, :cover, :date, :description,
+        :start_time, :end_time, :indoors, :artist_id, :venue_id
+      )
+    end
+
+    # Authorization logic
+    def authorize_owner_or_admin!
+      venue_owner_id = @event.venue&.owner_id
+
+      authorized = owner_signed_in? && current_owner.id == venue_owner_id
+
+      authorized ||= user_signed_in? && current_user.email == "pbohea@gmail.com"
+
+      unless authorized
+        redirect_to events_path, alert: "You are not authorized to modify this event."
+      end
     end
 end
