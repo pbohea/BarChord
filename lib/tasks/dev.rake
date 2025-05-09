@@ -1,6 +1,8 @@
 desc "Fill the database tables with some sample data"
 task sample_data: :environment do
   require "faker"
+  require "http"
+  require "uri"
 
   if Rails.env.development?
     puts "Deleting existing records..."
@@ -11,82 +13,89 @@ task sample_data: :environment do
     Owner.destroy_all
   end
 
-  
-  # Create Owners first
+  #owners
   owners = []
   10.times do
-    owner_name = Faker::Name.first_name
+    name = Faker::Name.first_name
     owners << Owner.create!(
-      name: owner_name,
-      email: "#{owner_name.downcase}_owner@example.com",
+      firstname: name,
+      email: "#{name.downcase}_owner@example.com",
       password: "password"
     )
   end
 
-  # Create Users
+  #users
   10.times do
+    name = Faker::Name.first_name
     User.create!(
-      email: "#{Faker::Name.first_name.downcase}_user@example.com",
+      email: "#{name.downcase}_user@example.com",
       password: "password",
-      username: "#{Faker::Username}"
+      username: "#{name.downcase}_fan"
     )
   end
 
-  # Create Artists
+  #artists
   artists = []
   10.times do
-    artist_name = Faker::Name.first_name
+    name = Faker::Name.first_name
     artists << Artist.create!(
-      name: artist_name,
-      email: "#{artist_name.downcase}_artist@example.com",
+      firstname: name,
+      email: "#{name.downcase}_artist@example.com",
       password: "password",
+      username: "#{name.downcase}_music",
       genre: Faker::Music.genre,
-      website: "www.google.com",
-      image: Faker::LoremFlickr.image(size: "50x60"),
-      username: "#{Faker::Username}"
-
+      website: "https://example.com",
     )
   end
 
-  venues = []  
+  #venues
+  venues = []
   10.times do
-    v = Venue.new
-    
-    v.name = Faker::Company.name
-    v.address = Faker::Address.full_address
-    v.category = Faker::Restaurant.type
-    v.website = "www.google.com"
-    v.image = Faker::LoremFlickr.image(size: "50x60")
-    v.owner_id = owners.sample.id  
-    
-    address = v.address
+    address = Faker::Address.full_address
+    name = Faker::Company.name
 
-    api_url = "https://api.mapbox.com/search/geocode/v6/forward?q=#{address}&access_token=#{ENV.fetch('MAPBOX_ACCESS_TOKEN')}"
-    raw_response = HTTP.get(api_url)
-    parsed_data = JSON.parse(raw_response)
+    #geocoding
+    escaped_address = URI.encode_www_form_component(address)
+    api_key = ENV.fetch("GOOGLE_MAPS_API_KEY")
+    url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{escaped_address}&key=#{api_key}"
 
-    coordinates = parsed_data.fetch("features").at(0).fetch("geometry").fetch("coordinates")
-    longitude = coordinates.at(0)
-    latitude = coordinates.at(1)
+    response = HTTP.get(url)
+    parsed = JSON.parse(response)
 
-    v.latitude = latitude
-    v.longitude = longitude
-    v.save
-    venues << v
+    if parsed["status"] == "OK"
+      location = parsed["results"][0]["geometry"]["location"]
+      lat = location["lat"]
+      lng = location["lng"]
+
+      venue = Venue.create!(
+        name: name,
+        address: address,
+        category: Faker::Restaurant.type,
+        website: "https://example.com",
+        owner_id: owners.sample.id,
+        latitude: lat,
+        longitude: lng
+      )
+      venues << venue
+    else
+      puts "Could not geocode: #{address} (Status: #{parsed["status"]})"
+    end
   end
 
-
+  #events
   10.times do
-    start_time = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 24.hours)
+    start_time = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
     Event.create!(
       category: Faker::Music.instrument,
-      date: Faker::Date.forward(days: 1),
+      date: start_time.to_date,
       start_time: start_time,
-      end_time: start_time + 3.hours,
-      description: Faker::Lorem.characters(number: 12),
-      cover: Faker::Boolean.boolean(true_ratio: 0.2),
+      end_time: start_time + 2.hours,
+      description: Faker::Lorem.sentence(word_count: 6),
+      cover: [true, false].sample,
+      indoors: [true, false].sample,
       venue_id: venues.sample.id,
-      artist_id: artists.sample.id  
-      )
-    end
+      artist_id: artists.sample.id
+    )
+  end
+
 end
