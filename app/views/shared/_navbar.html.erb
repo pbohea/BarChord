@@ -1,63 +1,30 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm mb-4">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Live Music App</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
+
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
 
     <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
-      <ul class="navbar-nav">
+      <ul class="navbar-nav align-items-center">
         <li class="nav-item">
           <%= link_to "Home", root_path, class: "nav-link" %>
         </li>
 
-        <% if owner_signed_in? %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              <%= current_owner.firstname || current_owner.email %>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "dropdown-item" %></li>
-              <li><%= link_to "Edit Profile", edit_owner_registration_path, class: "dropdown-item" %></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><%= link_to "Sign Out", destroy_owner_session_path, method: :delete, class: "dropdown-item" %></li>
-            </ul>
-          </li>
-
-        <% elsif artist_signed_in? %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              <%= current_artist.username || current_artist.email %>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><%= link_to "My Events", artist_events_path, class: "dropdown-item" %></li>
-              <li><%= link_to "Edit Profile", edit_artist_registration_path, class: "dropdown-item" %></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "dropdown-item" %></li>
-            </ul>
-          </li>
-
-        <% elsif user_signed_in? %>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
-              <%= current_user.username || current_user.email %>
-            </a>
-            <ul class="dropdown-menu dropdown-menu-end">
-              <li><%= link_to "Edit Profile", edit_user_registration_path, class: "dropdown-item" %></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "dropdown-item" %></li>
-            </ul>
-          </li>
-
-        <% else %>
-          <li class="nav-item">
-            <button class="btn btn-outline-primary px-3 ms-2" type="button" data-bs-toggle="modal" data-bs-target="#signInModal">
-              Sign In
+        <% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
+          <li class="nav-item ms-2">
+            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#accountMenu" aria-controls="accountMenu">
+              ☰ Menu
             </button>
           </li>
+        <% else %>
+          <li class="nav-item">
+            <%= link_to "Sign In", login_path, class: "nav-link" %>
+          </li>
 
           <li class="nav-item">
-            <button class="btn btn-outline-secondary px-3 ms-2" type="button" data-bs-toggle="modal" data-bs-target="#signUpModal">
+            <button class="btn btn-outline-secondary ms-2" data-bs-toggle="modal" data-bs-target="#signupModal">
               Sign Up
             </button>
           </li>
@@ -67,45 +34,53 @@
   </div>
 </nav>
 
-<!-- Sign In Modal -->
-<div class="modal fade" id="signInModal" tabindex="-1" aria-labelledby="signInModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <%= form_with url: login_path, method: :post, local: true do %>
-        <div class="modal-header">
-          <h5 class="modal-title" id="signInModalLabel">Sign In</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-3">
-            <%= label_tag :email, "Email", class: "form-label" %>
-            <%= email_field_tag :email, nil, class: "form-control", required: true %>
-          </div>
-          <div class="mb-3">
-            <%= label_tag :password, "Password", class: "form-label" %>
-            <%= password_field_tag :password, nil, class: "form-control", required: true %>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <%= submit_tag "Login", class: "btn btn-primary" %>
-        </div>
+<!-- ✅ Offcanvas Menu -->
+<% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="accountMenu" aria-labelledby="accountMenuLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="accountMenuLabel">
+        <% if owner_signed_in? %>
+          <%= current_owner.firstname || current_owner.email %>
+        <% elsif artist_signed_in? %>
+          <%= current_artist.username || current_artist.email %>
+        <% elsif user_signed_in? %>
+          <%= current_user.username || current_user.email %>
+        <% end %>
+      </h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+
+    <div class="offcanvas-body">
+      <% if owner_signed_in? %>
+        <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "Sign Out", destroy_owner_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
+
+      <% elsif artist_signed_in? %>
+        <%= link_to "My Events", artist_events_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
+
+      <% elsif user_signed_in? %>
+        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
       <% end %>
     </div>
   </div>
-</div>
+<% end %>
 
-<!-- Sign Up Modal -->
-<div class="modal fade" id="signUpModal" tabindex="-1" aria-labelledby="signUpModalLabel" aria-hidden="true">
+<!-- ✅ Sign Up Modal -->
+<div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="signUpModalLabel">Sign Up As</h5>
+        <h5 class="modal-title" id="signupModalLabel">Sign Up As</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <div class="modal-body text-center">
-        <%= link_to "User", new_user_registration_path, class: "btn btn-primary mb-2 w-100" %>
-        <%= link_to "Owner", new_owner_registration_path, class: "btn btn-secondary mb-2 w-100" %>
-        <%= link_to "Artist", new_artist_registration_path, class: "btn btn-dark w-100" %>
+      <div class="modal-body d-grid gap-2">
+        <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success" %>
+        <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info" %>
       </div>
     </div>
   </div>
