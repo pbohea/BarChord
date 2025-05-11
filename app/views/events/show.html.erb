@@ -2,7 +2,6 @@
   <div class="card shadow-sm">
     <div class="card-body">
 
-      <!-- Artist Info -->
       <div class="text-center mb-3">
         <% if @event.artist&.image.present? %>
           <img src="<%= @event.artist.image %>" alt="Artist Photo" class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;">
@@ -17,15 +16,13 @@
         </h5>
       </div>
 
-      <!-- Venue & Event Info -->
       <ul class="list-group list-group-flush mb-3">
         <li class="list-group-item">
-          <strong>Venue:</strong> <%= @event.venue.name %> <br>
-          <small class="text-muted">Category: <%= @event.venue.category %></small>
+          <strong><%= @event.venue.name %> </strong> (<small class="text-muted"><%= @event.venue.category %>)</small>
         </li>
 
         <li class="list-group-item">
-          <strong>Event Category:</strong> <%= @event.category %>
+          <strong> <%= @event.category %> </strong>
         </li>
 
         <li class="list-group-item">
@@ -44,10 +41,9 @@
         </li>
       </ul>
 
-      <!-- Google Maps Button Placeholder -->
       <div class="d-grid">
         <button class="btn btn-primary" disabled>
-          Go to this event (Maps link coming soon)
+          Go to this event (placeholder)
         </button>
       </div>
 
