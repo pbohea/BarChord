@@ -9,6 +9,7 @@ class EventsController < ApplicationController
 
   # GET /events/1
   def show
+    @event = Event.find(params[:id])
   end
 
   # GET /events/new

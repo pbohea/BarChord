@@ -1,10 +1,56 @@
-<p style="color: green"><%= notice %></p>
+<div class="container my-4" style="max-width: 500px;">
+  <div class="card shadow-sm">
+    <div class="card-body">
 
-<%= render @event %>
+      <!-- Artist Info -->
+      <div class="text-center mb-3">
+        <% if @event.artist&.image.present? %>
+          <img src="<%= @event.artist.image %>" alt="Artist Photo" class="rounded-circle mb-2" style="width: 100px; height: 100px; object-fit: cover;">
+        <% else %>
+          <div class="rounded-circle bg-secondary mb-2 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; color: white;">
+            <i class="fas fa-user fa-lg"></i>
+          </div>
+        <% end %>
 
-<div>
-  <%= link_to "Edit this event", edit_event_path(@event) %> |
-  <%= link_to "Back to events", events_path %>
+        <h5>
+          <%= link_to @event.artist.username, artist_path(@event.artist), class: "text-decoration-none" %>
+        </h5>
+      </div>
 
-  <%= button_to "Destroy this event", @event, method: :delete %>
+      <!-- Venue & Event Info -->
+      <ul class="list-group list-group-flush mb-3">
+        <li class="list-group-item">
+          <strong>Venue:</strong> <%= @event.venue.name %> <br>
+          <small class="text-muted">Category: <%= @event.venue.category %></small>
+        </li>
+
+        <li class="list-group-item">
+          <strong>Event Category:</strong> <%= @event.category %>
+        </li>
+
+        <li class="list-group-item">
+          <strong>Date:</strong> <%= @event.date.strftime("%A, %B %-d") %><br>
+          <strong>Time:</strong>
+          <%= @event.start_time.strftime("%-I:%M %p") %> – <%= @event.end_time.strftime("%-I:%M %p") %>
+        </li>
+
+        <li class="list-group-item">
+          <strong>Location:</strong> <%= @event.indoors? ? "Indoors" : "Outdoors" %>
+        </li>
+
+        <li class="list-group-item">
+          <strong>Cover Charge:</strong>
+          <%= @event.cover? ? number_to_currency(@event.cover_amount || 5) : "No Cover" %>
+        </li>
+      </ul>
+
+      <!-- Google Maps Button Placeholder -->
+      <div class="d-grid">
+        <button class="btn btn-primary" disabled>
+          Go to this event (Maps link coming soon)
+        </button>
+      </div>
+
+    </div>
+  </div>
 </div>
