@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_11_164501) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_11_210714) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -260,6 +260,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_11_164501) do
     t.datetime "updated_at", null: false
     t.float "latitude"
     t.float "longitude"
+    t.string "street_address"
+    t.string "city"
+    t.string "state"
+    t.string "zip_code"
   end
 
   add_foreign_key "artist_follows", "artists"
