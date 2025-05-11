@@ -8,6 +8,13 @@ class VenuesController < ApplicationController
 
   # GET /venues/1 or /venues/1.json
   def show
+    @venue = Venue.find(params[:id])
+
+    if turbo_frame_request?
+      render "venues/modal", layout: false
+    else
+      render :show
+    end
   end
 
   # GET /venues/new
@@ -58,13 +65,14 @@ class VenuesController < ApplicationController
   end
 
   private
-    # Use callbacks to share common setup or constraints between actions.
-    def set_venue
-      @venue = Venue.find(params.expect(:id))
-    end
 
-    # Only allow a list of trusted parameters through.
-    def venue_params
-      params.expect(venue: [ :address, :category, :events_count, :name, :website, :owner_id ])
-    end
+  # Use callbacks to share common setup or constraints between actions.
+  def set_venue
+    @venue = Venue.find(params.expect(:id))
+  end
+
+  # Only allow a list of trusted parameters through.
+  def venue_params
+    params.expect(venue: [:address, :category, :events_count, :name, :website, :owner_id])
+  end
 end

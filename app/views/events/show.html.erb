@@ -18,7 +18,17 @@
 
       <ul class="list-group list-group-flush mb-3">
         <li class="list-group-item">
-          <strong><%= @event.venue.name %> </strong> (<small class="text-muted"><%= @event.venue.category %>)</small>
+          <strong>
+            <%= link_to @event.venue.name,
+                venue_path(@event.venue),
+                data: {
+                  turbo_frame: "venue_modal_frame",
+                  bs_toggle: "modal",
+                  bs_target: "#venueModal"
+                },
+                class: "text-decoration-none" %>
+          </strong>
+          <small class="text-muted">(<%= @event.venue.category %>)</small>
         </li>
 
         <li class="list-group-item">
@@ -49,4 +59,12 @@
 
     </div>
   </div>
-</div>
+
+  <!-- Venue Modal (shell + Turbo target) -->
+  <div class="modal fade" id="venueModal" tabindex="-1" aria-labelledby="venueModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <turbo-frame id="venue_modal_frame"></turbo-frame>
+      </div>
+    </div>
+  </div>
