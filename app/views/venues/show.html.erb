@@ -5,11 +5,7 @@
 
       <% if @venue.address.present? %>
         <p class="mb-2">
-          <%= link_to @venue.address,
-                      "https://www.google.com/maps/search/?api=1&query=#{URI.encode(@venue.address)}",
-                      target: "_blank",
-                      rel: "noopener",
-                      class: "btn btn-sm btn-outline-primary" %>
+          <%=  @venue.address %>
         </p>
       <% end %>
 
