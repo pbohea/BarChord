@@ -11,7 +11,7 @@ class VenuesController < ApplicationController
     @venue = Venue.find(params[:id])
 
     if turbo_frame_request?
-      render "venues/modal", layout: false
+      render partial: "venues/modal", layout: false
     else
       render :show
     end
