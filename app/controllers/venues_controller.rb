@@ -28,7 +28,7 @@ class VenuesController < ApplicationController
 
   # POST /venues or /venues.json
   def create
-    @venue = Venue.new(venue_params)
+    @venue = current_owner.venues.build(venue_params)
 
     respond_to do |format|
       if @venue.save
@@ -73,6 +73,14 @@ class VenuesController < ApplicationController
 
   # Only allow a list of trusted parameters through.
   def venue_params
-    params.expect(venue: [:address, :category, :events_count, :name, :website, :owner_id])
+    params.require(:venue).permit(
+      :name,
+      :category,
+      :website,
+      :street_address,
+      :city,
+      :state,
+      :zip_code
+    )
   end
 end

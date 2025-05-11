@@ -3,9 +3,9 @@
     <div class="card-body text-center">
       <h4 class="mb-3"><%= @venue.name %></h4>
 
-      <% if @venue.address.present? %>
+      <% if @venue.full_address.present? %>
         <p class="mb-2">
-          <%=  @venue.address %>
+          <%= @venue.full_address %>
         </p>
       <% end %>
 

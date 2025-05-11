@@ -3,6 +3,17 @@
 
   <%= form_with model: @venue, local: true, class: "needs-validation" do |f| %>
 
+    <% if @venue.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(@venue.errors.count, "error") %> prevented this venue from being saved:</h4>
+        <ul>
+          <% @venue.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
+
     <!-- Venue Name -->
     <div class="mb-3">
       <%= f.label :name, "Venue Name", class: "form-label" %>
@@ -18,7 +29,7 @@
     <!-- Website -->
     <div class="mb-3">
       <%= f.label :website, "Website (optional)", class: "form-label" %>
-      <%= f.url_field :website, class: "form-control", placeholder: "https://example.com" %>
+      <%= f.text_field :website, class: "form-control", placeholder: "https://example.com" %>
     </div>
 
     <!-- Street Address -->
