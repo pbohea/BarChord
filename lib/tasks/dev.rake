@@ -20,7 +20,7 @@ task sample_data: :environment do
     owners << Owner.create!(
       firstname: name,
       email: "#{name.downcase}_owner@example.com",
-      password: "password"
+      password: "password",
     )
   end
 
@@ -30,7 +30,7 @@ task sample_data: :environment do
     User.create!(
       email: "#{name.downcase}_user@example.com",
       password: "password",
-      username: "#{name.downcase}_fan"
+      username: "#{name.downcase}_fan",
     )
   end
 
@@ -84,92 +84,89 @@ task sample_data: :environment do
   end
 =end
 
+  #VENUES WITH NO GOOGLEMAPS API
+  venues = []
 
+  manual_venues = [
+    {
+      name: "The Broken Oar",
+      address: "614 Rawson Bridge Rd, Port Barrington, IL 60010",
+      category: "Bar",
+      website: "https://brokenoar.com",
+      latitude: 42.2472,
+      longitude: -88.1929,
+    },
+    {
+      name: "Durty Nellie's",
+      address: "180 N Smith St, Palatine, IL 60067",
+      category: "Irish Pub",
+      website: "https://durtynellies.com",
+      latitude: 42.1126,
+      longitude: -88.0490,
+    },
+    {
+      name: "The Hideout",
+      address: "1354 W Wabansia Ave, Chicago, IL 60642",
+      category: "Music Venue",
+      website: "https://hideoutchicago.com",
+      latitude: 41.9132,
+      longitude: -87.6622,
+    },
+    {
+      name: "Martyrs'",
+      address: "3855 N Lincoln Ave, Chicago, IL 60613",
+      category: "Live Music Bar",
+      website: "https://martyrslive.com",
+      latitude: 41.9510,
+      longitude: -87.6792,
+    },
+    {
+      name: "FitzGerald’s",
+      address: "6615 W Roosevelt Rd, Berwyn, IL 60402",
+      category: "Jazz Club",
+      website: "https://www.fitzgeraldsnightclub.com",
+      latitude: 41.8649,
+      longitude: -87.7884,
+    },
+    {
+      name: "The Empty Bottle",
+      address: "1035 N Western Ave, Chicago, IL 60622",
+      category: "Indie Music Venue",
+      website: "https://emptybottle.com",
+      latitude: 41.9002,
+      longitude: -87.6861,
+    },
+  ]
 
-#VENUES WITH NO GOOGLEMAPS API
-venues = []
+  manual_venues.each do |venue_attrs|
+    venue = Venue.create!(
+      name: venue_attrs[:name],
+      address: venue_attrs[:address],
+      category: venue_attrs[:category],
+      website: venue_attrs[:website],
+      owner_id: owners.sample.id,
+      latitude: venue_attrs[:latitude],
+      longitude: venue_attrs[:longitude],
+    )
+    venues << venue
+  end
 
-manual_venues = [
-  {
-    name: "The Broken Oar",
-    address: "614 Rawson Bridge Rd, Port Barrington, IL 60010",
-    category: "Bar",
-    website: "https://brokenoar.com",
-    latitude: 42.2472,
-    longitude: -88.1929
-  },
-  {
-    name: "Durty Nellie's",
-    address: "180 N Smith St, Palatine, IL 60067",
-    category: "Irish Pub",
-    website: "https://durtynellies.com",
-    latitude: 42.1126,
-    longitude: -88.0490
-  },
-  {
-    name: "The Hideout",
-    address: "1354 W Wabansia Ave, Chicago, IL 60642",
-    category: "Music Venue",
-    website: "https://hideoutchicago.com",
-    latitude: 41.9132,
-    longitude: -87.6622
-  },
-  {
-    name: "Martyrs'",
-    address: "3855 N Lincoln Ave, Chicago, IL 60613",
-    category: "Live Music Bar",
-    website: "https://martyrslive.com",
-    latitude: 41.9510,
-    longitude: -87.6792
-  },
-  {
-    name: "FitzGerald’s",
-    address: "6615 W Roosevelt Rd, Berwyn, IL 60402",
-    category: "Jazz Club",
-    website: "https://www.fitzgeraldsnightclub.com",
-    latitude: 41.8649,
-    longitude: -87.7884
-  },
-  {
-    name: "The Empty Bottle",
-    address: "1035 N Western Ave, Chicago, IL 60622",
-    category: "Indie Music Venue",
-    website: "https://emptybottle.com",
-    latitude: 41.9002,
-    longitude: -87.6861
-  }
-]
-
-manual_venues.each do |venue_attrs|
-  venue = Venue.create!(
-    name: venue_attrs[:name],
-    address: venue_attrs[:address],
-    category: venue_attrs[:category],
-    website: venue_attrs[:website],
-    owner_id: owners.sample.id,
-    latitude: venue_attrs[:latitude],
-    longitude: venue_attrs[:longitude]
-  )
-  venues << venue
-end
-
-
-
-
-  #events
+  # events
   10.times do
     start_time = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
+    cover = [true, false].sample
+
     Event.create!(
       category: Faker::Music.instrument,
       date: start_time.to_date,
       start_time: start_time,
       end_time: start_time + 2.hours,
       description: Faker::Lorem.sentence(word_count: 6),
-      cover: [true, false].sample,
+      cover: cover,
+      cover_amount: cover ? rand(5..20) : nil,
       indoors: [true, false].sample,
       venue_id: venues.sample.id,
-      artist_id: artists.sample.id
+      artist_id: artists.sample.id,
     )
   end
-
 end
