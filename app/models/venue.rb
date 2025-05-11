@@ -3,7 +3,6 @@
 # Table name: venues
 #
 #  id             :bigint           not null, primary key
-#  address        :string
 #  category       :string
 #  city           :string
 #  events_count   :integer
@@ -24,8 +23,23 @@ class Venue < ApplicationRecord
   has_many :venue_follows
   has_many :followers, through: :venue_follows, source: :user
 
+  before_save :geocode_address, if: :address_changed?
+
   def full_address
-  [street_address, city, state, zip_code].compact.join(', ')
+    [street_address, city, state, zip_code].compact.join(', ')
   end
-  
+
+  private
+
+  def address_changed?
+    street_address_changed? || city_changed? || state_changed? || zip_code_changed?
+  end
+
+  def geocode_address
+    results = Geocoder.search(full_address)
+    if coords = results.first&.coordinates
+      self.latitude = coords[0]
+      self.longitude = coords[1]
+    end
+  end
 end
