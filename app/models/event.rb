@@ -20,6 +20,8 @@ class Event < ApplicationRecord
   belongs_to :venue
   belongs_to :artist, optional: true
 
+  scope :upcoming, -> { where("date >= ?", Date.today).order(:date, :start_time) }
+
   validate :artist_presence
 
   def artist_presence

@@ -1,0 +1,52 @@
+<div class="container my-4" style="max-width: 500px;">
+  <div class="card shadow-sm">
+    <div class="card-body text-center">
+      <!-- Profile Image -->
+      <% if @artist.image.present? %>
+        <img src="<%= @artist.image %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+      <% else %>
+        <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; color: white;">
+          <i class="fas fa-user fa-2x"></i>
+        </div>
+      <% end %>
+
+      <!-- Display Name -->
+      <h4 class="mb-1"><%= @artist.username %></h4>
+
+      <!-- Website -->
+      <% if @artist.website.present? %>
+        <p>
+          <a href="<%= @artist.website %>" target="_blank" class="btn btn-sm btn-outline-primary">
+            Visit Website
+          </a>
+        </p>
+      <% end %>
+
+      <!-- Turbo-powered Follow Button -->
+      <turbo-frame id="follow_button">
+        <%= render partial: "artists/follow_button", locals: { artist: @artist } %>
+      </turbo-frame>
+    </div>
+  </div>
+
+  <!-- Upcoming Events -->
+  <div class="mt-4">
+    <h5 class="text-center text-muted mb-3">Upcoming Events</h5>
+
+    <% if @upcoming_events.any? %>
+      <ul class="list-group">
+        <% @upcoming_events.each do |event| %>
+          <li class="list-group-item text-start">
+            <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
+            <small>
+              <%= event.category %> — <%= event.start_time.strftime("%-I:%M %p") %><br>
+              at <%= link_to event.venue.name, venue_path(event.venue), class: "text-decoration-none" %>
+            </small>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted text-center">No upcoming events.</p>
+    <% end %>
+  </div>
+</div>

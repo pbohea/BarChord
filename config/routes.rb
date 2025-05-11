@@ -1,17 +1,23 @@
 Rails.application.routes.draw do
   devise_for :owners, controllers: { registrations: "owners/registrations" }
-  devise_for :users,  controllers: { registrations: "users/registrations" }
-  devise_for :artists, controllers: { registrations: "artists/registrations" } 
+  devise_for :users, controllers: { registrations: "users/registrations" }
+  devise_for :artists, controllers: { registrations: "artists/registrations" }
 
   root to: "events#active"
 
-
+  #model routes
   resources :venues
   resources :events
 
-  get  "/login",  to: "sessions#new"
-  post "/login",  to: "sessions#create"
+  resources :artists, only: [:show] do
+    get :events, on: :member
+  end
 
+  #session management
+  get "/login", to: "sessions#new"
+  post "/login", to: "sessions#create"
+
+  #misc routes
   get "/owners/:id/dashboard", to: "owners#dashboard", as: :owner_dashboard
 
   #for autocomplete search
@@ -27,6 +33,4 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
-  # Defines the root path route ("/")
-  # root "posts#index"
 end
