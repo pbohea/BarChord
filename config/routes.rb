@@ -20,7 +20,7 @@ Rails.application.routes.draw do
   resources :configurations, only: [] do
     get :ios_v1, on: :collection
   end
-  
+
 
   #session management
   get "/login", to: "sessions#new"
@@ -29,7 +29,7 @@ Rails.application.routes.draw do
   #misc routes
   get "/owners/:id/dashboard", to: "owners#dashboard", as: :owner_dashboard
   get "/users/:id/dashboard", to: "users#dashboard", as: :user_dashboard
-
+  get "/map", to: "events#map", as: :map
 
   #for autocomplete search
   get "/artists/search", to: "artists#search"

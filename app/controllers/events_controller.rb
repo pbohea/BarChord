@@ -59,6 +59,10 @@ class EventsController < ApplicationController
     end
   end
 
+  def map
+    
+  end
+
 
   private
 
