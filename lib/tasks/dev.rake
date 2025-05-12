@@ -200,4 +200,19 @@ task sample_data: :environment do
       artist_id: artists.sample.id,
     )
   end
+
+  #create followed artists and venues
+
+  User.find_each do |user|
+    user_artists = artists.sample(rand(2..4)) # follow 2–4 artists
+    user_venues = venues.sample(rand(2..4))  # follow 2–4 venues
+
+    user_artists.each do |artist|
+      ArtistFollow.find_or_create_by!(user: user, artist: artist)
+    end
+
+    user_venues.each do |venue|
+      VenueFollow.find_or_create_by!(user: user, venue: venue)
+    end
+  end
 end

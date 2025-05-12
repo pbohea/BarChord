@@ -1,1 +1,35 @@
-<h1> user dashboard </h1>
+<div class="container mt-4">
+  <h2 class="mb-4 text-center">My Dashboard</h2>
+
+  <!-- Favorite Artists -->
+  <div class="mb-5">
+    <h4>Favorite Artists</h4>
+    <% if @favorite_artists.any? %>
+      <ul class="list-group">
+        <% @favorite_artists.each do |artist| %>
+          <li class="list-group-item">
+            <%= link_to artist.username, artist_path(artist), class: "text-decoration-none" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">You haven't followed any artists yet.</p>
+    <% end %>
+  </div>
+
+  <!-- Favorite Venues -->
+  <div>
+    <h4>Favorite Venues</h4>
+    <% if @favorite_venues.any? %>
+      <ul class="list-group">
+        <% @favorite_venues.each do |venue| %>
+          <li class="list-group-item">
+            <%= link_to venue.name, venue_path(venue), class: "text-decoration-none" %>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted">You haven't followed any venues yet.</p>
+    <% end %>
+  </div>
+</div>

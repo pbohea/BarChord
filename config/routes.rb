@@ -19,6 +19,8 @@ Rails.application.routes.draw do
 
   #misc routes
   get "/owners/:id/dashboard", to: "owners#dashboard", as: :owner_dashboard
+  get "/users/:id/dashboard", to: "users#dashboard", as: :user_dashboard
+
 
   #for autocomplete search
   get "/artists/search", to: "artists#search"

@@ -62,6 +62,7 @@
         <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
 
       <% elsif user_signed_in? %>
+        <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
         <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
         <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
       <% end %>
