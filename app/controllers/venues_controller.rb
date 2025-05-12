@@ -54,7 +54,6 @@ class VenuesController < ApplicationController
     end
   end
 
-  # DELETE /venues/1 or /venues/1.json
   def destroy
     @venue.destroy!
 
@@ -66,12 +65,10 @@ class VenuesController < ApplicationController
 
   private
 
-  # Use callbacks to share common setup or constraints between actions.
   def set_venue
     @venue = Venue.find(params.expect(:id))
   end
 
-  # Only allow a list of trusted parameters through.
   def venue_params
     params.require(:venue).permit(
       :name,
@@ -80,7 +77,10 @@ class VenuesController < ApplicationController
       :street_address,
       :city,
       :state,
-      :zip_code
+      :zip_code,
+      :latitude,
+      :longitude,
+      :image 
     )
   end
 end

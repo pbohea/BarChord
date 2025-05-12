@@ -4,64 +4,73 @@
       <h4 class="mb-0">Sign Up as an Artist</h4>
     </div>
     <div class="card-body">
-      <%= form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
+      <%= form_with model: resource,
+                    as: resource_name,
+                    url: registration_path(resource_name),
+                    local: true do |f| %>
+
         <%= devise_error_messages! %>
 
-        <!-- Firstname -->
         <div class="mb-3">
           <%= f.label :firstname, class: "form-label" %>
           <%= f.text_field :firstname, class: "form-control" %>
         </div>
 
-        <!-- Lastname -->
         <div class="mb-3">
           <%= f.label :lastname, class: "form-label" %>
           <%= f.text_field :lastname, class: "form-control" %>
         </div>
 
-        <!-- Display Name -->
         <div class="mb-3">
           <%= f.label :username, "Display Name", class: "form-label" %>
           <%= f.text_field :username, class: "form-control", placeholder: "How your name will appear to users" %>
         </div>
 
-        <!-- Genre -->
         <div class="mb-3">
           <%= f.label :genre, "Music Genre", class: "form-label" %>
-          <%= f.select :genre, ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"], {}, class: "form-select" %>
+          <%= f.select :genre,
+                ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"],
+                {},
+                class: "form-select" %>
         </div>
 
-        <!-- Type -->
         <div class="mb-3">
-          <%= f.label :type, "Performance Type", class: "form-label" %>
-          <%= f.select :type, ["Solo Guitar", "Solo Piano", "Band", "DJ"], {}, class: "form-select" %>
+          <%= f.label :performance_type, "Performance Type", class: "form-label" %>
+          <%= f.select :performance_type,
+                ["Solo Guitar", "Solo Piano", "Band", "DJ"],
+                {},
+                class: "form-select" %>
         </div>
 
-        <!-- Website -->
         <div class="mb-3">
           <%= f.label :website, "Website", class: "form-label" %>
           <%= f.url_field :website, class: "form-control", placeholder: "https://yourmusic.com" %>
         </div>
 
-        <!-- Image Upload (for now just a URL) -->
         <div class="mb-3">
-          <%= f.label :image, "Image URL", class: "form-label" %>
-          <%= f.text_field :image, class: "form-control", placeholder: "https://example.com/photo.jpg" %>
+          <%= form.label :image, "Profile Photo", class: "form-label" %>
+
+          <% if form.object.image.attached? %>
+            <div class="mb-2">
+              <%= image_tag form.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
+            </div>
+          <% end %>
+
+          <%= form.file_field :image, 
+        accept: "image/jpeg,image/png", 
+        class: "form-control" %>
         </div>
 
-        <!-- Email -->
         <div class="mb-3">
           <%= f.label :email, class: "form-label" %>
           <%= f.email_field :email, class: "form-control" %>
         </div>
 
-        <!-- Password -->
         <div class="mb-3">
           <%= f.label :password, class: "form-label" %>
           <%= f.password_field :password, class: "form-control" %>
         </div>
 
-        <!-- Password Confirmation -->
         <div class="mb-3">
           <%= f.label :password_confirmation, class: "form-label" %>
           <%= f.password_field :password_confirmation, class: "form-control" %>

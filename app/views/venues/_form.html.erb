@@ -14,49 +14,46 @@
       </div>
     <% end %>
 
-    <!-- Venue Name -->
     <div class="mb-3">
       <%= f.label :name, "Venue Name", class: "form-label" %>
       <%= f.text_field :name, class: "form-control", placeholder: "e.g. The Blue Note", required: true %>
     </div>
 
-    <!-- Category -->
     <div class="mb-3">
       <%= f.label :category, class: "form-label" %>
       <%= f.select :category, ["Bar", "Jazz Club", "Nightclub", "Pub", "Cafe"], {}, class: "form-select", required: true %>
     </div>
 
-    <!-- Website -->
     <div class="mb-3">
       <%= f.label :website, "Website (optional)", class: "form-label" %>
       <%= f.text_field :website, class: "form-control", placeholder: "https://example.com" %>
     </div>
 
-    <!-- Street Address -->
+    <div class="mb-3">
+      <%= f.label :image, "Upload Photo", class: "form-label" %>
+      <%= f.file_field :image, class: "form-control", accept: "image/*" %>
+    </div>
+
     <div class="mb-3">
       <%= f.label :street_address, "Street Address", class: "form-label" %>
       <%= f.text_field :street_address, class: "form-control", placeholder: "123 Main St", required: true %>
     </div>
 
-    <!-- City -->
     <div class="mb-3">
       <%= f.label :city, class: "form-label" %>
       <%= f.text_field :city, class: "form-control", placeholder: "Chicago", required: true %>
     </div>
 
-    <!-- State -->
     <div class="mb-3">
       <%= f.label :state, class: "form-label" %>
       <%= f.text_field :state, class: "form-control", placeholder: "IL", maxlength: 2, required: true %>
     </div>
 
-    <!-- ZIP Code -->
     <div class="mb-4">
       <%= f.label :zip_code, "ZIP Code", class: "form-label" %>
       <%= f.text_field :zip_code, class: "form-control", placeholder: "60614", required: true %>
     </div>
 
-    <!-- Submit -->
     <div class="d-grid">
       <%= f.submit "Create Venue", class: "btn btn-primary" %>
     </div>

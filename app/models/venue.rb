@@ -23,6 +23,9 @@ class Venue < ApplicationRecord
   has_many :venue_follows
   has_many :followers, through: :venue_follows, source: :user
 
+  has_one_attached :image
+
+
   before_validation :normalize_website_url
 
   validates :name, :street_address, :city, :state, :zip_code, presence: true

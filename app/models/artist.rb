@@ -34,4 +34,6 @@ class Artist < ApplicationRecord
   has_many :artist_follows
   has_many :followers, through: :artist_follows, source: :user
 
+  has_one_attached :image
+
 end
