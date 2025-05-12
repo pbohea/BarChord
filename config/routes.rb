@@ -5,6 +5,8 @@ Rails.application.routes.draw do
 
   root to: "events#active"
 
+  get "/events/map", to: "events#map", as: :map
+
   #model routes
   resources :venues
   resources :events
@@ -29,7 +31,6 @@ Rails.application.routes.draw do
   #misc routes
   get "/owners/:id/dashboard", to: "owners#dashboard", as: :owner_dashboard
   get "/users/:id/dashboard", to: "users#dashboard", as: :user_dashboard
-  get "/map", to: "events#map", as: :map
 
   #for autocomplete search
   get "/artists/search", to: "artists#search"

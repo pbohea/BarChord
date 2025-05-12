@@ -1,5 +1,18 @@
 json.array! @events do |event|
-  json.extract! event, :id, :name, :date, :start_time
+  json.id event.id
+  json.date event.date
+  json.start_time event.start_time
+  json.end_time event.end_time
+  json.description event.description
+
+  json.cover event.cover
+  json.cover_amount event.cover_amount
+  json.category event.category
+  json.indoors event.indoors
+
+  json.label(
+    event.artist&.name.presence || event.artist_name.presence || event.venue.name
+  )
 
   json.venue do
     json.name event.venue.name
