@@ -13,6 +13,9 @@ task sample_data: :environment do
     Owner.destroy_all
   end
 
+  #safety switch for geocoding
+  Venue.skip_callback(:save, :before, :geocode_address)
+
   #owners
   owners = []
   10.times do
@@ -48,107 +51,135 @@ task sample_data: :environment do
     )
   end
 
-=begin
-  #VENUES WITH GOOGLE MAPS API
-  venues = []
-  10.times do
-    address = Faker::Address.full_address
-    name = Faker::Company.name
-
-    #geocoding
-    escaped_address = URI.encode_www_form_component(address)
-    api_key = ENV.fetch("GOOGLE_MAPS_API_KEY")
-    url = "https://maps.googleapis.com/maps/api/geocode/json?address=#{escaped_address}&key=#{api_key}"
-
-    response = HTTP.get(url)
-    parsed = JSON.parse(response)
-
-    if parsed["status"] == "OK"
-      location = parsed["results"][0]["geometry"]["location"]
-      lat = location["lat"]
-      lng = location["lng"]
-
-      venue = Venue.create!(
-        name: name,
-        address: address,
-        category: Faker::Restaurant.type,
-        website: "https://example.com",
-        owner_id: owners.sample.id,
-        latitude: lat,
-        longitude: lng
-      )
-      venues << venue
-    else
-      puts "Could not geocode: #{address} (Status: #{parsed["status"]})"
-    end
-  end
-=end
-
   #VENUES WITH NO GOOGLEMAPS API
   venues = []
 
   manual_venues = [
     {
-      name: "The Broken Oar",
-      address: "614 Rawson Bridge Rd, Port Barrington, IL 60010",
-      category: "Bar",
-      website: "https://brokenoar.com",
-      latitude: 42.2472,
-      longitude: -88.1929,
+      name: "The Green Mill",
+      street_address: "4802 N Broadway",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60640",
+      category: "Jazz Club",
+      website: "https://greenmilljazz.com",
+      latitude: 41.9701,
+      longitude: -87.6598,
     },
     {
-      name: "Durty Nellie's",
-      address: "180 N Smith St, Palatine, IL 60067",
-      category: "Irish Pub",
-      website: "https://durtynellies.com",
-      latitude: 42.1126,
-      longitude: -88.0490,
+      name: "Schubas Tavern",
+      street_address: "3159 N Southport Ave",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60657",
+      category: "Live Music Bar",
+      website: "https://lh-st.com/venues/schubas-tavern",
+      latitude: 41.9409,
+      longitude: -87.6636,
     },
     {
-      name: "The Hideout",
-      address: "1354 W Wabansia Ave, Chicago, IL 60642",
-      category: "Music Venue",
+      name: "Constellation",
+      street_address: "3111 N Western Ave",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60618",
+      category: "Experimental Venue",
+      website: "https://constellation-chicago.com",
+      latitude: 41.9383,
+      longitude: -87.6889,
+    },
+    {
+      name: "Reggies Rock Club",
+      street_address: "2109 S State St",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60616",
+      category: "Rock Venue",
+      website: "https://reggieslive.com",
+      latitude: 41.8539,
+      longitude: -87.6272,
+    },
+    {
+      name: "Hideout Inn",
+      street_address: "1354 W Wabansia Ave",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60642",
+      category: "Indie Bar",
       website: "https://hideoutchicago.com",
       latitude: 41.9132,
       longitude: -87.6622,
     },
     {
-      name: "Martyrs'",
-      address: "3855 N Lincoln Ave, Chicago, IL 60613",
-      category: "Live Music Bar",
-      website: "https://martyrslive.com",
-      latitude: 41.9510,
-      longitude: -87.6792,
+      name: "Lincoln Hall",
+      street_address: "2424 N Lincoln Ave",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60614",
+      category: "Concert Hall",
+      website: "https://lh-st.com/venues/lincoln-hall",
+      latitude: 41.9260,
+      longitude: -87.6495,
     },
     {
-      name: "FitzGerald’s",
-      address: "6615 W Roosevelt Rd, Berwyn, IL 60402",
-      category: "Jazz Club",
-      website: "https://www.fitzgeraldsnightclub.com",
-      latitude: 41.8649,
-      longitude: -87.7884,
+      name: "Subterranean",
+      street_address: "2011 W North Ave",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60647",
+      category: "Alternative Venue",
+      website: "https://subt.net",
+      latitude: 41.9106,
+      longitude: -87.6775,
     },
     {
-      name: "The Empty Bottle",
-      address: "1035 N Western Ave, Chicago, IL 60622",
-      category: "Indie Music Venue",
-      website: "https://emptybottle.com",
-      latitude: 41.9002,
-      longitude: -87.6861,
+      name: "Beat Kitchen",
+      street_address: "2100 W Belmont Ave",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60618",
+      category: "Rock Club",
+      website: "https://beatkitchen.com",
+      latitude: 41.9393,
+      longitude: -87.6805,
+    },
+    {
+      name: "Sleeping Village",
+      street_address: "3734 W Belmont Ave",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60618",
+      category: "Multi-Genre Venue",
+      website: "https://sleeping-village.com",
+      latitude: 41.9399,
+      longitude: -87.7202,
+    },
+    {
+      name: "Thalia Hall",
+      street_address: "1807 S Allport St",
+      city: "Chicago",
+      state: "IL",
+      zip_code: "60608",
+      category: "Historic Venue",
+      website: "https://thaliahallchicago.com",
+      latitude: 41.8577,
+      longitude: -87.6555,
     },
   ]
 
-  manual_venues.each do |venue_attrs|
-    venue = Venue.create!(
-      name: venue_attrs[:name],
-      address: venue_attrs[:address],
-      category: venue_attrs[:category],
-      website: venue_attrs[:website],
+  manual_venues.each do |attrs|
+    venues << Venue.create!(
+      name: attrs[:name],
+      street_address: attrs[:street_address],
+      city: attrs[:city],
+      state: attrs[:state],
+      zip_code: attrs[:zip_code],
+      category: attrs[:category],
+      website: attrs[:website],
+      latitude: attrs[:latitude],
+      longitude: attrs[:longitude],
       owner_id: owners.sample.id,
-      latitude: venue_attrs[:latitude],
-      longitude: venue_attrs[:longitude],
     )
-    venues << venue
   end
 
   # events
