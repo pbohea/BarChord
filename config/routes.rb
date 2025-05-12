@@ -17,6 +17,11 @@ Rails.application.routes.draw do
 
   resources :venue_follows, only: [:create, :destroy]
 
+  resources :configurations, only: [] do
+    get :ios_v1, on: :collection
+  end
+  
+
   #session management
   get "/login", to: "sessions#new"
   post "/login", to: "sessions#create"
