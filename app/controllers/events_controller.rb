@@ -60,34 +60,37 @@ class EventsController < ApplicationController
   end
 
   def map
-    
-  end
+    @events = Event.upcoming.includes(:venue)
 
+    respond_to do |format|
+      format.json  # will render app/views/events/map.json.jbuilder
+    end
+  end
 
   private
 
-    def set_event
-      @event = Event.find(params[:id])
+  def set_event
+    @event = Event.find(params[:id])
+  end
+
+  def event_params
+    params.require(:event).permit(
+      :category, :cover, :date, :description,
+      :start_time, :end_time, :indoors,
+      :venue_id, :artist_id, :artist_name
+    )
+  end
+
+  # Authorization logic
+  def authorize_owner_or_admin!
+    venue_owner_id = @event.venue&.owner_id
+
+    authorized = owner_signed_in? && current_owner.id == venue_owner_id
+
+    authorized ||= user_signed_in? && current_user.email == "pbohea@gmail.com"
+
+    unless authorized
+      redirect_to events_path, alert: "You are not authorized to modify this event."
     end
-
-    def event_params
-      params.require(:event).permit(
-        :category, :cover, :date, :description,
-        :start_time, :end_time, :indoors,
-        :venue_id, :artist_id, :artist_name
-      )
-    end
-
-    # Authorization logic
-    def authorize_owner_or_admin!
-      venue_owner_id = @event.venue&.owner_id
-
-      authorized = owner_signed_in? && current_owner.id == venue_owner_id
-
-      authorized ||= user_signed_in? && current_user.email == "pbohea@gmail.com"
-
-      unless authorized
-        redirect_to events_path, alert: "You are not authorized to modify this event."
-      end
-    end
+  end
 end

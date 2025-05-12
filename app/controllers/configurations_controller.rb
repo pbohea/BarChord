@@ -11,6 +11,14 @@ class ConfigurationsController < ApplicationController
           properties: {
             context: "modal"
           }
+        },
+        {
+          patterns: [
+            "/events/[0-9]+/map"
+          ],
+          properties: {
+            view_controller: "map"
+          }
         }
       ]
     }
