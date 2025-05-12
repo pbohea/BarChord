@@ -1,4 +1,4 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top shadow-sm mb-4">
+<nav class="navbar d-hotwire-native-none bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">Live Music App</a>
 
@@ -34,7 +34,6 @@
   </div>
 </nav>
 
-<!-- ✅ Offcanvas Menu -->
 <% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
   <div class="offcanvas offcanvas-end" tabindex="-1" id="accountMenu" aria-labelledby="accountMenuLabel">
     <div class="offcanvas-header">
@@ -70,7 +69,6 @@
   </div>
 <% end %>
 
-<!-- ✅ Sign Up Modal -->
 <div class="modal fade" id="signupModal" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
