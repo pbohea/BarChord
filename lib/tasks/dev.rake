@@ -7,10 +7,13 @@ task sample_data: :environment do
   if Rails.env.development?
     puts "Deleting existing records..."
     Event.destroy_all
+    VenueFollow.delete_all
     Venue.destroy_all
+    ArtistFollow.delete_all
     Artist.destroy_all
     User.destroy_all
     Owner.destroy_all
+    
   end
 
   #safety switch for geocoding
@@ -61,7 +64,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60640",
-      category: "Jazz Club",
+      category: "Music Hall",
       website: "https://greenmilljazz.com",
       latitude: 41.9701,
       longitude: -87.6598,
@@ -72,7 +75,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60657",
-      category: "Live Music Bar",
+      category: "Club",
       website: "https://lh-st.com/venues/schubas-tavern",
       latitude: 41.9409,
       longitude: -87.6636,
@@ -83,7 +86,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60618",
-      category: "Experimental Venue",
+      category: "Bar",
       website: "https://constellation-chicago.com",
       latitude: 41.9383,
       longitude: -87.6889,
@@ -94,7 +97,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60616",
-      category: "Rock Venue",
+      category: "Music Hall",
       website: "https://reggieslive.com",
       latitude: 41.8539,
       longitude: -87.6272,
@@ -105,7 +108,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60642",
-      category: "Indie Bar",
+      category: "Club",
       website: "https://hideoutchicago.com",
       latitude: 41.9132,
       longitude: -87.6622,
@@ -116,7 +119,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60614",
-      category: "Concert Hall",
+      category: "Bar",
       website: "https://lh-st.com/venues/lincoln-hall",
       latitude: 41.9260,
       longitude: -87.6495,
@@ -127,7 +130,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60647",
-      category: "Alternative Venue",
+      category: "Music Hall",
       website: "https://subt.net",
       latitude: 41.9106,
       longitude: -87.6775,
@@ -138,7 +141,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60618",
-      category: "Rock Club",
+      category: "Club",
       website: "https://beatkitchen.com",
       latitude: 41.9393,
       longitude: -87.6805,
@@ -149,7 +152,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60618",
-      category: "Multi-Genre Venue",
+      category: "Bar",
       website: "https://sleeping-village.com",
       latitude: 41.9399,
       longitude: -87.7202,
@@ -160,7 +163,7 @@ task sample_data: :environment do
       city: "Chicago",
       state: "IL",
       zip_code: "60608",
-      category: "Historic Venue",
+      category: "Music Hall",
       website: "https://thaliahallchicago.com",
       latitude: 41.8577,
       longitude: -87.6555,
@@ -182,13 +185,14 @@ task sample_data: :environment do
     )
   end
 
+  allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
   # events
   10.times do
     start_time = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
     cover = [true, false].sample
 
     Event.create!(
-      category: Faker::Music.instrument,
+      category: allowed_categories.sample,
       date: start_time.to_date,
       start_time: start_time,
       end_time: start_time + 2.hours,
