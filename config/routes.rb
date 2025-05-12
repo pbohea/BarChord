@@ -5,8 +5,7 @@ Rails.application.routes.draw do
 
   root to: "events#active"
 
-  get "/events/map", to: "events#map", as: :map
-
+  get "events/map", to: "events#map", defaults: { format: :json }
   #model routes
   resources :venues
   resources :events
@@ -22,7 +21,6 @@ Rails.application.routes.draw do
   resources :configurations, only: [] do
     get :ios_v1, on: :collection
   end
-
 
   #session management
   get "/login", to: "sessions#new"

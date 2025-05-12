@@ -63,7 +63,7 @@ class EventsController < ApplicationController
     @events = Event.upcoming.includes(:venue)
 
     respond_to do |format|
-      format.json  # will render app/views/events/map.json.jbuilder
+      format.json  
     end
   end
 
