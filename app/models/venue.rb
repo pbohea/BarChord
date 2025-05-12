@@ -49,10 +49,10 @@ class Venue < ApplicationRecord
   end
 
   def geocode_address
-    results = Geocoder.search(full_address)
-    if coords = results.first&.coordinates
-      self.latitude = coords[0]
-      self.longitude = coords[1]
+    result = Geocoder.search(full_address).first
+    if result&.coordinates
+      self.latitude = result.latitude
+      self.longitude = result.longitude
     end
   end
 end
