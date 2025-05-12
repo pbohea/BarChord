@@ -1,4 +1,3 @@
-class AuthenticationController < ApplicationController
   module Authentication
     extend ActiveSupport::Concern
     included do
@@ -22,4 +21,3 @@ class AuthenticationController < ApplicationController
       cookies.permanent.encrypted[:artist_id] = artist.id
     end
   end
-end
