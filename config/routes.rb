@@ -13,6 +13,10 @@ Rails.application.routes.draw do
     get :events, on: :member
   end
 
+  resources :artist_follows, only: [:create, :destroy]
+
+  resources :venue_follows, only: [:create, :destroy]
+
   #session management
   get "/login", to: "sessions#new"
   post "/login", to: "sessions#create"
