@@ -6,28 +6,32 @@
   </div>
 <% end %>
 
-<h1 class="mb-4">Events Near You</h1>
-
 <div id="events" class="row g-4">
   <% @events.each do |event| %>
     <% venue = event.venue %>
     <div class="col-12">
-      <div class="card shadow-sm">
+      <div class="card shadow-sm mb-1">
         <% if venue.image.attached? %>
           <%= image_tag venue.image.variant(resize_to_fill: [1200, 300]), class: "card-img-top" %>
         <% end %>
 
         <div class="card-body">
-          <div class="d-flex justify-content-between align-items-center">
-            <h5 class="card-title mb-1">
-              <%= link_to venue.name, venue_path(venue), class: "text-decoration-none" %>
-            </h5>
-            <span class="badge bg-primary">
-              <%= event.artist&.username || event.artist_name %>
-            </span>
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <h5 class="card-title mb-1">
+                <%= link_to venue.name, venue_path(venue), class: "text-decoration-none" %>
+              </h5>
+              <p class="text-muted mb-0"><small><%= event.category %></small></p>
+            </div>
+
+            <% if event.artist.present? %>
+              <%= link_to event.artist.username, artist_path(event.artist), class: "badge bg-primary text-decoration-none" %>
+            <% else %>
+              <span class="badge bg-secondary"><%= event.artist_name %></span>
+            <% end %>
           </div>
 
-          <p class="card-text">
+          <p class="card-text mb-2">
             <%= link_to venue.full_address, "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}", target: "_blank", class: "text-decoration-none" %><br>
             <strong>
               <%= event.date == Date.today ? "Today" : event.date.strftime("%B %-d") %>
