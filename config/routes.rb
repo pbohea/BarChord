@@ -3,7 +3,7 @@ Rails.application.routes.draw do
   devise_for :users, controllers: { registrations: "users/registrations" }
   devise_for :artists, controllers: { registrations: "artists/registrations" }
 
-  root to: "events#active"
+  root to: "events#index"
 
   get "events/map", to: "events#map", defaults: { format: :json }
   #model routes
