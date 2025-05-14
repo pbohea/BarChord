@@ -3,6 +3,7 @@ task sample_data: :environment do
   require "faker"
   require "http"
   require "uri"
+  require "open-uri"
 
   if Rails.env.development?
     puts "Deleting existing records..."
@@ -13,7 +14,6 @@ task sample_data: :environment do
     Artist.destroy_all
     User.destroy_all
     Owner.destroy_all
-    
   end
 
   #safety switch for geocoding
