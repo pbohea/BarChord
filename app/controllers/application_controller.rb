@@ -1,6 +1,22 @@
 class ApplicationController < ActionController::Base
   # Modern browser enforcement (optional)
   allow_browser versions: :modern
+  before_action :store_user_location!, if: :storable_location?
+
+  private
+
+  def storable_location?
+    request.get? &&
+      is_navigational_format? &&
+      !devise_controller? &&
+      !request.xhr?
+  end
+
+  def store_user_location!
+    store_location_for(:user, request.fullpath)
+    store_location_for(:owner, request.fullpath)
+    store_location_for(:artist, request.fullpath)
+  end
 
   # Devise helper access
   include Devise::Controllers::Helpers

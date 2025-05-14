@@ -15,7 +15,7 @@ class Users::SessionsController < Devise::SessionsController
   protected
 
   def after_sign_in_path_for(resource)
-    user_dashboard_path(resource)
+    stored_location_for(resource) || user_dashboard_path(resource)
   end
 
   def after_sign_out_path_for(resource_or_scope)
