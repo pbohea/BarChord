@@ -48,15 +48,15 @@
         </div>
 
         <div class="mb-3">
-          <%= form.label :image, "Profile Photo", class: "form-label" %>
+          <%= f.label :image, "Profile Photo", class: "form-label" %>
 
-          <% if form.object.image.attached? %>
+          <% if f.object.image.attached? %>
             <div class="mb-2">
-              <%= image_tag form.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
+              <%= image_tag f.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
             </div>
           <% end %>
 
-          <%= form.file_field :image, 
+          <%= f.file_field :image, 
         accept: "image/jpeg,image/png", 
         class: "form-control" %>
         </div>

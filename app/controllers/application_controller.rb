@@ -1,22 +1,44 @@
 class ApplicationController < ActionController::Base
-  # Only allow modern browsers supporting webp images, web push, badges, import maps, CSS nesting, and CSS :has.
-  include Authentication
-  
+  # Modern browser enforcement (optional)
   allow_browser versions: :modern
 
+  # Devise helper access
+  include Devise::Controllers::Helpers
+
+  # Make Devise-like helpers available for Owner and Artist
+  helper_method :owner_signed_in?, :current_owner,
+                :artist_signed_in?, :current_artist,
+                :user_signed_in?, :current_user
+
+  def current_owner
+    @current_owner ||= warden.authenticate(scope: :owner)
+  end
+
+  def owner_signed_in?
+    current_owner.present?
+  end
+
+  def current_artist
+    @current_artist ||= warden.authenticate(scope: :artist)
+  end
+
+  def artist_signed_in?
+    current_artist.present?
+  end
 
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   protected
 
   def configure_permitted_parameters
-    if resource_class == Artist
+    case resource_class.name
+    when "Artist"
       devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :username, :genre, :type, :website, :image])
       devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :username, :genre, :type, :website, :image])
-    elsif resource_class == Owner
+    when "Owner"
       devise_parameter_sanitizer.permit(:sign_up, keys: [:firstname, :lastname, :username])
       devise_parameter_sanitizer.permit(:account_update, keys: [:firstname, :lastname, :username])
-    elsif resource_class == User
+    when "User"
       devise_parameter_sanitizer.permit(:sign_up, keys: [:username])
       devise_parameter_sanitizer.permit(:account_update, keys: [:username])
     end

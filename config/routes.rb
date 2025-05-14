@@ -1,7 +1,27 @@
 Rails.application.routes.draw do
-  devise_for :owners, controllers: { registrations: "owners/registrations" }
-  devise_for :users, controllers: { registrations: "users/registrations" }
-  devise_for :artists, controllers: { registrations: "artists/registrations" }
+  devise_for :users, controllers: {
+                       sessions: "users/sessions",
+                       registrations: "users/registrations",
+                       passwords: "users/passwords",
+                       confirmations: "users/confirmations",
+                       unlocks: "users/unlocks",
+                     }
+
+  devise_for :owners, controllers: {
+                        sessions: "owners/sessions",
+                        registrations: "owners/registrations",
+                        passwords: "owners/passwords",
+                        confirmations: "owners/confirmations",
+                        unlocks: "owners/unlocks",
+                      }
+
+  devise_for :artists, controllers: {
+                         sessions: "artists/sessions",
+                         registrations: "artists/registrations",
+                         passwords: "artists/passwords",
+                         confirmations: "artists/confirmations",
+                         unlocks: "artists/unlocks",
+                       }
 
   root to: "events#index"
 
