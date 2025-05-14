@@ -1,0 +1,55 @@
+<div class="container my-5">
+  <div class="card shadow-sm">
+    <div class="card-body p-5">
+      <h1 class="display-5 mb-4 text-center">About LocalLive</h1>
+
+      <p class="lead text-center mb-4">
+        LocalLive connects you to the heartbeat of your neighborhood: live music.
+      </p>
+
+      <p>
+        Whether it’s a solo acoustic guitarist playing at a coffee shop, a jazz trio lighting up a speakeasy, or a DJ spinning at your favorite rooftop bar—LocalLive helps you discover it all in real-time.
+      </p>
+
+      <p>
+        Built for mobile from the ground up using <strong>Ruby on Rails 8</strong>, <strong>Hotwire Native</strong>, and <strong>Bootstrap</strong>, our app is designed to provide a fast and seamless experience for music lovers on the go.
+      </p>
+
+      <p>
+        The interactive map is at the core of the app, letting you explore nearby venues visually. Tap on a pin to learn more about upcoming performances, venue details, and featured artists. Filters make it easy to narrow results by genre, venue type, or event format (indoor/outdoor/cover-free).
+      </p>
+
+      <p>
+        Venue owners and artists can manage their profiles, post events, and build their audiences. Users can follow favorite artists and venues, create an account, and stay updated on who’s playing where.
+      </p>
+
+      <hr class="my-5" />
+
+      <h4>How does the map work?</h4>
+      <p>
+        The map displays live music events occurring within the next 12 hours based on your current location. Use filters to find specific genres, venue types, or event settings like indoor, outdoor, or cover-free.
+      </p>
+
+      <h4>How does favoriting an artist or venue work?</h4>
+      <p>
+        When you follow an artist or venue, you’ll be able to filter the map to only show events from your favorites. In the future, you’ll also receive personalized notifications when new matching events are posted.
+      </p>
+
+      <h4>I'm a venue owner. How do I use the app?</h4>
+      <p>
+        <%= link_to "Learn how to manage your venue and post events", owners_about_path, class: "btn btn-outline-secondary btn-sm" %>
+      </p>
+
+      <h4>I'm an artist. How do I use the app?</h4>
+      <p>
+        <%= link_to "Learn how to promote your shows and grow your fanbase", artists_about_path, class: "btn btn-outline-secondary btn-sm" %>
+      </p>
+
+      <hr class="my-4" />
+
+      <p class="text-muted text-center">
+        LocalLive is a passion project built to support small-time performers and independent venues. We believe live music makes communities stronger, and we’re here to help it thrive—one show at a time.
+      </p>
+    </div>
+  </div>
+</div>
