@@ -42,10 +42,6 @@ Rails.application.routes.draw do
     get :ios_v1, on: :collection
   end
 
-  #session management
-  get "/login", to: "sessions#new"
-  post "/login", to: "sessions#create"
-
   #misc routes
   get "/owners/:id/dashboard", to: "owners#dashboard", as: :owner_dashboard
   get "/users/:id/dashboard", to: "users#dashboard", as: :user_dashboard
