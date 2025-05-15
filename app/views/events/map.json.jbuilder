@@ -20,5 +20,6 @@ json.array! @events do |event|
     json.category event.venue.category
     json.latitude event.venue.latitude
     json.longitude event.venue.longitude
+    json.website event.venue.website
   end
 end
