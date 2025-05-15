@@ -53,19 +53,19 @@
 
     <div class="offcanvas-body">
       <% if owner_signed_in? %>
-        <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
-        <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
-        <%= link_to "Sign Out", destroy_owner_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn btn-link d-block mb-2", data: { turbo: true } %>
+        <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
+        <%= link_to "Sign Out", destroy_owner_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { turbo: true } %>
 
       <% elsif artist_signed_in? %>
-        <%= link_to "My Events", artist_events_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
-        <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
-        <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "My Events", artist_events_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
+        <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
+        <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { turbo: true } %>
 
       <% elsif user_signed_in? %>
-        <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
-        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-link d-block mb-2", data: { bs_dismiss: "offcanvas" } %>
-        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { bs_dismiss: "offcanvas" } %>
+        <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn btn-link d-block mb-2", data: { turbo: true } %>
+        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
+        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { turbo: true } %>
       <% end %>
     </div>
   </div>
