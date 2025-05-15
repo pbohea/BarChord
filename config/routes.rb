@@ -48,6 +48,7 @@ Rails.application.routes.draw do
   get "/about", to: "pages#about"
   get "/owners_about", to: "pages#owners_about"
   get "/artists_about", to: "pages#artists_about"
+  get "/menu", to: "pages#menu", as: :menu
 
   #for autocomplete search
   get "/artists/search", to: "artists#search"
