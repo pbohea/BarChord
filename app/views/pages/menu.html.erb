@@ -1,1 +1,66 @@
-<h1> HELLO </h1>
+<div class="container py-4">
+  <h1 class="mb-4">Menu</h1>
+
+  <% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
+    <div class="d-grid gap-2">
+      <% if owner_signed_in? %>
+        <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn btn-outline-primary" %>
+        <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Sign Out", destroy_owner_session_path, method: :delete, class: "btn btn-outline-danger" %>
+
+      <% elsif artist_signed_in? %>
+        <%= link_to "My Events", artist_events_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn btn-outline-danger" %>
+
+      <% elsif user_signed_in? %>
+        <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn btn-outline-primary" %>
+        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-outline-secondary" %>
+        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-outline-danger" %>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="d-grid gap-2">
+      <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signinModal">
+        Sign In
+      </button>
+      <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">
+        Sign Up
+      </button>
+    </div>
+  <% end %>
+</div>
+
+<!-- Sign In Modal -->
+<div class="modal fade" id="signinModal" data-turbo="false" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signinModalLabel">Sign In As</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-grid gap-2">
+        <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success" %>
+        <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info" %>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Sign Up Modal -->
+<div class="modal fade" id="signupModal" data-turbo="false" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="signupModalLabel">Sign Up As</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body d-grid gap-2">
+        <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success" %>
+        <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info" %>
+      </div>
+    </div>
+  </div>
+</div>

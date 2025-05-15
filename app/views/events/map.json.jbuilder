@@ -16,6 +16,7 @@ json.array! @events do |event|
 
   json.venue do
     json.name event.venue.name
+    json.id event.venue.id
     json.category event.venue.category
     json.latitude event.venue.latitude
     json.longitude event.venue.longitude
