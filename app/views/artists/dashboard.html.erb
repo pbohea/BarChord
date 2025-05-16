@@ -1,1 +1,75 @@
-<h1> artist dashboard </h1>
+<div class="container my-4" style="max-width: 500px;">
+  <h2 class="text-center mb-4">Upcoming Events</h2>
+
+  <% if @upcoming_events.any? %>
+    <% @upcoming_events.each do |event| %>
+      <% venue = event.venue %>
+      <div class="card shadow-sm mb-4">
+        <div class="card-body text-center">
+          <h4 class="mb-3">
+            <%= link_to venue.name, venue_path(venue), class: "text-decoration-none" %>
+          </h4>
+
+          <% if venue.full_address.present? %>
+            <p class="mb-2">
+              <%= link_to venue.full_address, "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}", target: "_blank", class: "text-decoration-none" %>
+            </p>
+          <% end %>
+
+          <p class="text-muted">
+            <strong>Category:</strong> <%= event.category %>
+          </p>
+
+          <p class="mb-2">
+            <strong>
+              <%= event.date == Date.today ? "Today" : event.date.strftime("%B %-d, %Y") %>
+              @ <%= event.start_time.strftime("%-I:%M %p") %>
+              - <%= event.end_time.strftime("%-I:%M %p") %>
+            </strong>
+          </p>
+
+          <%= link_to "View Event", event_path(event), class: "btn btn-outline-dark btn-sm mt-2" %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-center text-muted">No upcoming events.</p>
+  <% end %>
+
+  <h2 class="text-center mt-5 mb-4">Past Events</h2>
+
+  <% if @past_events.any? %>
+    <% @past_events.each do |event| %>
+      <% venue = event.venue %>
+      <div class="card shadow-sm mb-4">
+        <div class="card-body text-center">
+          <h4 class="mb-3">
+            <%= link_to venue.name, venue_path(venue), class: "text-decoration-none" %>
+          </h4>
+
+          <% if venue.full_address.present? %>
+            <p class="mb-2">
+              <%= link_to venue.full_address, "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}", target: "_blank", class: "text-decoration-none" %>
+            </p>
+          <% end %>
+
+          <p class="text-muted">
+            <strong>Category:</strong> <%= event.category %>
+          </p>
+
+          <p class="mb-2">
+            <strong>
+              <%= event.date.strftime("%B %-d, %Y") %>
+              @ <%= event.start_time.strftime("%-I:%M %p") %>
+              - <%= event.end_time.strftime("%-I:%M %p") %>
+            </strong>
+          </p>
+
+          <%= link_to "View Event", event_path(event), class: "btn btn-outline-dark btn-sm mt-2" %>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <p class="text-center text-muted">No past events yet.</p>
+  <% end %>
+</div>

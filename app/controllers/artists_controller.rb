@@ -13,4 +13,11 @@ class ArtistsController < ApplicationController
     @artist = Artist.find(params[:id])
     @upcoming_events = @artist.events.upcoming
   end
+
+  def dashboard
+  @artist = current_artist
+  @upcoming_events = @artist.upcoming_events
+  @past_events = @artist.past_events
+  end
+
 end
