@@ -40,6 +40,7 @@ class Artist < ApplicationRecord
 
   has_one_attached :image
 
+
   def upcoming_events
     events.upcoming
   end

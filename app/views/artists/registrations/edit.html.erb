@@ -1,35 +1,101 @@
-<h2>Edit <%= resource_name.to_s.humanize %></h2>
+<div class="container my-4" style="max-width: 550px;">
+  <div class="card shadow-sm">
+    <div class="card-body">
+      <h4 class="card-title mb-3 text-center">Edit Artist Profile</h4>
 
-<%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put }) do |f| %>
-  <%= f.error_notification %>
+      <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name), html: { method: :put, multipart: true }) do |f| %>
+        <%= f.error_notification %>
 
-  <div class="form-inputs">
-    <%= f.input :email, required: true, autofocus: true %>
+        <div class="mb-3">
+          <%= f.input :firstname, input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
 
-    <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
-      <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
-    <% end %>
+        <div class="mb-3">
+          <%= f.input :lastname, input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
 
-    <%= f.input :password,
-                hint: "leave it blank if you don't want to change it",
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :password_confirmation,
-                required: false,
-                input_html: { autocomplete: "new-password" } %>
-    <%= f.input :current_password,
-                hint: "we need your current password to confirm your changes",
-                required: true,
-                input_html: { autocomplete: "current-password" } %>
+        <div class="mb-3">
+          <%= f.input :username, label: "Display Name", input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :genre, collection: ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"], input_html: { class: "form-select" }, label_html: { class: "form-label" }, prompt: false %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :performance_type, label: "Type", collection: ["Solo Guitar", "Solo Piano", "Band", "DJ"], input_html: { class: "form-select" }, label_html: { class: "form-label" }, prompt: false %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :website, input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :instagram_url, label: "Instagram URL", input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :youtube_url, label: "YouTube URL", input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :tiktok_url, label: "TikTok URL", input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="mb-3" data-controller="image-preview">
+          <%= f.label :image, "Profile Photo", class: "form-label" %>
+
+          <% if resource.image.attached? %>
+            <div class="mb-2">
+              <%= image_tag resource.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
+            </div>
+          <% end %>
+
+          <div data-image-preview-target="container" class="mb-2 d-none">
+            <img data-image-preview-target="preview" class="img-thumbnail" style="max-width: 300px;" />
+          </div>
+
+          <%= f.file_field :image, accept: "image/jpeg,image/png", class: "form-control", data: { image_preview_target: "input", action: "image-preview#previewImage" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :email, required: true, autofocus: true, input_html: { class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <% if devise_mapping.confirmable? && resource.pending_reconfirmation? %>
+          <p class="text-muted small mb-3">
+            Waiting confirmation for: <strong><%= resource.unconfirmed_email %></strong>
+          </p>
+        <% end %>
+
+        <div class="mb-3">
+          <%= f.input :password, required: false, hint: "Leave blank if you don’t want to change it", input_html: { autocomplete: "new-password", class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :password_confirmation, required: false, input_html: { autocomplete: "new-password", class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.input :current_password, required: true, hint: "Required to confirm your changes", input_html: { autocomplete: "current-password", class: "form-control" }, label_html: { class: "form-label" } %>
+        </div>
+
+        <div class="d-grid gap-2">
+          <%= f.button :submit, "Update Account", class: "btn btn-primary" %>
+        </div>
+      <% end %>
+
+      <hr class="my-4">
+
+      <div class="text-center">
+        <h6>Cancel Account</h6>
+        <p class="text-muted small">Unhappy? You can delete your account below.</p>
+        <%= button_to "Cancel my account", registration_path(resource_name), method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-outline-danger btn-sm" %>
+      </div>
+
+      <div class="text-center mt-3">
+        <%= link_to "Back", root_path, class: "btn btn-link btn-sm" %>
+      </div>
+    </div>
   </div>
-
-  <div class="form-actions">
-    <%= f.button :submit, "Update" %>
-  </div>
-<% end %>
-
-<h3>Cancel my account</h3>
-
-<div>Unhappy? <%= button_to "Cancel my account", registration_path(resource_name), data: { confirm: "Are you sure?", turbo_confirm: "Are you sure?" }, method: :delete %></div>
-
-<%= link_to "Back", :back %>
+</div>
