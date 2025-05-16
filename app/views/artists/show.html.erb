@@ -28,6 +28,12 @@
       <turbo-frame id="follow_button_<%= @artist.id %>">
         <%= render partial: "artists/follow_button", locals: { artist: @artist } %>
       </turbo-frame>
+
+      <!--bio-->
+      <% if @artist.bio.present? %>
+        <p class="mt-3"><%= simple_format(@artist.bio) %></p>
+      <% end %>
+
     </div>
   </div>
 

@@ -67,7 +67,8 @@ artists = []
     password: "password",
     username: "#{name.downcase}_music",
     genre: Faker::Music.genre,
-    website: "https://example.com"
+    website: "https://example.com",
+    bio: Faker::Quote.matz
   )
 
   #avatar_url = Faker::Avatar.image(slug: name.downcase, size: "300x300", format: "png")
