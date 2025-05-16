@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_16_035750) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_16_040343) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -67,6 +67,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_16_035750) do
     t.string "type"
     t.string "image"
     t.text "bio"
+    t.string "instagram_url"
+    t.string "youtube_url"
+    t.string "tiktok_url"
     t.index ["email"], name: "index_artists_on_email", unique: true
     t.index ["reset_password_token"], name: "index_artists_on_reset_password_token", unique: true
   end

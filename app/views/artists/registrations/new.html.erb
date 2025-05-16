@@ -48,6 +48,21 @@
         </div>
 
         <div class="mb-3">
+          <%= f.label :instagram_url, "Instagram URL" %>
+          <%= f.text_field :instagram_url, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :youtube_url, "YouTube URL" %>
+          <%= f.text_field :youtube_url, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :tiktok_url, "TikTok URL" %>
+          <%= f.text_field :tiktok_url, class: "form-control" %>
+        </div>
+
+        <div class="mb-3">
           <%= f.label :image, "Profile Photo", class: "form-label" %>
 
           <% if f.object.image.attached? %>
