@@ -1,12 +1,63 @@
-<% content_for :title, "Editing venue" %>
+<div class="container mt-5" style="max-width: 600px;">
+  <h2 class="mb-4 text-center">
+    Edit "<strong><%= @venue.name %></strong>"
+  </h2>
+  <%= form_with model: @venue, local: true, class: "needs-validation" do |f| %>
 
-<h1>Editing venue</h1>
+    <% if @venue.errors.any? %>
+      <div class="alert alert-danger">
+        <h4><%= pluralize(@venue.errors.count, "error") %> prevented this venue from being saved:</h4>
+        <ul>
+          <% @venue.errors.full_messages.each do |msg| %>
+            <li><%= msg %></li>
+          <% end %>
+        </ul>
+      </div>
+    <% end %>
 
-<%= render "form", venue: @venue %>
+    <div class="mb-3">
+      <%= f.label :name, "Venue Name", class: "form-label" %>
+      <%= f.text_field :name, class: "form-control", placeholder: "e.g. The Blue Note", required: true %>
+    </div>
 
-<br>
+    <div class="mb-3">
+      <%= f.label :category, class: "form-label" %>
+      <%= f.select :category, ["Bar", "Jazz Club", "Nightclub", "Pub", "Cafe"], {}, class: "form-select", required: true %>
+    </div>
 
-<div>
-  <%= link_to "Show this venue", @venue %> |
-  <%= link_to "Back to venues", venues_path %>
+    <div class="mb-3">
+      <%= f.label :website, "Website (optional)", class: "form-label" %>
+      <%= f.text_field :website, class: "form-control", placeholder: "https://example.com" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :image, "Upload New Photo", class: "form-label" %>
+      <%= f.file_field :image, class: "form-control", accept: "image/*" %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :street_address, "Street Address", class: "form-label" %>
+      <%= f.text_field :street_address, class: "form-control", placeholder: "123 Main St", required: true %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :city, class: "form-label" %>
+      <%= f.text_field :city, class: "form-control", placeholder: "Chicago", required: true %>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :state, class: "form-label" %>
+      <%= f.text_field :state, class: "form-control", placeholder: "IL", maxlength: 2, required: true %>
+    </div>
+
+    <div class="mb-4">
+      <%= f.label :zip_code, "ZIP Code", class: "form-label" %>
+      <%= f.text_field :zip_code, class: "form-control", placeholder: "60614", required: true %>
+    </div>
+
+    <div class="d-grid">
+      <%= f.submit "Update Venue", class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
 </div>
