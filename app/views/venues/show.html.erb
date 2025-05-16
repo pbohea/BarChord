@@ -20,13 +20,18 @@
       </p>
 
       <!-- Trigger button -->
+      
       <button type="button" class="btn btn-outline-primary mt-3 mb-3" data-bs-toggle="modal" data-bs-target="#venueUpcomingEventsModal">
         View Upcoming Events
       </button>
 
+      <% unless owner_signed_in? %>
+
       <turbo-frame id="follow_button_<%= @venue.id %>" >
         <%= render partial: "venues/follow_button", locals: { venue: @venue } %>
       </turbo-frame>
+
+       <% end %>
 
       <!-- Modal -->
       <div class="modal fade" id="venueUpcomingEventsModal" tabindex="-1" aria-labelledby="venueUpcomingEventsLabel" aria-hidden="true">

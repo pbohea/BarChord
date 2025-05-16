@@ -9,11 +9,12 @@
           <div class="rounded-circle bg-secondary mb-2 d-flex align-items-center justify-content-center" style="width: 100px; height: 100px; color: white;">
             <i class="fas fa-user fa-lg"></i>
           </div>
-        <% end %>
+        
 
         <h5>
           <%= link_to @event.artist.username, artist_path(@event.artist), class: "text-decoration-none" %>
         </h5>
+        <% end %>
       </div>
 
       <ul class="list-group list-group-flush mb-3">
