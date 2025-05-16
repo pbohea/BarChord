@@ -18,6 +18,29 @@
       <p class="text-muted mt-3">
         <strong>Category:</strong> <%= @venue.category %>
       </p>
+
+      <!-- Trigger button -->
+      <button type="button" class="btn btn-outline-primary mt-3" data-bs-toggle="modal" data-bs-target="#venueUpcomingEventsModal">
+        View Upcoming Events
+      </button>
+
+      <!-- Modal -->
+      <div class="modal fade" id="venueUpcomingEventsModal" tabindex="-1" aria-labelledby="venueUpcomingEventsLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="venueUpcomingEventsLabel">Upcoming Events at <%= @venue.name %></h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-3">
+              <turbo-frame id="venue_upcoming_events_frame" src="<%= upcoming_events_venue_path(@venue) %>">
+                <div class="text-center text-muted">Loading events...</div>
+              </turbo-frame>
+            </div>
+          </div>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

@@ -63,6 +63,13 @@ class VenuesController < ApplicationController
     end
   end
 
+  def upcoming_events
+    @venue = Venue.find(params[:id])
+    @events = @venue.events.upcoming
+
+    render partial: "venues/upcoming_events", locals: { venue: @venue, events: @events }, layout: false
+  end
+
   private
 
   def set_venue
@@ -80,7 +87,7 @@ class VenuesController < ApplicationController
       :zip_code,
       :latitude,
       :longitude,
-      :image 
+      :image
     )
   end
 end

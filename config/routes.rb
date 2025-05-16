@@ -27,7 +27,13 @@ Rails.application.routes.draw do
 
   get "events/map", to: "events#map", defaults: { format: :json }
   #model routes
-  resources :venues
+
+  resources :venues do
+    member do
+      get :upcoming_events
+    end
+  end
+
   resources :events
 
   resources :artists, only: [:show] do
