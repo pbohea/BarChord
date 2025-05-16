@@ -2,44 +2,18 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="/">LocalLive</a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+    <!-- Toggler now opens offcanvas -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#accountMenu" aria-controls="accountMenu" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse justify-content-end" id="navbarMain">
-      <ul class="navbar-nav align-items-center">
-        <li class="nav-item">
-          <%= link_to "Home", root_path, class: "nav-link" %>
-        </li>
-
-        <% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
-          <li class="nav-item ms-2">
-            <button class="btn btn-outline-secondary" type="button" data-bs-toggle="offcanvas" data-bs-target="#accountMenu" aria-controls="accountMenu">
-              ☰ Menu
-            </button>
-          </li>
-        <% else %>
-          <li class="nav-item">
-            <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#signinModal">
-              Sign In
-            </button>
-          </li>
-
-          <li class="nav-item">
-            <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">
-              Sign Up
-            </button>
-          </li>
-        <% end %>
-      </ul>
-    </div>
   </div>
 </nav>
 
 <% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
+  <!-- Offcanvas for signed-in users -->
   <div class="offcanvas offcanvas-end" tabindex="-1" id="accountMenu" aria-labelledby="accountMenuLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="accountMenuLabel">
+    <div class="offcanvas-header justify-content-center">
+      <h5 class="offcanvas-title text-center" id="accountMenuLabel">
         <% if owner_signed_in? %>
           <%= current_owner.firstname || current_owner.email %>
         <% elsif artist_signed_in? %>
@@ -52,6 +26,8 @@
     </div>
 
     <div class="offcanvas-body">
+      <%= link_to "Home", root_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
+
       <% if owner_signed_in? %>
         <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn btn-link d-block mb-2", data: { turbo: true } %>
         <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
@@ -67,6 +43,18 @@
         <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
         <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { turbo: true } %>
       <% end %>
+    </div>
+  </div>
+<% else %>
+  <!-- Offcanvas for guest users -->
+  <div class="offcanvas offcanvas-end" tabindex="-1" id="accountMenu" aria-labelledby="accountMenuLabel">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title" id="accountMenuLabel">Welcome</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+    </div>
+    <div class="offcanvas-body d-grid gap-2">
+      <%= button_tag "Sign In", type: "button", class: "btn btn-outline-primary", data: { bs_toggle: "modal", bs_target: "#signinModal" } %>
+      <%= button_tag "Sign Up", type: "button", class: "btn btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#signupModal" } %>
     </div>
   </div>
 <% end %>
