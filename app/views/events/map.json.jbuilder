@@ -11,7 +11,7 @@ json.array! @events do |event|
   json.indoors event.indoors
 
   json.label(
-    event.artist&.username.presence || event.artist_username.presence || event.venue.name
+    event.artist&.username.presence || event.venue.name
   )
 
   json.venue do
