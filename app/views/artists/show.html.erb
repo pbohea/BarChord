@@ -48,7 +48,8 @@
         <% end %>
       <% end %>
 
-      <!-- Turbo-powered Follow Button -->
+      <!-- follow unfollow button -->
+
       <turbo-frame id="follow_button_<%= @artist.id %>">
         <%= render partial: "artists/follow_button", locals: { artist: @artist } %>
       </turbo-frame>

@@ -1,5 +1,3 @@
-<turbo-stream target="follow_button_<%= @artist.id %>" action="update">
-  <template>
-    <%= render partial: "artists/follow_button", locals: { artist: @artist } %>
-  </template>
-</turbo-stream>
+<%= turbo_stream.replace "follow_button_#{@artist.id}" do %>
+  <%= render partial: "artists/follow_button", locals: { artist: @artist } %>
+<% end %>
