@@ -11,11 +11,11 @@
 #  image                  :string
 #  instagram_url          :string
 #  lastname               :string
+#  performance_type       :string
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
 #  tiktok_url             :string
-#  type                   :string
 #  username               :string
 #  website                :string
 #  youtube_url            :string

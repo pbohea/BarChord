@@ -35,7 +35,7 @@
         </div>
 
         <div class="mb-3">
-          <%= f.label :performance_type, "Performance Type", class: "form-label" %>
+          <%= f.label :performance_type, "Type", class: "form-label" %>
           <%= f.select :performance_type,
                 ["Solo Guitar", "Solo Piano", "Band", "DJ"],
                 {},
@@ -44,7 +44,7 @@
 
         <div class="mb-3">
           <%= f.label :website, "Website", class: "form-label" %>
-          <%= f.url_field :website, class: "form-control", placeholder: "https://yourmusic.com" %>
+          <%= f.text_field :website, class: "form-control", placeholder: "https://yourmusic.com" %>
         </div>
 
         <div class="mb-3">

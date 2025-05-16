@@ -37,16 +37,20 @@
         </div>
 
       <% elsif artist_signed_in? %>
-        <%= link_to "My Events", artist_events_path, class: "btn btn-outline-primary", data: { turbo: true } %>
-        <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-outline-primary", data: { turbo: true } %>
-        <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn btn-outline-primary text-danger", data: { turbo: true } %>
-        <%= link_to "About", about_path, class: "btn btn-outline-primary" %>
+        <%= link_to "My Events", artist_events_path, class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
+        <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
+        <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn d-block btn-outline-primary mb-2 text-danger", data: { turbo: true } %>
+        <div class="mt-auto text-center">
+          <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
+        </div>
 
       <% elsif user_signed_in? %>
-        <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn btn-link d-block mb-2", data: { turbo: true } %>
-        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-link d-block mb-2", data: { turbo: true } %>
-        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-link d-block text-danger", data: { turbo: true } %>
-        <%= link_to "About", about_path, class: "btn btn-outline-primary" %>
+        <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
+        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
+        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn d-block btn-outline-primary mb-2 text-danger", data: { turbo: true } %>
+        <div class="mt-auto text-center">
+          <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
+        </div>
 
       <% end %>
     </div>
@@ -59,10 +63,11 @@
       <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
     </div>
     <div class="offcanvas-body d-grid gap-2">
-      <%= button_tag "Sign In", type: "button", class: "btn btn-outline-primary", data: { bs_toggle: "modal", bs_target: "#signinModal" } %>
-      <%= button_tag "Sign Up", type: "button", class: "btn btn-outline-secondary", data: { bs_toggle: "modal", bs_target: "#signupModal" } %>
-      <%= link_to "About", about_path, class: "btn btn-outline-primary" %>
-
+      <%= button_tag "Sign In", type: "button", class: "btn d-block btn-outline-primary mb-2", data: { bs_toggle: "modal", bs_target: "#signinModal" } %>
+      <%= button_tag "Sign Up", type: "button", class: "btn d-block btn-outline-primary mb-2", data: { bs_toggle: "modal", bs_target: "#signupModal" } %>
+        <div class="mt-auto text-center">
+          <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
+        </div>
     </div>
   </div>
 <% end %>

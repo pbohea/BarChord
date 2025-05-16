@@ -19,11 +19,11 @@ class Artists::RegistrationsController < Devise::RegistrationsController
   protected
 
   def after_sign_up_path_for(resource)
-    artist_events_path(resource)
+    artist_dashboard_path(resource)
   end
 
   def after_update_path_for(resource)
-    artist_events_path(resource)
+    artist_dashboard_path(resource)
   end
 
   private
@@ -31,5 +31,19 @@ class Artists::RegistrationsController < Devise::RegistrationsController
   def track_artist_session(artist)
     cookies.permanent.encrypted[:artist_id] = artist.id
     Current.artist = artist if defined?(Current)
+  end
+
+  def sign_up_params
+    params.require(:artist).permit(
+      :firstname, :lastname, :username, :email, :password, :password_confirmation,
+      :genre, :performance_type, :website, :instagram_url, :youtube_url, :tiktok_url, :image
+    )
+  end
+
+  def account_update_params
+    params.require(:artist).permit(
+      :firstname, :lastname, :username, :email, :password, :password_confirmation, :current_password,
+      :genre, :performance_type, :website, :instagram_url, :youtube_url, :tiktok_url, :image
+    )
   end
 end
