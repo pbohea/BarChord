@@ -1,6 +1,14 @@
 <div class="container my-4" style="max-width: 500px;">
   <div class="card shadow-sm">
     <div class="card-body text-center">
+
+      <% if @venue.image.present? %>
+        <img src="<%= url_for(@venue.image) %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+      <% else %>
+        <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; color: white;">
+          <i class="fas fa-user fa-2x"></i>
+        </div>
+      <% end %>
       <h4 class="mb-3"><%= @venue.name %></h4>
 
       <% if @venue.full_address.present? %>
@@ -20,18 +28,18 @@
       </p>
 
       <!-- Trigger button -->
-      
+
       <button type="button" class="btn btn-outline-primary mt-3 mb-3" data-bs-toggle="modal" data-bs-target="#venueUpcomingEventsModal">
         View Upcoming Events
       </button>
 
       <% unless owner_signed_in? %>
 
-      <turbo-frame id="follow_button_<%= @venue.id %>" >
-        <%= render partial: "venues/follow_button", locals: { venue: @venue } %>
-      </turbo-frame>
+        <turbo-frame id="follow_button_<%= @venue.id %>" >
+          <%= render partial: "venues/follow_button", locals: { venue: @venue } %>
+        </turbo-frame>
 
-       <% end %>
+      <% end %>
 
       <!-- Modal -->
       <div class="modal fade" id="venueUpcomingEventsModal" tabindex="-1" aria-labelledby="venueUpcomingEventsLabel" aria-hidden="true">

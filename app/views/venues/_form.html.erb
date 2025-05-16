@@ -21,7 +21,7 @@
 
     <div class="mb-3">
       <%= f.label :category, class: "form-label" %>
-      <%= f.select :category, ["Bar", "Jazz Club", "Nightclub", "Pub", "Cafe"], {}, class: "form-select", required: true %>
+      <%= f.select :category, Venue::CATEGORIES, {}, class: "form-select", required: true %>
     </div>
 
     <div class="mb-3">
@@ -29,9 +29,23 @@
       <%= f.text_field :website, class: "form-control", placeholder: "https://example.com" %>
     </div>
 
-    <div class="mb-3">
-      <%= f.label :image, "Upload Photo", class: "form-label" %>
-      <%= f.file_field :image, class: "form-control", accept: "image/*" %>
+    <div class="mb-3" data-controller="image-preview">
+      <%= f.label :image, "Profile Photo", class: "form-label" %>
+
+      <div data-image-preview-target="container" class="mb-2 d-none">
+        <img data-image-preview-target="preview" class="img-thumbnail" style="max-width: 300px;" />
+      </div>
+
+      <% if f.object.persisted? && f.object.image.attached? %>
+        <div class="mb-2">
+          <%= image_tag f.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
+        </div>
+      <% end %>
+
+      <%= f.file_field :image,
+        accept: "image/jpeg,image/png",
+        class: "form-control",
+        data: { image_preview_target: "input", action: "image-preview#previewImage" } %>
     </div>
 
     <div class="mb-3">

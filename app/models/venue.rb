@@ -25,13 +25,14 @@ class Venue < ApplicationRecord
 
   has_one_attached :image
 
-
   before_validation :normalize_website_url
 
   validates :name, :street_address, :city, :state, :zip_code, presence: true
   validates :website, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true
 
   before_save :geocode_address, if: :address_changed?
+
+  CATEGORIES = ["Bar", "Jazz Club", "Nightclub", "Pub", "Cafe"].freeze
 
   def full_address
     [street_address, city, state, zip_code].compact.join(", ")

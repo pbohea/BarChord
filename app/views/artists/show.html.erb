@@ -3,8 +3,6 @@
     <div class="card-body text-center">
       <!-- Profile Image -->
       <% if @artist.image.present? %>
-        <!--<img src="<%= @artist.image %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
-      -->
         <img src="<%= url_for(@artist.image) %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
       <% else %>
         <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; color: white;">
