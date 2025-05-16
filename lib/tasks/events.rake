@@ -1,13 +1,10 @@
 namespace :events do
-  desc "TODO"
+  desc "Scrape web for Chicago live music events"
   task pull: :environment do
-
-    pp "Running Events Search"
-
-    ENDPOINT = "https://api.anthropic.com/v1/messages"
+    puts "Running Events Search"
 
     require "json"
-    require "http"                 
+    require "http"
     require "dotenv/load"
 
     API_KEY  = ENV.fetch("ANTHROPIC_KEY")
@@ -15,41 +12,40 @@ namespace :events do
 
     payload = {
       model: "claude-3-7-sonnet-20250219",
-      max_tokens: 64000,
-      tool_choice: { type: "auto" },
+      max_tokens: 8192,
       tools: [
-        { 
-          type: "web_search_20250305",
-          name: "web_search"
-        },
-
         {
-          type:        "custom",
-          name:        "answer_json",
+          type: "web_search_20250305",
+          name: "web_search",
+          max_uses: 5
+        },
+        {
+          type: "custom",
+          name: "answer_json",
           description: "Return the final structured answer.",
           input_schema: {
             type: "object",
             properties: {
               events: {
-                type:  "array",
+                type: "array",
                 items: {
                   type: "object",
                   properties: {
                     name:        { type: "string" },
                     venue:       { type: "string" },
                     address:     { type: "string" },
-                    date:        { type: "string", format: "date" },          # YYYY-MM-DD
-                    start_time:  { type: "string", pattern: "^\\d{2}:\\d{2}$" }, # HH:MM
+                    date:        { type: "string", format: "date" },
+                    start_time:  { type: "string", pattern: "^\\d{2}:\\d{2}$" },
                     price:       { type: "string" },
                     ticket_url:  { type: "string", format: "uri" },
                     description: { type: "string" }
                   },
-                  required: %w[name venue date start_time],
+                  required: %w[name venue address date start_time],
                   additionalProperties: false
                 }
               },
               source_urls: {
-                type:  "array",
+                type: "array",
                 items: { type: "string", format: "uri" }
               }
             },
@@ -60,9 +56,8 @@ namespace :events do
       ],
       messages: [
         {
-          role:    "user",
-          content: "What are the best small live jazz events happening in Chicago this weekend? "\
-                  "Return the answer as JSON."
+          role: "user",
+          content: "Search for bars in Chicago with live music events in the next 7 days. Return the answer as JSON."
         }
       ]
     }
@@ -76,8 +71,5 @@ namespace :events do
       .post(ENDPOINT, body: JSON.dump(payload))
 
     puts JSON.pretty_generate(JSON.parse(response.body))
-
-
   end
-
 end
