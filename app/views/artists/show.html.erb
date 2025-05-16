@@ -5,7 +5,7 @@
       <% if @artist.image.present? %>
         <!--<img src="<%= @artist.image %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
       -->
-      <img src="<%= url_for(@artist.image) %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+        <img src="<%= url_for(@artist.image) %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
       <% else %>
         <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; color: white;">
           <i class="fas fa-user fa-2x"></i>
@@ -25,7 +25,7 @@
       <% end %>
 
       <!-- Turbo-powered Follow Button -->
-      <turbo-frame id="follow_button">
+      <turbo-frame id="follow_button_<%= @artist.id %>">
         <%= render partial: "artists/follow_button", locals: { artist: @artist } %>
       </turbo-frame>
     </div>
