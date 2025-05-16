@@ -28,18 +28,13 @@
 
         <div class="mb-3">
           <%= f.label :genre, "Music Genre", class: "form-label" %>
-          <%= f.select :genre,
-                ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"],
-                {},
-                class: "form-select" %>
+          <%= f.select :genre, Artist::GENRES, {}, class: "form-select" %>
         </div>
 
         <div class="mb-3">
           <%= f.label :performance_type, "Type", class: "form-label" %>
-          <%= f.select :performance_type,
-                ["Solo Guitar", "Solo Piano", "Band", "DJ"],
-                {},
-                class: "form-select" %>
+          <%= f.select :performance_type, Artist::PERFORMANCE_TYPES, {}, class: "form-select" %>
+
         </div>
 
         <div class="mb-3">

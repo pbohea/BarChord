@@ -34,12 +34,14 @@ class Artist < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :events, foreign_key: "artist_id"
-  has_many :venues, through: :events  
+  has_many :venues, through: :events
   has_many :artist_follows
   has_many :followers, through: :artist_follows, source: :user
 
   has_one_attached :image
 
+  GENRES = ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"].freeze
+  PERFORMANCE_TYPES = ["Solo Guitar", "Solo Piano", "Band", "DJ"].freeze
 
   def upcoming_events
     events.upcoming
@@ -48,5 +50,4 @@ class Artist < ApplicationRecord
   def past_events
     events.past
   end
-
 end

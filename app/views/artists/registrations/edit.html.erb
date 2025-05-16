@@ -19,11 +19,11 @@
         </div>
 
         <div class="mb-3">
-          <%= f.input :genre, collection: ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"], input_html: { class: "form-select" }, label_html: { class: "form-label" }, prompt: false %>
+          <%= f.input :genre, collection: Artist::GENRES, input_html: { class: "form-select" }, label_html: { class: "form-label" }, prompt: false %>
         </div>
 
         <div class="mb-3">
-          <%= f.input :performance_type, label: "Type", collection: ["Solo Guitar", "Solo Piano", "Band", "DJ"], input_html: { class: "form-select" }, label_html: { class: "form-label" }, prompt: false %>
+          <%= f.input :performance_type, label: "Type", collection: Artist::PERFORMANCE_TYPES, input_html: { class: "form-select" }, label_html: { class: "form-label" }, prompt: false %>
         </div>
 
         <div class="mb-3">
