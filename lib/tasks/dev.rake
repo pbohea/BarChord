@@ -40,19 +40,47 @@ task sample_data: :environment do
     )
   end
 
-  #artists
-  artists = []
-  10.times do
-    name = Faker::Name.first_name
-    artists << Artist.create!(
-      firstname: name,
-      email: "#{name.downcase}_artist@example.com",
-      password: "password",
-      username: "#{name.downcase}_music",
-      genre: Faker::Music.genre,
-      website: "https://example.com",
-    )
-  end
+  # #artists
+  # avatar_url = Faker::Avatar.image(slug: name.downcase, size: "300x300", format: "png")
+
+  # artists = []
+  # 10.times do
+  #   name = Faker::Name.first_name
+  #   artists << Artist.create!(
+  #     firstname: name,
+  #     email: "#{name.downcase}_artist@example.com",
+  #     password: "password",
+  #     username: "#{name.downcase}_music",
+  #     genre: Faker::Music.genre,
+  #     website: "https://example.com"
+  #   )
+  # end
+
+  # artists
+artists = []
+10.times do
+  name = Faker::Name.first_name
+
+  artist = Artist.create!(
+    firstname: name,
+    email: "#{name.downcase}_artist@example.com",
+    password: "password",
+    username: "#{name.downcase}_music",
+    genre: Faker::Music.genre,
+    website: "https://example.com"
+  )
+
+  #avatar_url = Faker::Avatar.image(slug: name.downcase, size: "300x300", format: "png")
+  avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
+
+  artist.image.attach(
+    io: URI.open(avatar_url),
+    filename: "#{name.downcase}.png",
+    content_type: "image/png"
+  )
+
+  artists << artist
+end
 
   #VENUES WITH NO GOOGLEMAPS API
   venues = []
