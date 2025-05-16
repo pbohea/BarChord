@@ -26,7 +26,7 @@
 
       <% if @artist.instagram_url.present? || @artist.youtube_url.present? || @artist.tiktok_url.present? %>
         <% if @artist.instagram_url.present? || @artist.youtube_url.present? || @artist.tiktok_url.present? %>
-          <div class="d-flex justify-content-center gap-3 mt-3 flex-wrap">
+          <div class="d-flex justify-content-center gap-3 mt-3 mb-3 flex-wrap">
             <% if @artist.instagram_url.present? %>
               <%= link_to @artist.instagram_url, target: "_blank", rel: "noopener", class: "text-decoration-none text-dark" do %>
                 <i class="fab fa-instagram fa-lg"></i>
