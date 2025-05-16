@@ -1,3 +1,105 @@
+<!--<div class="container my-5" style="max-width: 550px;">
+  <div class="card shadow-lg">
+    <div class="card-header bg-info text-white text-center">
+      <h4 class="mb-0">Sign Up as an Artist</h4>
+    </div>
+    <div class="card-body">
+      <%#= form_with model: resource,-->
+<!--                    as: resource_name,
+                    url: registration_path(resource_name),
+                    local: true do |f| %>
+
+        <%#= devise_error_messages! %>-->
+<!--
+        <div class="mb-3">
+          <%#= f.label :firstname, class: "form-label" %>-->
+<%#= f.text_field :firstname, class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :lastname, class: "form-label" %>-->
+<%#= f.text_field :lastname, class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :username, "Display Name", class: "form-label" %>-->
+<%#= f.text_field :username, class: "form-control", placeholder: "How your name will appear to users" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :genre, "Music Genre", class: "form-label" %>-->
+<%#= f.select :genre,
+                ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"],
+                {},
+                class: "form-select" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :performance_type, "Type", class: "form-label" %>-->
+<%#= f.select :performance_type,
+                ["Solo Guitar", "Solo Piano", "Band", "DJ"],
+                {},
+                class: "form-select" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :website, "Website", class: "form-label" %>-->
+<%#= f.text_field :website, class: "form-control", placeholder: "https://yourmusic.com" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :instagram_url, "Instagram URL" %>-->
+<%#= f.text_field :instagram_url, class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :youtube_url, "YouTube URL" %>-->
+<%#= f.text_field :youtube_url, class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :tiktok_url, "TikTok URL" %>-->
+<%#= f.text_field :tiktok_url, class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :image, "Profile Photo", class: "form-label" %>-->
+<!---->
+<%# if f.object.persisted? && f.object.image.attached? %>
+<!--            <div class="mb-2">-->
+<%#= image_tag f.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
+<!--            </div>-->
+<%# end %>
+<!---->
+<%#= f.file_field :image,
+        accept: "image/jpeg,image/png",
+        class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :email, class: "form-label" %>-->
+<%#= f.email_field :email, class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :password, class: "form-label" %>-->
+<%#= f.password_field :password, class: "form-control" %>
+<!--        </div>
+
+        <div class="mb-3">
+          <%#= f.label :password_confirmation, class: "form-label" %>-->
+<%#= f.password_field :password_confirmation, class: "form-control" %>
+<!--        </div>
+
+        <div class="d-grid">
+          <%#= f.submit "Create Account", class: "btn btn-info" %>-->
+<!--        </div>-->
+<%# end %>
+<!--    </div>
+  </div>
+</div>
+-->
+
 <div class="container my-5" style="max-width: 550px;">
   <div class="card shadow-lg">
     <div class="card-header bg-info text-white text-center">
@@ -62,8 +164,12 @@
           <%= f.text_field :tiktok_url, class: "form-control" %>
         </div>
 
-        <div class="mb-3">
+        <div class="mb-3" data-controller="image-preview">
           <%= f.label :image, "Profile Photo", class: "form-label" %>
+
+          <div data-image-preview-target="container" class="mb-2 d-none">
+            <img data-image-preview-target="preview" class="img-thumbnail" style="max-width: 300px;" />
+          </div>
 
           <% if f.object.persisted? && f.object.image.attached? %>
             <div class="mb-2">
@@ -73,7 +179,8 @@
 
           <%= f.file_field :image,
         accept: "image/jpeg,image/png",
-        class: "form-control" %>
+        class: "form-control",
+        data: { image_preview_target: "input", action: "image-preview#previewImage" } %>
         </div>
 
         <div class="mb-3">
