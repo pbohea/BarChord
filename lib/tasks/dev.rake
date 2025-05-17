@@ -71,7 +71,8 @@ artists = []
     bio: Faker::Quote.matz,
     instagram_url: "https://www.google.com",
     tiktok_url: "https://www.google.com",
-    youtube_url: "https://www.google.com"
+    youtube_url: "https://www.google.com",
+    spotify_url: "https://www.google.com"
   )
 
   #avatar_url = Faker::Avatar.image(slug: name.downcase, size: "300x300", format: "png")

@@ -36,14 +36,14 @@ class Artists::RegistrationsController < Devise::RegistrationsController
   def sign_up_params
     params.require(:artist).permit(
       :firstname, :lastname, :username, :email, :password, :password_confirmation,
-      :genre, :performance_type, :website, :instagram_url, :youtube_url, :tiktok_url, :image
+      :genre, :performance_type, :website, :instagram_url, :youtube_url, :tiktok_url, :spotify_url, :image
     )
   end
 
   def account_update_params
     params.require(:artist).permit(
       :firstname, :lastname, :username, :email, :password, :password_confirmation, :current_password,
-      :genre, :performance_type, :website, :instagram_url, :youtube_url, :tiktok_url, :image
+      :genre, :performance_type, :website, :instagram_url, :youtube_url, :tiktok_url, :spotify_url, :image
     )
   end
 end

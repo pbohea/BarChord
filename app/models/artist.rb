@@ -15,6 +15,7 @@
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
+#  spotify_url            :string
 #  tiktok_url             :string
 #  username               :string
 #  website                :string

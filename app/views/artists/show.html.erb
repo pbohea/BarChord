@@ -42,6 +42,15 @@
                 <i class="fab fa-tiktok fa-lg"></i>
               <% end %>
             <% end %>
+
+            <% if @artist.spotify_url.present? %>
+              <%= link_to @artist.spotify_url, target: "_blank", rel: "noopener", class: "text-decoration-none text-dark" do %>
+                <i class="fab fa-spotify fa-lg"></i>
+              <% end %>
+            <% end %>
+
+
+
           </div>
         <% end %>
       <% end %>
