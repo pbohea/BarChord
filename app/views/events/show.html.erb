@@ -21,11 +21,10 @@
               class: "text-decoration-none fw-bold text-dark",
               data: { turbo_frame: "_top" } %>
       </h5>
-
     </div>
 
     <!-- Event Details List -->
-    <ul class="list-group list-group-flush mb-3">
+    <ul class="list-group list-group-flush mb-0">
       <li class="list-group-item">
         <strong>
           <%= link_to @event.venue.name, venue_path(@event.venue),
@@ -58,11 +57,17 @@
         <%= @event.cover? ? number_to_currency(@event.cover_amount || 5) : "No Cover" %>
       </li>
     </ul>
-
-    <div class="d-grid">
-      <%= link_to "Go to event", @event.venue.website, class: "btn btn-primary", target: "_blank", rel: "noopener", data: { turbo: false } if @event.venue.website.present? %>
-    </div>
   </div>
+
+  <% if @event.venue.website.present? %>
+    <div class="d-grid mt-3">
+      <%= link_to "Go to event", @event.venue.website,
+            class: "btn btn-primary",
+            target: "_blank",
+            rel: "noopener",
+            data: { turbo: false } %>
+    </div>
+  <% end %>
 </div>
 
 <!-- Venue Modal -->
