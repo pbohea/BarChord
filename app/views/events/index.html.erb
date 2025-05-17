@@ -1,50 +1,64 @@
 <% content_for :title, "Upcoming Events Near You" %>
 
-<div class="container my-4" style="max-width: 500px;">
+<div class="container my-4" style="max-width: 540px;">
   <% @events.each do |event| %>
     <% venue = event.venue %>
-    <div class="card shadow-sm mb-4">
-      <div class="card-body text-center">
+    <% artist = event.artist %>
 
-        <!-- Venue Name -->
-        <h4 class="mb-3">
-          <%= link_to venue.name, venue_path(venue), class: "text-decoration-none" %>
-        </h4>
+    <div class="card mb-4 shadow border-0 position-relative">
+      <div class="card-body position-relative pe-5">
+        <!-- 🎤 Artist Image + Name (Clickable) -->
+        <% if artist&.image&.attached? %>
+          <div style="position: absolute; top: 12px; right: 12px; width: 100px; text-align: center; z-index: 1;">
+            <%= link_to artist_path(artist), data: { turbo_frame: "_top" } do %>
+              <%= image_tag artist.image.variant(resize_to_fill: [80, 80]),
+                    class: "rounded-circle shadow",
+                    style: "object-fit: cover;" %>
+            <% end %>
 
-        <!-- Venue Address -->
+            <div class="mt-1 text-muted small fw-semibold">
+              <%= link_to artist.username, artist_path(artist),
+                    class: "text-decoration-none text-reset",
+                    data: { turbo_frame: "_top" } %>
+            </div>
+
+            <div class="mt-1 text-muted small fw-normal mb-3">
+              <%= event.category %>
+            </div>
+          </div>
+        <% end %>
+
+        <!-- 📍 Venue Name -->
+        <div class="mb-2">
+          <p class="mb-0">
+            <%= link_to venue.name, venue_path(venue),
+                  class: "fw-bold fs-5 text-decoration-none text-primary",
+                  data: { turbo_frame: "_top" } %>
+          </p>
+        </div>
+
+        <!-- 📆 Date & Time -->
+        <div class="mt-3 mb-3">
+          <p class="mb-0 text-muted small fw-semibold">
+            <%= event.date.strftime("%A, %B %-d") %><br>
+            <%= event.start_time.strftime("%-I:%M %p") %> – <%= event.end_time.strftime("%-I:%M %p") %>
+          </p>
+        </div>
+
+        <!-- 🗺️ Map Link -->
         <% if venue.full_address.present? %>
-          <p class="mb-2">
-            <%= link_to venue.full_address, "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}", target: "_blank", class: "text-decoration-none" %>
-          </p>
+          <div class="position-relative" style="z-index: 2;">
+            <%= link_to "Map",
+        "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}",
+        class: "btn btn-sm btn-outline-primary",
+        target: "_blank",
+        data: { turbo: false } %>
+          </div>
         <% end %>
 
-        <!-- Artist -->
-        <% if event.artist.present? %>
-          <p class="mb-2">
-            <%= link_to event.artist.username, artist_path(event.artist), class: "btn btn-sm btn-outline-primary", data: { turbo_frame: "_top" } %>
-          </p>
-        <% else %>
-          <p class="mb-2">
-            <span class="badge bg-secondary"><%= event.artist_name %></span>
-          </p>
-        <% end %>
-
-        <!-- Category -->
-        <p class="text-muted">
-          <strong>Category:</strong> <%= event.category %>
-        </p>
-
-        <!-- Date and Time -->
-        <p class="mb-2">
-          <strong>
-            <%= event.date == Date.today ? "Today" : event.date.strftime("%B %-d, %Y") %>
-            @ <%= event.start_time.strftime("%-I:%M %p") %>
-            - <%= event.end_time.strftime("%-I:%M %p") %>
-          </strong>
-        </p>
-
-        <!-- View Event Button -->
-        <%= link_to "View Event", event_path(event), class: "btn btn-outline-dark btn-sm mt-2" %>
+        <%= link_to event_path(event),
+        class: "stretched-link position-absolute",
+        style: "inset: 0; z-index: 0;" do %><% end %>
       </div>
     </div>
   <% end %>
