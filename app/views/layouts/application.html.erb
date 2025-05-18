@@ -17,7 +17,6 @@
     <% end %>
     <%= javascript_importmap_tags %>
     <%= yield :head %>
-
   </head>
 
   <body>
@@ -26,7 +25,11 @@
 
     <div id="flash-overlay" style="position: fixed; top: 1rem; left: 50%; transform: translateX(-50%); z-index: 1050; width: auto; max-width: 90%;">
       <% flash.each do |key, message| %>
-        <div class="alert alert-<%= key == "notice" ? "success" : "danger" %> alert-dismissible fade show text-center shadow" role="alert">
+        <div
+          class="alert alert-<%= key == "notice" ? "success" : "danger" %> alert-dismissible fade show text-center shadow"
+          role="alert"
+          data-controller="flash"
+          data-flash-timeout-value="3000">
           <%= message %>
           <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
         </div>
@@ -34,20 +37,8 @@
     </div>
 
     <div class="container mt-3">
-
       <%= yield %>
+    </div> <!-- ✅ This was missing -->
 
-      
-      <script>
-        document.addEventListener("DOMContentLoaded", function() {
-          const alerts = document.querySelectorAll('.alert');
-          alerts.forEach(function(alert) {
-            setTimeout(() => {
-              const fade = new bootstrap.Alert(alert);
-              fade.close();
-            }, 3000);
-          });
-        });
-      </script>
-    </body>
-  </html>
+  </body>
+</html>

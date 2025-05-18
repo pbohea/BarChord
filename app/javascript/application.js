@@ -11,3 +11,23 @@ window.jQuery = jquery;
 window.$ = jquery;
 import Rails from "@rails/ujs"
 Rails.start();
+
+document.addEventListener("turbo:load", () => {
+  document.querySelectorAll('.alert').forEach((alert) => {
+    setTimeout(() => {
+      alert.classList.remove('show')
+      setTimeout(() => alert.remove(), 300)
+    }, 3000)
+  });
+});
+
+document.addEventListener("turbo:frame-render", (event) => {
+  const frame = event.target
+  if (frame.id && frame.id.startsWith("follow_button_")) {
+    const btn = frame.querySelector("form button")
+    if (btn) {
+      btn.classList.add("btn-follow-animate")
+      setTimeout(() => btn.classList.remove("btn-follow-animate"), 200)
+    }
+  }
+})
