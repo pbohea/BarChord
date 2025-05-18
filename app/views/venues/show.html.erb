@@ -45,8 +45,8 @@
           <li class="list-group-item text-center">
             <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
             <small>
-              <%= event.category %> — <%= event.start_time.strftime("%-I:%M %p") %><br>
-              at <%= link_to event.venue.name, venue_path(event.venue), class: "text-decoration-none" %>
+            <%= link_to event.artist.username, artist_path(event.artist) %> - <%= event.category %> <br>
+              <%= event.start_time.strftime("%-I:%M %p") %>
             </small>
           </li>
         <% end %>
