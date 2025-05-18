@@ -2,12 +2,15 @@
   <div class="card shadow-sm">
     <div class="card-body text-center">
 
-      <!-- Venue Name First -->
-      <h2 class="fw-bold text-center fs-2 mb-2">
-        <%= link_to @event.venue.name, venue_path(@event.venue),
-    class: "text-decoration-none text-primary" %>
-      </h2>
-      <small class="text-muted d-block mb-3">(<%= @event.venue.category %>)</small>
+      <!-- Venue Name Button at Top -->
+      <div class="d-flex justify-content-center">
+        <button type="button"
+            class="btn btn-outline-primary mb-3"
+            data-bs-toggle="modal"
+            data-bs-target="#venueShowModal">
+          <%= @event.venue.name %>
+        </button>
+      </div>
 
       <!-- Artist Image -->
       <% if @event.artist&.image&.attached? %>
@@ -62,4 +65,16 @@
             data: { turbo: false } %>
     </div>
   <% end %>
+
+  <!-- Modal -->
+  <div class="modal fade" id="venueShowModal" tabindex="-1" aria-labelledby="venueShowLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <turbo-frame id="venue_show_frame" src="<%= venue_path(@event.venue) %>">
+          <div class="text-center text-muted p-4">Loading venue...</div>
+        </turbo-frame>
+      </div>
+    </div>
+  </div>
+
 </div>

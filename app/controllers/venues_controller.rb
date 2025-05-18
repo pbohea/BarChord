@@ -8,12 +8,17 @@ class VenuesController < ApplicationController
 
   # GET /venues/1 or /venues/1.json
   def show
+    @upcoming_events = @venue.events.upcoming
     @venue = Venue.find(params[:id])
 
-    if turbo_frame_request?
-      render partial: "venues/modal", layout: false
-    else
-      render :show
+    respond_to do |format|
+      format.html do
+        if turbo_frame_request?
+          render partial: "venues/show", locals: { venue: @venue }
+        else
+          render :show
+        end
+      end
     end
   end
 

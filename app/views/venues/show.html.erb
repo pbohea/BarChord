@@ -27,12 +27,6 @@
         <strong>Category:</strong> <%= @venue.category %>
       </p>
 
-      <!-- Trigger button -->
-
-      <button type="button" class="btn btn-outline-primary mt-3 mb-3" data-bs-toggle="modal" data-bs-target="#venueUpcomingEventsModal">
-        View Upcoming Events
-      </button>
-
       <% unless owner_signed_in? %>
 
         <turbo-frame id="follow_button_<%= @venue.id %>" >
@@ -40,24 +34,26 @@
         </turbo-frame>
 
       <% end %>
-
-      <!-- Modal -->
-      <div class="modal fade" id="venueUpcomingEventsModal" tabindex="-1" aria-labelledby="venueUpcomingEventsLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered">
-          <div class="modal-content">
-            <div class="modal-header">
-              <h5 class="modal-title" id="venueUpcomingEventsLabel">Upcoming Events at <%= @venue.name %></h5>
-              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-            </div>
-            <div class="modal-body p-3">
-              <turbo-frame id="venue_upcoming_events_frame" src="<%= upcoming_events_venue_path(@venue) %>">
-                <div class="text-center text-muted">Loading events...</div>
-              </turbo-frame>
-            </div>
-          </div>
-        </div>
-      </div>
-
     </div>
   </div>
+  <div class="mt-4">
+    <h5 class="text-center text-muted mb-3">Upcoming Events</h5>
+
+    <% if @upcoming_events.any? %>
+      <ul class="list-group">
+        <% @upcoming_events.each do |event| %>
+          <li class="list-group-item text-center">
+            <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
+            <small>
+              <%= event.category %> — <%= event.start_time.strftime("%-I:%M %p") %><br>
+              at <%= link_to event.venue.name, venue_path(event.venue), class: "text-decoration-none" %>
+            </small>
+          </li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="text-muted text-center">No upcoming events.</p>
+    <% end %>
+  </div>
+
 </div>
