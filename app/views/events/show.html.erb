@@ -36,7 +36,7 @@
     <!-- Event Details List -->
     <ul class="list-group list-group-flush mb-0">
       <li class="list-group-item text-muted">
-        <%= @event.category %>
+        <%= @event.description.presence || @event.category %>
       </li>
 
       <li class="list-group-item">
