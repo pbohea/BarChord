@@ -2,42 +2,41 @@
   <div class="card shadow-sm">
     <div class="card-body text-center">
 
+      <!-- Venue Name First -->
+      <h2 class="fw-bold text-center fs-2 mb-2">
+        <%= link_to @event.venue.name, venue_path(@event.venue),
+              class: "text-decoration-none text-primary",
+              data: {
+                turbo_frame: "venue_modal_frame",
+                bs_toggle: "modal",
+                bs_target: "#venueModal"
+              } %>
+      </h2>
+      <small class="text-muted d-block mb-3">(<%= @event.venue.category %>)</small>
+
       <!-- Artist Image -->
       <% if @event.artist&.image&.attached? %>
         <%= link_to artist_path(@event.artist), data: { turbo_frame: "_top" } do %>
-          <%= image_tag @event.artist.image.variant(resize_to_fill: [120, 120]),
-                class: "rounded-circle mb-3 shadow",
+          <%= image_tag @event.artist.image.variant(resize_to_fill: [80, 80]),
+                class: "rounded-circle mb-2 shadow",
                 style: "object-fit: cover;" %>
         <% end %>
       <% else %>
-        <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center mx-auto" style="width: 120px; height: 120px; color: white;">
-          <i class="fas fa-user fa-2x"></i>
+        <div class="rounded-circle bg-secondary mb-2 d-flex align-items-center justify-content-center mx-auto" style="width: 80px; height: 80px; color: white;">
+          <i class="fas fa-user fa-lg"></i>
         </div>
       <% end %>
 
       <!-- Artist Name -->
-      <h5>
+      <p class="mb-0">
         <%= link_to @event.artist.username, artist_path(@event.artist),
-              class: "text-decoration-none fw-bold text-dark",
+              class: "text-decoration-none text-primary fw-semibold",
               data: { turbo_frame: "_top" } %>
-      </h5>
+      </p>
     </div>
 
     <!-- Event Details List -->
     <ul class="list-group list-group-flush mb-0">
-      <li class="list-group-item">
-        <strong>
-          <%= link_to @event.venue.name, venue_path(@event.venue),
-                class: "text-decoration-none",
-                data: {
-                  turbo_frame: "venue_modal_frame",
-                  bs_toggle: "modal",
-                  bs_target: "#venueModal"
-                } %>
-        </strong>
-        <small class="text-muted d-block">(<%= @event.venue.category %>)</small>
-      </li>
-
       <li class="list-group-item text-muted">
         <%= @event.category %>
       </li>
