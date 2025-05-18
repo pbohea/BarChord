@@ -57,35 +57,35 @@ task sample_data: :environment do
   # end
 
   # artists
-artists = []
-10.times do
-  name = Faker::Name.first_name
+  artists = []
+  10.times do
+    name = Faker::Name.first_name
 
-  artist = Artist.create!(
-    firstname: name,
-    email: "#{name.downcase}_artist@example.com",
-    password: "password",
-    username: "#{name.downcase}_music",
-    genre: Faker::Music.genre,
-    website: "https://example.com",
-    bio: Faker::Quote.matz,
-    instagram_url: "https://www.google.com",
-    tiktok_url: "https://www.google.com",
-    youtube_url: "https://www.google.com",
-    spotify_url: "https://www.google.com"
-  )
+    artist = Artist.create!(
+      firstname: name,
+      email: "#{name.downcase}_artist@example.com",
+      password: "password",
+      username: "#{name.downcase}_music",
+      genre: Faker::Music.genre,
+      website: "https://example.com",
+      bio: Faker::Quote.matz,
+      instagram_url: "https://www.google.com",
+      tiktok_url: "https://www.google.com",
+      youtube_url: "https://www.google.com",
+      spotify_url: "https://www.google.com",
+    )
 
-  #avatar_url = Faker::Avatar.image(slug: name.downcase, size: "300x300", format: "png")
-  avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
+    #avatar_url = Faker::Avatar.image(slug: name.downcase, size: "300x300", format: "png")
+    avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
 
-  artist.image.attach(
-    io: URI.open(avatar_url),
-    filename: "#{name.downcase}.png",
-    content_type: "image/png"
-  )
+    artist.image.attach(
+      io: URI.open(avatar_url),
+      filename: "#{name.downcase}.png",
+      content_type: "image/png",
+    )
 
-  artists << artist
-end
+    artists << artist
+  end
 
   #VENUES WITH NO GOOGLEMAPS API
   venues = []
@@ -204,7 +204,7 @@ end
   ]
 
   manual_venues.each do |attrs|
-    venues << Venue.create!(
+    venue = Venue.create!(
       name: attrs[:name],
       street_address: attrs[:street_address],
       city: attrs[:city],
@@ -216,6 +216,17 @@ end
       longitude: attrs[:longitude],
       owner_id: owners.sample.id,
     )
+
+    # Generate unique avatar image
+    avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
+
+    venue.image.attach(
+      io: URI.open(avatar_url),
+      filename: "#{attrs[:name].parameterize}.png",
+      content_type: "image/png",
+    )
+
+    venues << venue
   end
 
   allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
