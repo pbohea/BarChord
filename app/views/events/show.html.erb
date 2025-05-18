@@ -4,13 +4,11 @@
 
       <!-- Venue Name First -->
       <h2 class="fw-bold text-center fs-2 mb-2">
-        <%= link_to @event.venue.name, venue_path(@event.venue),
-              class: "text-decoration-none text-primary",
-              data: {
-                turbo_frame: "venue_modal_frame",
-                bs_toggle: "modal",
-                bs_target: "#venueModal"
-              } %>
+        <%= link_to @event.venue.name, @event.venue.website,
+        class: "text-decoration-none text-primary",
+        target: "_blank",            
+        rel: "noopener",            
+        data: { turbo: false } %>   
       </h2>
       <small class="text-muted d-block mb-3">(<%= @event.venue.category %>)</small>
 
@@ -67,13 +65,4 @@
             data: { turbo: false } %>
     </div>
   <% end %>
-</div>
-
-<!-- Venue Modal -->
-<div class="modal fade" id="venueModal" tabindex="-1" aria-labelledby="venueModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <turbo-frame id="venue_modal_frame"></turbo-frame>
-    </div>
-  </div>
 </div>
