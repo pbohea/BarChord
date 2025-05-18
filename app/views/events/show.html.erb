@@ -4,11 +4,8 @@
 
       <!-- Venue Name First -->
       <h2 class="fw-bold text-center fs-2 mb-2">
-        <%= link_to @event.venue.name, @event.venue.website,
-        class: "text-decoration-none text-primary",
-        target: "_blank",            
-        rel: "noopener",            
-        data: { turbo: false } %>   
+        <%= link_to @event.venue.name, venue_path(@event.venue),
+    class: "text-decoration-none text-primary" %>
       </h2>
       <small class="text-muted d-block mb-3">(<%= @event.venue.category %>)</small>
 
