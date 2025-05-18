@@ -38,6 +38,7 @@ Rails.application.routes.draw do
 
   resources :artists, only: [:show] do
     get :events, on: :member
+    get :search, on: :collection
   end
 
   resources :artist_follows, only: [:create, :destroy]

@@ -1,7 +1,11 @@
 class ArtistsController < ApplicationController
   def search
-    artists = Artist.where("username ILIKE ?", "%#{params[:q]}%").limit(10)
-    render json: artists.map { |a| { id: a.id, text: a.username } }
+    query = params[:query].to_s.strip.downcase
+    artists = Artist.where("LOWER(username) LIKE ?", "%#{query}%")
+                    .select(:id, :username)
+                    .limit(5)
+
+    render json: artists
   end
 
   def show
