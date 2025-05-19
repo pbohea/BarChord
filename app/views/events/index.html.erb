@@ -5,9 +5,13 @@
     <% venue = event.venue %>
     <% artist = event.artist %>
 
-    <div class="card mb-4 shadow border-0 position-relative">
+    <div class="card mb-4 shadow border-0 position-relative"
+         data-controller="event-card"
+         data-event-card-url-value="<%= event_path(event) %>"
+         data-action="click->event-card#goToEvent">
+
       <div class="card-body position-relative pe-5">
-        <!-- artist image and name -->
+        <!-- 🎤 Artist Image + Name -->
         <% if artist&.image&.attached? %>
           <div style="position: absolute; top: 12px; right: 12px; width: 100px; text-align: center; z-index: 1;">
             <%= link_to artist_path(artist), data: { turbo_frame: "_top" } do %>
@@ -28,8 +32,8 @@
           </div>
         <% end %>
 
-        <!-- venue -->
-        <div class="mb-2">
+        <!-- 📍 Venue Name -->
+        <div class="mb-2 position-relative" style="z-index: 2;">
           <p class="mb-0">
             <%= link_to venue.name, venue_path(venue),
                   class: "fw-bold fs-5 text-decoration-none text-primary",
@@ -37,7 +41,7 @@
           </p>
         </div>
 
-        <!-- date& time -->
+        <!-- 📆 Date & Time -->
         <div class="mt-3 mb-3">
           <p class="mb-0 text-muted small fw-semibold">
             <%= event.date.strftime("%A, %B %-d") %><br>
@@ -45,20 +49,16 @@
           </p>
         </div>
 
-        <!-- map -->
+        <!-- 🗺️ Map Link -->
         <% if venue.full_address.present? %>
           <div class="position-relative" style="z-index: 2;">
             <%= link_to "Map",
-        "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}",
-        class: "btn btn-sm btn-outline-primary",
-        target: "_blank",
-        data: { turbo: false } %>
+                        "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}",
+                        class: "btn btn-sm btn-outline-primary",
+                        target: "_blank",
+                        data: { turbo: false } %>
           </div>
         <% end %>
-
-        <%= link_to event_path(event),
-        class: "stretched-link position-absolute",
-        style: "inset: 0; z-index: 0;" do %><% end %>
       </div>
     </div>
   <% end %>
