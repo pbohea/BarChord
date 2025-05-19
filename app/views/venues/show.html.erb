@@ -30,7 +30,7 @@
       <% unless owner_signed_in? %>
 
         <turbo-frame id="follow_button_<%= @venue.id %>" >
-          <%= render partial: "venues/follow_button", locals: { venue: @venue } %>
+          <%= render partial: "venues/follow_button_new", locals: { venue: @venue } %>
         </turbo-frame>
 
       <% end %>
@@ -58,5 +58,23 @@
     <% else %>
       <p class="text-muted text-center">No upcoming events.</p>
     <% end %>
+  </div>
+</div>
+
+<div class="modal fade" id="authModal" tabindex="-1" aria-labelledby="authModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="authModalLabel">Authentication Required</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body text-center">
+        <p class="mb-3">Sign in or sign up to add this venue to your favorites.</p>
+        <div class="d-flex justify-content-center gap-2">
+          <%= link_to "Sign In", new_user_session_path, class: "btn btn-outline-primary", data: { turbo: false } %>
+          <%= link_to "Sign Up", new_user_registration_path, class: "btn btn-primary", data: { turbo: false } %>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
