@@ -24,7 +24,7 @@
       <% end %>
 
       <p class="text-muted mt-3">
-        <strong>Category:</strong> <%= @venue.category %>
+         <%= @venue.category %>
       </p>
 
       <% unless owner_signed_in? %>
@@ -36,18 +36,21 @@
       <% end %>
     </div>
   </div>
-  
+
   <div class="mt-4">
     <h5 class="text-center text-muted mb-3">Upcoming Events</h5>
 
     <% if @upcoming_events.any? %>
       <ul class="list-group">
         <% @upcoming_events.each do |event| %>
-          <li class="list-group-item text-center">
+          <li class="list-group-item text-center p-3" style="cursor: pointer;" onclick="window.location='<%= event_path(event) %>'">
             <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
             <small>
-            <%= link_to event.artist.username, artist_path(event.artist) %> - <%= event.category %> <br>
-              <%= event.start_time.strftime("%-I:%M %p") %>
+              <%= event.start_time.strftime("%-I:%M %p") %><br>
+ 
+              <%= link_to event.artist.username, artist_path(event.artist),
+                    class: "text-decoration-none",
+                    onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
             </small>
           </li>
         <% end %>
@@ -56,5 +59,4 @@
       <p class="text-muted text-center">No upcoming events.</p>
     <% end %>
   </div>
-
 </div>
