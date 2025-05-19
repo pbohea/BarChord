@@ -10,8 +10,7 @@
         </div>
       <% end %>
 
-      <!-- Display Name -->
-      <!-- Display Name -->
+      ]      <!-- Display Name -->
       <% if @artist.website.present? %>
         <h4 class="mb-1">
           <%= link_to @artist.username, @artist.website, target: "_blank", rel: "noopener", class: "text-decoration-none" %>
@@ -71,14 +70,18 @@
     <% if @upcoming_events.any? %>
       <ul class="list-group">
         <% @upcoming_events.each do |event| %>
-          <li class="list-group-item text-center p-3" style="cursor: pointer;" onclick="window.location='<%= event_path(event) %>'">
+          <li class="list-group-item text-center p-3"
+        data-controller="event-card"
+        data-event-card-url-value="<%= event_path(event) %>"
+        data-action="click->event-card#goToEvent"
+            style="cursor: pointer;">
             <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
             <small>
               <%= event.start_time.strftime("%-I:%M %p") %><br>
               at 
               <%= link_to event.venue.name, venue_path(event.venue),
-                    class: "text-decoration-none",
-                    onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+              class: "text-decoration-none",
+              onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
             </small>
           </li>
         <% end %>
