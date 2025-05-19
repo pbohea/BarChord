@@ -9,22 +9,23 @@
           <i class="fas fa-user fa-2x"></i>
         </div>
       <% end %>
-      <h4 class="mb-3"><%= @venue.name %></h4>
-
+      <% if @venue.website.present? %>
+        <p>
+          <%= link_to @venue.name, @venue.website, target: "_blank", rel: "noopener", class: "btn btn-sm btn-outline-dark" %>
+        </p>
+      <% else %>
+        <p>
+          <%= @venue.name %>
+        </p>
+      <% end %>
       <% if @venue.full_address.present? %>
         <p class="mb-2">
           <%= @venue.full_address %>
         </p>
       <% end %>
 
-      <% if @venue.website.present? %>
-        <p>
-          <%= link_to "Visit Website", @venue.website, target: "_blank", rel: "noopener", class: "btn btn-sm btn-outline-dark" %>
-        </p>
-      <% end %>
-
       <p class="text-muted mt-3">
-         <%= @venue.category %>
+        <%= @venue.category %>
       </p>
 
       <% unless owner_signed_in? %>
@@ -47,7 +48,7 @@
             <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
             <small>
               <%= event.start_time.strftime("%-I:%M %p") %><br>
- 
+
               <%= link_to event.artist.username, artist_path(event.artist),
                     class: "text-decoration-none",
                     onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
