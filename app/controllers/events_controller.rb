@@ -55,7 +55,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to events_path, status: :see_other, notice: "Event was successfully destroyed." }
-      format.json { head :no_content }
+      #format.json { head :no_content }
     end
   end
 
@@ -64,6 +64,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.json  
+      format.html
     end
   end
 
