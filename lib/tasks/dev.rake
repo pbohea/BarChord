@@ -228,7 +228,7 @@ task sample_data: :environment do
 
     venues << venue
   end
-#test
+
   allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
   # events
   10.times do

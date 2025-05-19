@@ -26,31 +26,28 @@
         <% if @artist.instagram_url.present? || @artist.youtube_url.present? || @artist.tiktok_url.present? %>
           <div class="d-flex justify-content-center gap-3 mt-3 mb-3 flex-wrap">
             <% if @artist.instagram_url.present? %>
-              <%= link_to @artist.instagram_url, target: "_blank", rel: "noopener", class: "text-decoration-none text-dark" do %>
-                <i class="fab fa-instagram fa-lg"></i>
+              <%= link_to @artist.instagram_url, target: "_blank", rel: "noopener", class: "text-decoration-none" do %>
+                <i class="fab fa-instagram fa-lg" style="color: #E1306C;"></i>
               <% end %>
             <% end %>
 
             <% if @artist.youtube_url.present? %>
-              <%= link_to @artist.youtube_url, target: "_blank", rel: "noopener", class: "text-decoration-none text-dark" do %>
-                <i class="fab fa-youtube fa-lg"></i>
+              <%= link_to @artist.youtube_url, target: "_blank", rel: "noopener", class: "text-decoration-none" do %>
+                <i class="fab fa-youtube fa-lg" style="color: #FF0000;"></i>
               <% end %>
             <% end %>
 
             <% if @artist.tiktok_url.present? %>
-              <%= link_to @artist.tiktok_url, target: "_blank", rel: "noopener", class: "text-decoration-none text-dark" do %>
-                <i class="fab fa-tiktok fa-lg"></i>
+              <%= link_to @artist.tiktok_url, target: "_blank", rel: "noopener", class: "text-decoration-none" do %>
+                <i class="fab fa-tiktok fa-lg" style="color: #000000;"></i>
               <% end %>
             <% end %>
 
             <% if @artist.spotify_url.present? %>
-              <%= link_to @artist.spotify_url, target: "_blank", rel: "noopener", class: "text-decoration-none text-dark" do %>
-                <i class="fab fa-spotify fa-lg"></i>
+              <%= link_to @artist.spotify_url, target: "_blank", rel: "noopener", class: "text-decoration-none" do %>
+                <i class="fab fa-spotify fa-lg" style="color: #1DB954;"></i>
               <% end %>
             <% end %>
-
-
-
           </div>
         <% end %>
       <% end %>
