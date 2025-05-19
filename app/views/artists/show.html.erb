@@ -71,11 +71,14 @@
     <% if @upcoming_events.any? %>
       <ul class="list-group">
         <% @upcoming_events.each do |event| %>
-          <li class="list-group-item text-center">
+          <li class="list-group-item text-center p-3" style="cursor: pointer;" onclick="window.location='<%= event_path(event) %>'">
             <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
             <small>
               <%= event.start_time.strftime("%-I:%M %p") %><br>
-              at <%= link_to event.venue.name, venue_path(event.venue), class: "text-decoration-none" %>
+              at 
+              <%= link_to event.venue.name, venue_path(event.venue),
+                    class: "text-decoration-none",
+                    onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
             </small>
           </li>
         <% end %>
