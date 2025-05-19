@@ -1,36 +1,3 @@
-<!--<div class="d-flex justify-content-center">
-  <div class="text-center">
-    <%# if user_signed_in? %>-->
-      <%# follow = current_user.artist_follows.find_by(artist_id: artist.id) %>
-<!---->
-      <%# if follow %>
-        <%#= button_to "Unfollow", artist_follow_path(follow),
-                      method: :delete,
-                      class: "btn btn-outline-danger btn-sm",
-                      data: { turbo_confirm: "Are you sure?" } %>
-      <%# else %>
-        <%#= button_to "Follow", artist_follows_path(artist_id: artist.id),
-                      method: :post,
-                      class: "btn btn-success btn-sm" %>
-      <%# end %>
-    <%# else %>
-<!--      <div class="d-flex flex-wrap align-items-center gap-2">-->
-        <%#= link_to "Sign In", new_user_session_path,
-                    class: "btn btn-outline-primary btn-sm",
-                    data: { turbo: false } %>
-<!--
-        <span>or</span>
-
-        <%#= link_to "Sign Up", new_user_registration_path,-->
-<!--                    class: "btn btn-outline-primary btn-sm",
-                    data: { turbo: false } %>
-
-        <span>to follow this artist!</span>
-      </div>
-    <%# end %>-->
-<!--  </div>
-</div>
--->
 
 <turbo-frame id="follow_button_<%= artist.id %>">
   <div class="d-flex justify-content-center">

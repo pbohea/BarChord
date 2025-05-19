@@ -15,19 +15,13 @@
                         class: "btn btn-success btn-sm" %>
         <% end %>
       <% else %>
-        <div class="d-flex flex-wrap align-items-center gap-2">
-          <%= link_to "Sign In", new_user_session_path,
-                      class: "btn btn-outline-primary btn-sm",
-                      data: { turbo: false } %>
-
-          <span>or</span>
-
-          <%= link_to "Sign Up", new_user_registration_path,
-                      class: "btn btn-outline-primary btn-sm",
-                      data: { turbo: false } %>
-
-          <span>to add this venue to favorites!</span>
-        </div>
+        <!-- Fake button triggers modal -->
+        <button type="button"
+                class="btn btn-success btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#authModal">
+          Add Favorite
+        </button>
       <% end %>
     </div>
   </div>
