@@ -4,7 +4,6 @@ json.array! @events do |event|
   json.start_time event.start_time
   json.end_time event.end_time
   json.description event.description
-
   json.cover event.cover
   json.cover_amount event.cover_amount
   json.category event.category
@@ -22,4 +21,12 @@ json.array! @events do |event|
     json.longitude event.venue.longitude
     json.website event.venue.website
   end
+
+    json.artist do
+    json.id event.artist.id
+    json.username event.artist.username
+    json.image_url url_for(event.artist.image) if event.artist.image.attached?
+    json.profile_url artist_url(event.artist)
+  end
+
 end

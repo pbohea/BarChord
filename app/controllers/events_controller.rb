@@ -60,7 +60,7 @@ class EventsController < ApplicationController
   end
 
   def map
-    @events = Event.upcoming.includes(:venue)
+    @events = Event.upcoming.includes(:venue, :artist)
 
     respond_to do |format|
       format.json  
