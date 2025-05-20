@@ -12,6 +12,8 @@ window.$ = jquery;
 import Rails from "@rails/ujs"
 Rails.start();
 
+
+
 document.addEventListener("turbo:load", () => {
   document.querySelectorAll('.alert').forEach((alert) => {
     setTimeout(() => {

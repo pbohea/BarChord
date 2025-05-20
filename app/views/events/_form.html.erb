@@ -3,7 +3,7 @@
 
   <%= form_with model: @event, local: true, class: "needs-validation" do |f| %>
 
-    <!-- Venue Dropdown (owned by current_owner) -->
+    <!-- venue dropdown -->
     <div class="mb-3">
       <%= f.label :venue_id, "Venue", class: "form-label" %>
       <%= f.select :venue_id, current_owner.venues.pluck(:name, :id), {}, class: "form-select", required: true %>
@@ -32,7 +32,7 @@
         class: "form-control #{'is-invalid' if @event.errors[:artist_name].present?}" %>
     </div>
 
-    <!-- Optional: error block -->
+    <!--  error block -->
     <% if @event.errors[:base].any? %>
       <div class="text-danger small mt-2"><%= @event.errors[:base].first %></div>
     <% end %>
