@@ -1,7 +1,7 @@
 <% content_for :title, "Upcoming Events Near You" %>
 
 <div class="container my-4" style="max-width: 540px;">
-  <% @events.each do |event| %>
+  <% @events.upcoming.each do |event| %>
     <% venue = event.venue %>
     <% artist = event.artist %>
 
