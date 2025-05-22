@@ -2,81 +2,54 @@
   <div class="container-fluid">
     <a class="navbar-brand" href="/">LocalLive</a>
 
-    <!-- Toggler now opens offcanvas -->
+    <!-- Offcanvas Toggler -->
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#accountMenu" aria-controls="accountMenu" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
   </div>
 </nav>
 
-<% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="accountMenu" aria-labelledby="accountMenuLabel">
-    <div class="offcanvas-header flex-column align-items-center text-center">
+<% signed_in = owner_signed_in? || artist_signed_in? || user_signed_in? %>
 
-      <% if artist_signed_in? && current_artist.image.attached? %>
-        <%= image_tag url_for(current_artist.image.variant(resize_to_fill: [100, 100])),
-                    class: "rounded-circle mb-2",
-                    style: "width: 100px; height: 100px; object-fit: cover;" %>
-      <% end %>
+<div class="offcanvas offcanvas-end" tabindex="-1" id="accountMenu" aria-labelledby="accountMenuLabel">
+  <div class="d-flex flex-column justify-content-between" style="height: 100dvh; overflow: hidden;">
 
-      <h5 class="offcanvas-title" id="accountMenuLabel">
-        <% if owner_signed_in? %>
-          <%= current_owner.firstname || current_owner.email %>
-        <% elsif artist_signed_in? %>
-          <%= current_artist.username || current_artist.email %>
-        <% elsif user_signed_in? %>
-          <%= current_user.username || current_user.email %>
-        <% end %>
-      </h5>
+    <!-- Top Section -->
+    <div class="container py-4">
+      <% if signed_in %>
+        <div class="d-grid gap-2">
 
-      <button type="button" class="btn-close position-absolute end-0 top-0 m-3" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
+          <% if owner_signed_in? %>
+            <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn btn-outline-primary" %>
+            <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-outline-secondary" %>
+            <%= link_to "Sign Out", destroy_owner_session_path, method: :delete, class: "btn btn-outline-danger" %>
 
-    <div class="offcanvas-body d-flex flex-column">
-      <%= link_to "Home", root_path, class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
+          <% elsif artist_signed_in? %>
+            <%= link_to "My Events", artist_events_path, class: "btn btn-outline-primary" %>
+            <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-outline-secondary" %>
+            <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn btn-outline-danger" %>
 
-      <% if owner_signed_in? %>
-        <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
-        <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
-        <%= link_to "Sign Out", destroy_owner_session_path, method: :delete, class: "btn d-block btn-outline-primary text-danger mb-2", data: { turbo: true } %>
-        <div class="mt-auto text-center">
-          <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
+          <% elsif user_signed_in? %>
+            <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn btn-outline-primary" %>
+            <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-outline-secondary" %>
+            <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn btn-outline-danger" %>
+          <% end %>
+
         </div>
-
-      <% elsif artist_signed_in? %>
-        <%= link_to "My Events", events_artist_path(current_artist), class: "btn btn-outline-primary mb-2" %>        <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
-        <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, class: "btn d-block btn-outline-primary mb-2 text-danger", data: { turbo: true } %>
-        <div class="mt-auto text-center">
-          <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
+      <% else %>
+        <div class="d-grid gap-2">
+          <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signinModal">Sign In</button>
+          <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
         </div>
-
-      <% elsif user_signed_in? %>
-        <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
-        <%= link_to "Edit Profile", edit_user_registration_path, class: "btn d-block btn-outline-primary mb-2", data: { turbo: true } %>
-        <%= link_to "Sign Out", destroy_user_session_path, method: :delete, class: "btn d-block btn-outline-primary mb-2 text-danger", data: { turbo: true } %>
-        <div class="mt-auto text-center">
-          <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
-        </div>
-
       <% end %>
     </div>
-  </div>
-<% else %>
-  <!-- Offcanvas for guest users -->
-  <div class="offcanvas offcanvas-end" tabindex="-1" id="accountMenu" aria-labelledby="accountMenuLabel">
-    <div class="offcanvas-header">
-      <h5 class="offcanvas-title" id="accountMenuLabel">Welcome</h5>
-      <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
-    </div>
-    <div class="offcanvas-body d-grid gap-2">
-      <%= button_tag "Sign In", type: "button", class: "btn d-block btn-outline-primary mb-2", data: { bs_toggle: "modal", bs_target: "#signinModal" } %>
-      <%= button_tag "Sign Up", type: "button", class: "btn d-block btn-outline-primary mb-2", data: { bs_toggle: "modal", bs_target: "#signupModal" } %>
-      <div class="mt-auto text-center">
-        <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
-      </div>
+
+    <!-- Bottom Section -->
+    <div class="text-center py-3">
+      <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
     </div>
   </div>
-<% end %>
+</div>
 
 <!-- Sign In Modal -->
 <div class="modal fade" id="signinModal" data-turbo="false" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
@@ -87,9 +60,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body d-grid gap-2">
-        <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary" %>
-        <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success" %>
-        <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info" %>
+        <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary w-100" %>
+        <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success w-100" %>
+        <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info w-100" %>
       </div>
     </div>
   </div>
@@ -104,9 +77,9 @@
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body d-grid gap-2">
-        <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary" %>
-        <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success" %>
-        <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info" %>
+        <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary w-100" %>
+        <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success w-100" %>
+        <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info w-100" %>
       </div>
     </div>
   </div>
