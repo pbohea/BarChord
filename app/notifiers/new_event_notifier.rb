@@ -15,6 +15,7 @@ class NewEventNotifier < ApplicationNotifier
     config.key_id = credentials.key_id
     config.team_id = credentials.team_id
     config.apns_key = credentials.apns_key
+    config.delay = false
 
     config.development = Rails.env.local?
   end

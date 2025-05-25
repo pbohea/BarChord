@@ -100,18 +100,18 @@ class EventsController < ApplicationController
 
   # notificaitons
   def notify_followers(event)
-  artist = event.artist
-  return unless artist
+    artist = event.artist
+    return unless artist
 
-  artist.followers.each do |user|
-    NewEventNotifier.with(event: event).deliver_later(user)
+    artist.followers.each do |user|
+      NewEventNotifier.with(event: event).deliver(user)
+    end
   end
-end
 
-def notify_artist(event)
-  artist = event.artist
-  return unless artist
+  def notify_artist(event)
+    artist = event.artist
+    return unless artist
 
-  NewEventNotifier.with(event: event).deliver_later(artist)
-end
+    NewEventNotifier.with(event: event).deliver(artist)
+  end
 end

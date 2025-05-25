@@ -9,5 +9,3 @@ export default class extends BridgeComponent {
     this.send("connect")
   }
 }
-
-// on page 215 need to figure out where to add this
