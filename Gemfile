@@ -98,3 +98,6 @@ group :test do
   gem "capybara"
   gem "selenium-webdriver", "~> 4.11.0"
 end
+
+gem "noticed", "~> 2.7"
+gem "apnotic", "~> 1.7"
