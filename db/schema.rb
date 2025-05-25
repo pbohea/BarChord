@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_05_17_153942) do
+ActiveRecord::Schema[8.0].define(version: 2025_05_25_182012) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -98,6 +98,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_153942) do
     t.datetime "updated_at", null: false
     t.index ["artist_id"], name: "index_follows_on_artist_id"
     t.index ["user_id"], name: "index_follows_on_user_id"
+  end
+
+  create_table "notification_tokens", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "token", null: false
+    t.string "platform", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_notification_tokens_on_user_id"
   end
 
   create_table "owners", force: :cascade do |t|
@@ -304,6 +313,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_05_17_153942) do
   add_foreign_key "artist_follows", "users"
   add_foreign_key "follows", "artists"
   add_foreign_key "follows", "users"
+  add_foreign_key "notification_tokens", "users"
   add_foreign_key "solid_queue_blocked_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_claimed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_failed_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
