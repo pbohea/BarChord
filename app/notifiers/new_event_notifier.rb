@@ -1,11 +1,10 @@
-
 class NewEventNotifier < ApplicationNotifier
   required_param :event
   deliver_by :ios do |config|
     config.device_tokens = -> {
       recipient.notification_tokens.where(platform: :ios).pluck(:token)
     }
-    confid.format = ->(apn) {
+    config.format = ->(apn) {
       apn.alert = "New event from one of your favorite artists"
       apn.custom_payload = {
         path: event_path(params[:event])

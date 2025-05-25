@@ -27,6 +27,9 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
+        notify_followers(@event)
+        notify_artist(@event)
+
         format.html { redirect_to @event, notice: "Event was successfully created." }
         format.json { render :show, status: :created, location: @event }
       else
@@ -63,7 +66,7 @@ class EventsController < ApplicationController
     @events = Event.upcoming.includes(:venue, :artist)
 
     respond_to do |format|
-      format.json  
+      format.json
       format.html
     end
   end
@@ -92,6 +95,39 @@ class EventsController < ApplicationController
 
     unless authorized
       redirect_to events_path, alert: "You are not authorized to modify this event."
+    end
+  end
+
+  # notificaitons
+  def notify_followers(event)
+    artist = event.artist
+    return unless artist
+
+    followers = artist.followers.includes(:notification_tokens)
+
+    followers.each do |user|
+      user.notification_tokens.each do |token|
+        PushNotificationService.send(
+          token: token.token,
+          title: "#{artist.username} added a new event!",
+          body: event.title.presence || "Check it out!",
+          url: Rails.application.routes.url_helpers.event_url(event),
+        )
+      end
+    end
+  end
+
+  def notify_artist(event)
+    artist = event.artist
+    return unless artist
+
+    artist.notification_tokens.each do |token|
+      PushNotificationService.send(
+        token: token.token,
+        title: "You're scheduled for a new event!",
+        body: "#{event.title} at #{event.venue.name}",
+        url: Rails.application.routes.url_helpers.event_url(event),
+      )
     end
   end
 end

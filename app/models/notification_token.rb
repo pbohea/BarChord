@@ -18,7 +18,7 @@
 #  fk_rails_...  (user_id => users.id)
 #
 class NotificationToken < ApplicationRecord
-  belongs_to :user
+  belongs_to :notifiable, polymorphic:true
 
   validates :token, presence: true
   validates :platform, inclusion: {in: %w[iOS]}
