@@ -39,3 +39,5 @@ examples.txt
 
 # Ignore public uploads
 /public/uploads/*
+
+/config/credentials/development.key
