@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <% if user_signed_in? || artist_signed_in? %>
+      <meta data-controller="bridge--notification-token">
+    <% end %>
     <title><%= content_for(:title) || "LocalLive" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -38,7 +41,8 @@
 
     <div class="container mt-3">
       <%= yield %>
-    </div> <!-- ✅ This was missing -->
+    </div>
+ <!-- ✅ This was missing -->
 
   </body>
 </html>
