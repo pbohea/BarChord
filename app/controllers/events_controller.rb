@@ -100,34 +100,18 @@ class EventsController < ApplicationController
 
   # notificaitons
   def notify_followers(event)
-    artist = event.artist
-    return unless artist
+  artist = event.artist
+  return unless artist
 
-    followers = artist.followers.includes(:notification_tokens)
-
-    followers.each do |user|
-      user.notification_tokens.each do |token|
-        PushNotificationService.send(
-          token: token.token,
-          title: "#{artist.username} added a new event!",
-          body: event.title.presence || "Check it out!",
-          url: Rails.application.routes.url_helpers.event_url(event),
-        )
-      end
-    end
+  artist.followers.each do |user|
+    NewEventNotifier.with(event: event).deliver_later(user)
   end
+end
 
-  def notify_artist(event)
-    artist = event.artist
-    return unless artist
+def notify_artist(event)
+  artist = event.artist
+  return unless artist
 
-    artist.notification_tokens.each do |token|
-      PushNotificationService.send(
-        token: token.token,
-        title: "You're scheduled for a new event!",
-        body: "#{event.title} at #{event.venue.name}",
-        url: Rails.application.routes.url_helpers.event_url(event),
-      )
-    end
-  end
+  NewEventNotifier.with(event: event).deliver_later(artist)
+end
 end
