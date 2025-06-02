@@ -25,7 +25,7 @@ json.array! @events do |event|
     json.artist do
     json.id event.artist.id
     json.username event.artist.username
-    json.image_url url_for(event.artist.image) if event.artist.image.attached?
+    json.image_url event.artist.image.attached? ? rails_blob_url(event.artist.image) : nil
     json.profile_url artist_url(event.artist)
   end
 
