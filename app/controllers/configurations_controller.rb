@@ -1,7 +1,39 @@
+# class ConfigurationsController < ApplicationController
+#   def ios_v1
+#     render json: {
+#       settings: {},
+#       rules: [
+#         {
+#           patterns: [
+#             "/new$",
+#             "/edit$"
+#           ],
+#           properties: {
+#             context: "modal"
+#           }
+#         },
+#         {
+#           patterns: [
+#             "^/events/map$"
+#           ],
+#           properties: {
+#             view_controller: "map"
+#           }
+#         }
+#       ]
+#     }
+#   end
+# end
+
 class ConfigurationsController < ApplicationController
   def ios_v1
     render json: {
-      settings: {},
+      settings: {
+        # Enable swipe to go back
+        swipe_to_refresh_enabled: true,
+        # Preload pages for faster navigation
+        preload_enabled: true
+      },
       rules: [
         {
           patterns: [
@@ -9,7 +41,9 @@ class ConfigurationsController < ApplicationController
             "/edit$"
           ],
           properties: {
-            context: "modal"
+            context: "modal",
+            # Dismiss modal with swipe gesture
+            modal_dismiss_gesture: "down"
           }
         },
         {
@@ -18,6 +52,38 @@ class ConfigurationsController < ApplicationController
           ],
           properties: {
             view_controller: "map"
+          }
+        },
+        # Add venue navigation optimization
+        {
+          patterns: [
+            "^/venues/\\d+$"
+          ],
+          properties: {
+            context: "default",
+            presentation: "push",
+            # This can help with faster transitions
+            preload: true
+          }
+        },
+        # Add artist navigation optimization  
+        {
+          patterns: [
+            "^/artists/\\d+$"
+          ],
+          properties: {
+            context: "default", 
+            presentation: "push",
+            preload: true
+          }
+        },
+        # Handle external links properly
+        {
+          patterns: [
+            "^https?://(?!.*your-domain\\.com).*"
+          ],
+          properties: {
+            context: "external"
           }
         }
       ]
