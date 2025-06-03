@@ -1,28 +1,15 @@
 class NotificationTokensController < ApplicationController
-  before_action :authenticate_notifiable!
+  before_action :authenticate_user!
   skip_before_action :verify_authenticity_token
 
   def create
-    @token = NotificationToken.find_or_initialize_by(
-      token: token_params[:token],
-      notifiable: @notifiable
-    )
-    @token.platform = token_params[:platform]
-    @token.save!
-    head :ok
+    current_user.notification_tokens.find_or_create_by!(notification_token)
+    head :created
   end
 
   private
 
-  def token_params
+  def notification_token
     params.require(:notification_token).permit(:token, :platform)
-  end
-
-  def authenticate_notifiable!
-    @notifiable = current_user || current_artist # || current_owner
-
-    unless @notifiable
-      render json: { error: "Unauthorized" }, status: :unauthorized
-    end
   end
 end

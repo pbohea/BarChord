@@ -27,6 +27,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
+
         notify_followers(@event)
         notify_artist(@event)
 
