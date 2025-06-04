@@ -21,7 +21,8 @@ class ConfigurationsController < ApplicationController
         },
         {
           patterns: [
-            "^/events/map$"
+            "^/map.*",
+            "^/events/map.*"
           ],
           properties: {
             view_controller: "map"

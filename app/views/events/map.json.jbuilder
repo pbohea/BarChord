@@ -1,11 +1,12 @@
-json.array! @events do |event|
+# Create the main response object
+json.events @events do |event|
   json.id event.id
-  json.date event.date.strftime("%A, %B %-d")
-  json.start_time event.start_time.strftime("%-I:%M %p")
+  json.date event.date.iso8601  # Keep ISO format for consistency
+  json.start_time event.start_time.iso8601
   
   # Handle optional end_time properly
   if event.end_time.present?
-    json.end_time event.end_time.strftime("%-I:%M %p")
+    json.end_time event.end_time.iso8601
   else
     json.end_time nil
   end
@@ -16,19 +17,16 @@ json.array! @events do |event|
   json.category event.category
   json.indoors event.indoors
 
-  # Create a fallback label
-  json.label(
-    event.venue&.name.presence || event.artist&.username.presence || "Unnamed Event"
-  )
-
   json.venue do
     json.id event.venue.id
     json.name event.venue.name
     json.category event.venue.category
     
-    # Ensure coordinates are valid numbers
-    json.latitude event.venue.latitude&.to_f || 0.0
-    json.longitude event.venue.longitude&.to_f || 0.0
+    # Create the coordinate object that iOS expects
+    json.coordinate do
+      json.latitude event.venue.latitude&.to_f || 0.0
+      json.longitude event.venue.longitude&.to_f || 0.0
+    end
     
     json.website event.venue.website
   end
@@ -53,3 +51,16 @@ json.array! @events do |event|
     end
   end
 end
+
+# Add optional centering data if provided via params
+if @center_lat && @center_lng
+  json.center do
+    json.latitude @center_lat
+    json.longitude @center_lng
+  end
+else
+  json.center nil
+end
+
+# Add selected venue ID if provided
+json.selected_venue_id @selected_venue_id

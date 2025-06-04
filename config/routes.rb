@@ -25,8 +25,10 @@ Rails.application.routes.draw do
 
   root to: "events#index"
 
-  get "events/map", to: "events#map", defaults: { format: :json }
-  #model routes
+  # Add dedicated map route for tab navigation
+  get "map", to: "events#map"
+  # Keep the old route for compatibility
+  get "events/map", to: "events#map"
 
   resources :venues do
     member do

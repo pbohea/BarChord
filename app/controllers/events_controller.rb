@@ -27,7 +27,6 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-
         notify_followers(@event)
         notify_artist(@event)
 
@@ -66,8 +65,13 @@ class EventsController < ApplicationController
   def map
     @events = Event.upcoming.includes(:venue, :artist)
 
+    # Add venue-specific centering params for jbuilder template
+    @center_lat = params[:lat]&.to_f
+    @center_lng = params[:lng]&.to_f
+    @selected_venue_id = params[:venue_id]&.to_i
+
     respond_to do |format|
-      format.json
+      format.json # This will use map.json.jbuilder
       format.html
     end
   end

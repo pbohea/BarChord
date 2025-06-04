@@ -50,13 +50,11 @@
         </div>
 
         <!-- map -->
-        <% if venue.full_address.present? %>
+        <% if venue.latitude.present? && venue.longitude.present? %>
           <div class="position-relative" style="z-index: 2;">
             <%= link_to "Map",
-                        "https://www.google.com/maps/search/?api=1&query=#{CGI.escape(venue.full_address)}",
-                        class: "btn btn-sm btn-outline-primary",
-                        target: "_blank",
-                        data: { turbo: false } %>
+                "/map?lat=#{venue.latitude}&lng=#{venue.longitude}&venue_id=#{venue.id}",
+                class: "btn btn-sm btn-outline-primary" %>
           </div>
         <% end %>
       </div>
