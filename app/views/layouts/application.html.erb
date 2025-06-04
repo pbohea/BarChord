@@ -1,6 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+    <% if hotwire_native_app? %>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <% end %>
     <% if user_signed_in? || artist_signed_in? %>
       <meta data-controller="bridge--notification-token">
     <% end %>
@@ -42,7 +45,7 @@
     <div class="container mt-3">
       <%= yield %>
     </div>
- <!-- ✅ This was missing -->
+    <!-- ✅ This was missing -->
 
   </body>
 </html>
