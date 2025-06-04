@@ -15,13 +15,15 @@
                         class: "btn btn-success btn-sm" %>
         <% end %>
       <% else %>
-        <!-- Fake button triggers modal -->
-        <button type="button"
-                class="btn btn-success btn-sm"
-                data-bs-toggle="modal"
-                data-bs-target="#authModal">
-          Add Favorite
-        </button>
+        <!-- Use Stimulus controller for alert -->
+        <div data-controller="auth-prompt" 
+            data-auth-prompt-message-value="You need to sign in to add venues to favorites. Go to sign in page?">
+          <button type="button"
+          class="btn btn-success btn-sm"
+          data-action="click->auth-prompt#prompt">
+            Add Favorite
+          </button>
+        </div>
       <% end %>
     </div>
   </div>

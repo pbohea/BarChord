@@ -16,10 +16,11 @@
         <% end %>
       <% else %>
         <!-- Use Stimulus controller for alert -->
-        <div data-controller="auth-prompt">
+        <div data-controller="auth-prompt" 
+             data-auth-prompt-message-value="You need to sign in to follow artists. Go to sign in page?">
           <button type="button"
-            class="btn btn-success btn-sm"
-            data-action="click->auth-prompt#prompt">
+          class="btn btn-success btn-sm"
+          data-action="click->auth-prompt#prompt">
             Follow
           </button>
         </div>
