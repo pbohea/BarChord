@@ -13,7 +13,7 @@
 
  */
 
- /* Hide elements that shouldn't appear in native app */
+/* Hide elements that shouldn't appear in native app */
 .d-hotwire-native-none {
   display: none !important;
 }
@@ -84,13 +84,6 @@ html {
   
   /* Ensure proper height calculation */
   height: 100%;
-}
-
-/* Fix for potential WebKit rendering issues */
-* {
-  -webkit-transform: translateZ(0);
-  -webkit-backface-visibility: hidden;
-  -webkit-perspective: 1000;
 }
 
 /* Prevent map-related configuration errors */
