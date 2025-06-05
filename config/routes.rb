@@ -36,7 +36,12 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :events
+  resources :events do
+    collection do
+      #get :nearby
+      get :map
+    end
+  end
 
   resources :artists, only: [:show] do
     get :events, on: :member

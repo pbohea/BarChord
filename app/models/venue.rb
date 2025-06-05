@@ -25,6 +25,9 @@ class Venue < ApplicationRecord
 
   has_one_attached :image
 
+  geocoded_by :full_address, latitude: :latitude, longitude: :longitude
+
+
   before_validation :normalize_website_url
 
   validates :name, :street_address, :city, :state, :zip_code, presence: true

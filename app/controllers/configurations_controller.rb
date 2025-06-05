@@ -28,7 +28,6 @@ class ConfigurationsController < ApplicationController
             view_controller: "map"
           }
         },
-        # Add venue navigation optimization
         {
           patterns: [
             "^/venues/\\d+$"

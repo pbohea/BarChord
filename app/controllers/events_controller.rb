@@ -4,7 +4,36 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
-    @events = Event.all
+    if params[:address].present? || params[:lat].present?
+      # User is searching by location - filter results
+      @events = find_nearby_events
+      @search_params = extract_search_params
+    else
+      # Default - show all upcoming events
+      @events = Event.upcoming.includes(:venue, :artist)
+      @search_params = nil
+    end
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream { render :index }
+    end
+  end
+
+  # GET /events/nearby - New filtered endpoint
+  def nearby
+    Rails.logger.info "🔍 NEARBY ENDPOINT HIT with params: #{params.inspect}"
+    
+    @events = find_nearby_events
+    @search_params = extract_search_params
+    
+    Rails.logger.info "📊 Found #{@events.count} events after filtering"
+    Rails.logger.info "🎯 Search params: #{@search_params}"
+    
+    respond_to do |format|
+      format.html { render :index }
+      format.json { render :nearby }
+    end
   end
 
   # GET /events/1
@@ -58,7 +87,6 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to events_path, status: :see_other, notice: "Event was successfully destroyed." }
-      #format.json { head :no_content }
     end
   end
 
@@ -78,6 +106,108 @@ class EventsController < ApplicationController
 
   private
 
+  def find_nearby_events
+    Rails.logger.info "🔍 Starting find_nearby_events"
+    
+    # Start with upcoming events
+    events = Event.upcoming.includes(:venue, :artist)
+    Rails.logger.info "📅 Found #{events.count} upcoming events total"
+    
+    # If we have location coordinates, filter by distance
+    if search_coordinates.present?
+      lat, lng = search_coordinates
+      radius = search_radius
+      
+      Rails.logger.info "📍 Searching near [#{lat}, #{lng}] within #{radius} miles"
+      
+      # Use geocoder's near method without ordering to avoid distance column issue
+      begin
+        nearby_venues = Venue.near([lat, lng], radius, units: :mi, order: false)
+        venue_ids = nearby_venues.pluck(:id)
+        Rails.logger.info "🏢 Found #{venue_ids.count} venues within radius: #{venue_ids}"
+      rescue => e
+        Rails.logger.warn "⚠️ Geocoder near method failed: #{e.message}, falling back to manual calculation"
+        # Fallback: manually filter venues by distance
+        all_venues = Venue.where.not(latitude: nil, longitude: nil)
+        venue_ids = all_venues.select do |venue|
+          distance = Geocoder::Calculations.distance_between(
+            [lat, lng], 
+            [venue.latitude, venue.longitude], 
+            units: :mi
+          )
+          distance <= radius
+        end.map(&:id)
+        Rails.logger.info "🏢 Manual calculation found #{venue_ids.count} venues within radius"
+      end
+      
+      events = events.where(venue_id: venue_ids)
+      Rails.logger.info "🎭 Filtered to #{events.count} events"
+      
+      # Sort by distance from search location
+      events = events.to_a.sort_by do |event|
+        if event.venue.latitude && event.venue.longitude
+          distance = Geocoder::Calculations.distance_between(
+            [lat, lng], 
+            [event.venue.latitude, event.venue.longitude],
+            units: :mi
+          )
+          Rails.logger.debug "📏 Event #{event.id} distance: #{distance.round(2)} miles"
+          distance
+        else
+          Rails.logger.warn "⚠️ Event #{event.id} has no venue coordinates"
+          Float::INFINITY # Put events without coordinates at the end
+        end
+      end
+    else
+      Rails.logger.info "❌ No search coordinates provided"
+    end
+    
+    events
+  end
+
+  def search_coordinates
+    @search_coordinates ||= begin
+      if params[:lat].present? && params[:lng].present?
+        [params[:lat].to_f, params[:lng].to_f]
+      elsif params[:address].present?
+        geocode_address(params[:address])
+      else
+        nil
+      end
+    end
+  end
+
+  def search_radius
+    radius = params[:radius]&.to_f || 5.0
+    # Clamp between 1 and 60 miles
+    [[radius, 1.0].max, 60.0].min
+  end
+
+  def geocode_address(address)
+    result = Geocoder.search(address).first
+    if result&.coordinates
+      coordinates = result.coordinates
+      Rails.logger.info "📍 Geocoded '#{address}' to: #{coordinates[0]}, #{coordinates[1]}"
+      coordinates
+    else
+      Rails.logger.warn "❌ Failed to geocode address: '#{address}'"
+      nil
+    end
+  end
+
+  def extract_search_params
+    coords = search_coordinates
+    {
+      address: params[:address],
+      lat: coords&.first,
+      lng: coords&.last,
+      radius: search_radius,
+      has_location: coords.present?
+    }
+  end
+
+  # Remove the radius_to_degrees helper since we're using geocoder's near method
+
   def set_event
     @event = Event.find(params[:id])
   end
@@ -95,7 +225,6 @@ class EventsController < ApplicationController
     venue_owner_id = @event.venue&.owner_id
 
     authorized = owner_signed_in? && current_owner.id == venue_owner_id
-
     authorized ||= user_signed_in? && current_user.email == "pbohea@gmail.com"
 
     unless authorized
@@ -103,7 +232,7 @@ class EventsController < ApplicationController
     end
   end
 
-  # notificaitons
+  # notifications
   def notify_followers(event)
     artist = event.artist
     return unless artist

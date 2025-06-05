@@ -1,63 +1,177 @@
-<% content_for :title, "Upcoming Events Near You" %>
+<!-- Location Search Section -->
+  <div class="card mb-4 shadow-sm border-0">
+    <div class="card-body">
+      <h6 class="card-title mb-3">
+        <i class="bi bi-geo-alt"></i> Find Events Near You
+      </h6><% content_for :title, "Upcoming Events Near You" %>
 
 <div class="container my-4" style="max-width: 540px;">
-  <% @events.upcoming.each do |event| %>
-    <% venue = event.venue %>
-    <% artist = event.artist %>
-
-    <div class="card mb-4 shadow border-0 position-relative"
-         data-controller="event-card"
-         data-event-card-url-value="<%= event_path(event) %>"
-         data-action="click->event-card#goToEvent">
-
-      <div class="card-body position-relative pe-5">
-        <!-- artist image and name -->
-        <% if artist&.image&.attached? %>
-          <div style="position: absolute; top: 12px; right: 12px; width: 100px; text-align: center; z-index: 1;">
-            <%= link_to artist_path(artist), data: { turbo_frame: "_top" } do %>
-              <%= image_tag artist.image.variant(resize_to_fill: [80, 80]),
-                    class: "rounded-circle shadow",
-                    style: "object-fit: cover;" %>
+  <!-- Location Search Section -->
+  <div class="card mb-4 shadow-sm border-0">
+    <div class="card-body">
+      <h6 class="card-title mb-3">
+        <i class="bi bi-geo-alt"></i> Find Events Near You
+      </h6>
+      
+      <%= form_with url: events_path, method: :get, local: false, 
+                    data: { controller: "location-search", 
+                            "location-search-current-lat-value": params[:lat],
+                            "location-search-current-lng-value": params[:lng],
+                            "location-search-current-address-value": params[:address],
+                            "location-search-current-radius-value": params[:radius] || 5,
+                            turbo_frame: "events-container" } do |f| %>
+        
+        <div class="row g-2 mb-3">
+          <div class="col-8">
+            <%= f.text_field :address, 
+                placeholder: "Enter address or ZIP code", 
+                class: "form-control form-control-sm",
+                value: params[:address],
+                data: { "location-search-target": "addressInput" } %>
+          </div>
+          <div class="col-4">
+            <%= f.select :radius, 
+                options_for_select([
+                  ['1 mi', 1], ['5 mi', 5], ['10 mi', 10], 
+                  ['15 mi', 15], ['25 mi', 25], ['50 mi', 50]
+                ], params[:radius] || 5),
+                {}, 
+                { class: "form-select form-select-sm" } %>
+          </div>
+        </div>
+        
+        <div class="d-flex gap-2 flex-wrap">
+          <%= f.submit "Search Location", class: "btn btn-primary btn-sm" %>
+          
+          <button type="button" 
+                  class="btn btn-outline-secondary btn-sm"
+                  data-action="click->location-search#useCurrentLocation">
+            <i class="bi bi-crosshair"></i> Use My Location
+          </button>
+          
+          <% if params[:address].present? || params[:lat].present? %>
+            <%= link_to "Show All Events", events_path, class: "btn btn-outline-danger btn-sm" %>
+          <% end %>
+        </div>
+        
+        <!-- Hidden fields for coordinates -->
+        <%= f.hidden_field :lat, data: { "location-search-target": "latInput" } %>
+        <%= f.hidden_field :lng, data: { "location-search-target": "lngInput" } %>
+      <% end %>
+      
+      <!-- Search Results Info -->
+      <% if params[:address].present? || params[:lat].present? %>
+        <div class="mt-3 pt-3 border-top">
+          <small class="text-muted">
+            <% if params[:address].present? %>
+              Showing events within <%= params[:radius] || 5 %> miles of "<%= params[:address] %>"
+            <% else %>
+              Showing events within <%= params[:radius] || 5 %> miles of your location
             <% end %>
+            
+            <% if @events.respond_to?(:count) %>
+              • <%= pluralize(@events.count, 'event') %> found
+            <% end %>
+          </small>
+        </div>
+      <% end %>
+    </div>
+  </div>
 
-            <div class="mt-1 text-muted small fw-semibold">
-              <%= link_to artist.username, artist_path(artist),
-                    class: "text-decoration-none text-reset",
+  <!-- Wrap events in a turbo frame for in-place updates -->
+  <%= turbo_frame_tag "events-container" do %>
+    <!-- Events List -->
+    <% events_to_show = @events %>
+    <% if events_to_show.any? %>
+    <% events_to_show.each do |event| %>
+      <% venue = event.venue %>
+      <% artist = event.artist %>
+
+      <div class="card mb-4 shadow border-0 position-relative"
+           data-controller="event-card"
+           data-event-card-url-value="<%= event_path(event) %>"
+           data-action="click->event-card#goToEvent">
+
+        <div class="card-body position-relative pe-5">
+          <!-- artist image and name -->
+          <% if artist&.image&.attached? %>
+            <div style="position: absolute; top: 12px; right: 12px; width: 100px; text-align: center; z-index: 1;">
+              <%= link_to artist_path(artist), data: { turbo_frame: "_top" } do %>
+                <%= image_tag artist.image.variant(resize_to_fill: [80, 80]),
+                      class: "rounded-circle shadow",
+                      style: "object-fit: cover;" %>
+              <% end %>
+
+              <div class="mt-1 text-muted small fw-semibold">
+                <%= link_to artist.username, artist_path(artist),
+                      class: "text-decoration-none text-reset",
+                      data: { turbo_frame: "_top" } %>
+              </div>
+
+              <div class="mt-1 text-muted small fw-normal mb-3">
+                <%= event.category %>
+              </div>
+            </div>
+          <% end %>
+
+          <!-- venue -->
+          <div class="mb-2 position-relative" style="z-index: 2;">
+            <p class="mb-0">
+              <%= link_to venue.name, venue_path(venue),
+                    class: "fw-bold fs-5 text-decoration-none text-primary",
                     data: { turbo_frame: "_top" } %>
-            </div>
-
-            <div class="mt-1 text-muted small fw-normal mb-3">
-              <%= event.category %>
-            </div>
+            </p>
+            
+            <!-- Show distance if available -->
+            <% if params[:address].present? || params[:lat].present? %>
+              <% if params[:lat].present? && params[:lng].present? && venue.latitude && venue.longitude %>
+                <% distance = Geocoder::Calculations.distance_between(
+                     [params[:lat].to_f, params[:lng].to_f], 
+                     [venue.latitude, venue.longitude],
+                     units: :mi
+                   ).round(1) %>
+                <small class="text-muted">
+                  <i class="bi bi-geo-alt"></i> <%= distance %> miles away
+                </small>
+              <% end %>
+            <% end %>
           </div>
-        <% end %>
 
-        <!-- venue -->
-        <div class="mb-2 position-relative" style="z-index: 2;">
-          <p class="mb-0">
-            <%= link_to venue.name, venue_path(venue),
-                  class: "fw-bold fs-5 text-decoration-none text-primary",
-                  data: { turbo_frame: "_top" } %>
-          </p>
-        </div>
-
-        <!-- date time -->
-        <div class="mt-3 mb-3">
-          <p class="mb-0 text-muted small fw-semibold">
-            <%= event.date.strftime("%A, %B %-d") %><br>
-            <%= event.start_time.strftime("%-I:%M %p") %> – <%= event.end_time.strftime("%-I:%M %p") %>
-          </p>
-        </div>
-
-        <!-- map -->
-        <% if venue.latitude.present? && venue.longitude.present? %>
-          <div class="position-relative" style="z-index: 2;">
-            <%= link_to "Map",
-                "/map?lat=#{venue.latitude}&lng=#{venue.longitude}&venue_id=#{venue.id}",
-                class: "btn btn-sm btn-outline-primary" %>
+          <!-- date time -->
+          <div class="mt-3 mb-3">
+            <p class="mb-0 text-muted small fw-semibold">
+              <%= event.date.strftime("%A, %B %-d") %><br>
+              <%= event.start_time.strftime("%-I:%M %p") %> – <%= event.end_time.strftime("%-I:%M %p") %>
+            </p>
           </div>
-        <% end %>
+
+          <!-- map -->
+          <% if venue.latitude.present? && venue.longitude.present? %>
+            <div class="position-relative" style="z-index: 2;">
+              <%= link_to "Map",
+                  "/map?lat=#{venue.latitude}&lng=#{venue.longitude}&venue_id=#{venue.id}",
+                  class: "btn btn-sm btn-outline-primary" %>
+            </div>
+          <% end %>
+        </div>
       </div>
+    <% end %>
+  <% else %>
+    <!-- Empty State -->
+    <div class="text-center py-5">
+      <i class="bi bi-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
+      <h5 class="mt-3 text-muted">No events found</h5>
+      <% if params[:address].present? || params[:lat].present? %>
+        <p class="text-muted">
+          Try expanding your search radius or searching a different location.
+        </p>
+        <%= link_to "Show All Events", events_path, class: "btn btn-primary" %>
+      <% else %>
+        <p class="text-muted">
+          Check back soon for upcoming events!
+        </p>
+      <% end %>
     </div>
   <% end %>
+  <% end %> <!-- End turbo_frame_tag -->
 </div>
