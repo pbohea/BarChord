@@ -49,7 +49,7 @@ task sample_data: :environment do
       firstname: name,
       email: "#{name.downcase}_artist@example.com",
       password: "password",
-      username: "#{name.downcase}_music",
+      username: "#{name.downcase} music",
       genre: Faker::Music.genre,
       website: "https://example.com",
       bio: Faker::Quote.matz,
