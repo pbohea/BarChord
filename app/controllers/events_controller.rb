@@ -4,6 +4,10 @@ class EventsController < ApplicationController
 
   # GET /events
   def index
+    Rails.logger.info "🔍 EVENTS INDEX HIT - User-Agent: #{request.user_agent}"
+    Rails.logger.info "🔍 REQUEST FORMAT: #{request.format}"
+    Rails.logger.info "🔍 REQUEST PARAMS: #{params.inspect}"
+    
     if params[:address].present? || params[:lat].present?
       # User is searching by location - filter results
       @events = find_nearby_events
@@ -16,6 +20,7 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.json { render json: @events } # Add JSON support for iOS
       format.turbo_stream { render :index }
     end
   end
@@ -167,9 +172,12 @@ class EventsController < ApplicationController
 
   def search_coordinates
     @search_coordinates ||= begin
-      if params[:lat].present? && params[:lng].present?
+      if params[:lat].present? && params[:lng].present? && 
+         params[:lat] != "" && params[:lng] != ""
+        # Use coordinates if they're provided (from iOS geolocation)
         [params[:lat].to_f, params[:lng].to_f]
       elsif params[:address].present?
+        # Fallback to geocoding the address
         geocode_address(params[:address])
       else
         nil
@@ -184,10 +192,29 @@ class EventsController < ApplicationController
   end
 
   def geocode_address(address)
-    result = Geocoder.search(address).first
+    # Add country context to improve geocoding accuracy
+    search_query = if address.match?(/^\d{5}(-\d{4})?$/)
+      # If it looks like a US ZIP code, add country context
+      "#{address}, USA"
+    else
+      address
+    end
+    
+    result = Geocoder.search(search_query).first
     if result&.coordinates
       coordinates = result.coordinates
-      Rails.logger.info "📍 Geocoded '#{address}' to: #{coordinates[0]}, #{coordinates[1]}"
+      Rails.logger.info "📍 Geocoded '#{address}' (searched: '#{search_query}') to: #{coordinates[0]}, #{coordinates[1]}"
+      
+      # Sanity check - reject coordinates that are clearly wrong for US addresses
+      lat, lng = coordinates
+      if address.match?(/^\d{5}(-\d{4})?$/) # US ZIP code
+        # US is roughly between 24-49 latitude, -125 to -66 longitude
+        if lat < 24 || lat > 49 || lng < -125 || lng > -66
+          Rails.logger.warn "⚠️ Geocoded coordinates #{lat}, #{lng} seem outside US bounds for ZIP #{address}"
+          return nil
+        end
+      end
+      
       coordinates
     else
       Rails.logger.warn "❌ Failed to geocode address: '#{address}'"

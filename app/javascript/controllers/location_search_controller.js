@@ -2,55 +2,115 @@ import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
   static targets = ["addressInput", "latInput", "lngInput"]
-  static values = { 
-    currentLat: Number, 
-    currentLng: Number, 
-    currentAddress: String, 
-    currentRadius: Number 
+  static values = {
+    currentLat: Number,
+    currentLng: Number,
+    currentAddress: String,
+    currentRadius: Number
   }
 
   connect() {
-    // Restore previous search from localStorage
-    this.restorePreviousSearch()
+    console.log("=== LOCATION SEARCH CONTROLLER v2.0 LOADED ===")
+    console.log("Location search controller connected")
+    console.log("Controller element:", this.element)
+    console.log("Controller element tagName:", this.element.tagName)
+    console.log("Has targets:", {
+      address: this.hasAddressInputTarget,
+      lat: this.hasLatInputTarget,
+      lng: this.hasLngInputTarget
+    })
+
+    // If we have current coordinates, populate the hidden fields
+    if (this.currentLatValue && this.currentLngValue) {
+      this.latInputTarget.value = this.currentLatValue
+      this.lngInputTarget.value = this.currentLngValue
+    }
+
+    // Clear coordinates when user types in address field
+    this.addressInputTarget.addEventListener('input', () => {
+      console.log("Address input changed, clearing coordinates")
+      this.latInputTarget.value = ""
+      this.lngInputTarget.value = ""
+    })
   }
 
-  useCurrentLocation() {
+  useCurrentLocation(event) {
+    console.log("Use current location clicked")
+    const button = event.target
+
+    // Check if geolocation is supported
     if (!navigator.geolocation) {
-      alert("Geolocation is not supported by this browser.")
+      console.error("Geolocation is not supported by this browser")
+      alert("Geolocation is not supported by your browser")
       return
     }
 
-    // Show loading state
-    const button = event.target
+    // Update button state
     const originalText = button.innerHTML
-    button.innerHTML = '<i class="spinner-border spinner-border-sm"></i> Getting location...'
+    button.innerHTML = '<i class="spinner-border spinner-border-sm me-1"></i> Getting location...'
     button.disabled = true
+
+    const resetButton = () => {
+      button.innerHTML = originalText
+      button.disabled = false
+    }
+
+    // Set a timeout to prevent infinite loading
+    const timeoutId = setTimeout(() => {
+      console.error("Geolocation timeout")
+      resetButton()
+      alert("Location request timed out. Please try again or enter an address manually.")
+    }, 10000) // 10 second timeout
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 8000, // 8 second timeout for the actual geolocation
+      maximumAge: 300000 // Accept cached position up to 5 minutes old
+    }
 
     navigator.geolocation.getCurrentPosition(
       (position) => {
+        console.log("Geolocation success:", position)
+        clearTimeout(timeoutId)
+
         const lat = position.coords.latitude
         const lng = position.coords.longitude
-        
-        // Set hidden form fields
+
+        console.log(`Got coordinates: ${lat}, ${lng}`)
+
+        // Update hidden fields
         this.latInputTarget.value = lat
         this.lngInputTarget.value = lng
-        
+
         // Clear address field since we're using coordinates
         this.addressInputTarget.value = ""
-        
-        // Save to localStorage
-        this.saveSearchToStorage({ lat, lng, address: "", radius: this.currentRadiusValue })
-        
-        // Submit the form
-        this.element.requestSubmit()
+
+        // Try to reverse geocode to show user-friendly address
+        this.reverseGeocode(lat, lng)
+          .then(address => {
+            if (address) {
+              this.addressInputTarget.value = address
+              console.log("Reverse geocoded to:", address)
+            }
+          })
+          .catch(error => {
+            console.warn("Reverse geocoding failed:", error)
+            this.addressInputTarget.value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
+          })
+          .finally(() => {
+            resetButton()
+            this.submitForm()
+          })
       },
       (error) => {
-        console.error("Error getting location:", error)
+        console.error("Geolocation error:", error)
+        clearTimeout(timeoutId)
+        resetButton()
+
         let message = "Unable to get your location. "
-        
-        switch(error.code) {
+        switch (error.code) {
           case error.PERMISSION_DENIED:
-            message += "Please allow location access and try again."
+            message += "Location access was denied."
             break
           case error.POSITION_UNAVAILABLE:
             message += "Location information is unavailable."
@@ -62,70 +122,78 @@ export default class extends Controller {
             message += "An unknown error occurred."
             break
         }
-        
-        alert(message)
-        
-        // Restore button
-        button.innerHTML = originalText
-        button.disabled = false
+
+        alert(message + " Please enter an address manually.")
       },
-      {
-        enableHighAccuracy: true,
-        timeout: 10000,
-        maximumAge: 300000 // 5 minutes
-      }
+      options
     )
   }
 
-  restorePreviousSearch() {
-    // Don't restore if we already have current search params
-    if (this.currentLatValue || this.currentAddressValue) {
-      return
-    }
+  submitForm() {
+    console.log("=== SUBMIT FORM DEBUG ===")
+    console.log("Auto-submitting form with location data")
+    console.log("Form element:", this.element)
+    console.log("Form tagName:", this.element.tagName)
+    console.log("Form action:", this.element.action)
+    console.log("Form method:", this.element.method)
 
+    // Check if form has the required data
+    console.log("Form data check:")
+    console.log("- lat input value:", this.latInputTarget.value)
+    console.log("- lng input value:", this.lngInputTarget.value)
+    console.log("- address input value:", this.addressInputTarget.value)
+
+    // Since this.element IS the form, submit it directly
     try {
-      const saved = localStorage.getItem('lastEventSearch')
-      if (saved) {
-        const searchData = JSON.parse(saved)
-        
-        if (searchData.address) {
-          this.addressInputTarget.value = searchData.address
-        }
-        
-        if (searchData.lat && searchData.lng) {
-          this.latInputTarget.value = searchData.lat
-          this.lngInputTarget.value = searchData.lng
-        }
-        
-        // Set radius if saved
-        const radiusSelect = this.element.querySelector('select[name="radius"]')
-        if (radiusSelect && searchData.radius) {
-          radiusSelect.value = searchData.radius
+      console.log("Trying requestSubmit()...")
+      this.element.requestSubmit()
+      console.log("requestSubmit() called successfully")
+    } catch (error) {
+      console.error("requestSubmit() failed:", error)
+      console.log("Trying regular submit()...")
+      try {
+        this.element.submit()
+        console.log("submit() called successfully")
+      } catch (submitError) {
+        console.error("submit() also failed:", submitError)
+
+        // Last resort: find and click the submit button
+        console.log("Trying to click submit button...")
+        const submitButton = this.element.querySelector('input[type="submit"]')
+        if (submitButton) {
+          console.log("Found submit button:", submitButton)
+          submitButton.click()
+          console.log("Submit button clicked")
+        } else {
+          console.error("No submit button found!")
         }
       }
-    } catch (error) {
-      console.error("Error restoring search:", error)
     }
+    console.log("=== END SUBMIT DEBUG ===")
   }
 
-  saveSearchToStorage(searchData) {
+  async reverseGeocode(lat, lng) {
     try {
-      localStorage.setItem('lastEventSearch', JSON.stringify(searchData))
-    } catch (error) {
-      console.error("Error saving search:", error)
-    }
-  }
+      // Use a simple reverse geocoding service
+      const response = await fetch(`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}&localityLanguage=en`)
 
-  // Save search when form is submitted normally
-  disconnect() {
-    const formData = new FormData(this.element)
-    const searchData = {
-      address: formData.get('address') || "",
-      lat: formData.get('lat') || "",
-      lng: formData.get('lng') || "",
-      radius: formData.get('radius') || 5
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
+
+      const data = await response.json()
+
+      // Build a nice address string
+      const parts = []
+      if (data.locality) parts.push(data.locality)
+      if (data.principalSubdivision) parts.push(data.principalSubdivision)
+      if (data.postcode) parts.push(data.postcode)
+
+      return parts.length > 0 ? parts.join(", ") : null
+
+    } catch (error) {
+      console.error("Reverse geocoding failed:", error)
+      return null
     }
-    
-    this.saveSearchToStorage(searchData)
   }
 }
