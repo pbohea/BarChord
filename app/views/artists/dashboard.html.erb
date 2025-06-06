@@ -1,12 +1,12 @@
-<div class="container my-4" style="max-width: 500px;">
+<% content_for :title, "Dashboard" %>
 
-<div class="container my-4" style="max-width: 500px;">
+<div class="container mb-3 pt-3" style="max-width: 500px;">
   <div class="text-center mb-4">
     <%= link_to "Add New Event", new_event_path, class: "btn btn-primary" %>
   </div>
   
   
-  <h2 class="text-center mb-4">Upcoming Events</h2>
+  <h2 class="text-center mb-4">My Upcoming Events</h2>
 
   <% if @upcoming_events.any? %>
     <% @upcoming_events.each do |event| %>
@@ -43,7 +43,7 @@
     <p class="text-center text-muted">No upcoming events.</p>
   <% end %>
 
-  <h2 class="text-center mt-5 mb-4">Past Events</h2>
+  <h2 class="text-center mt-5 mb-4">My Past Events</h2>
 
   <% if @past_events.any? %>
     <% @past_events.each do |event| %>

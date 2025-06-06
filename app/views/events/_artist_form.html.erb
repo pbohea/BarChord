@@ -1,5 +1,4 @@
-<div class="container mt-5" style="max-width: 600px;">
-  <h2 class="mb-4 text-center">Create New Event</h2>
+<div class="container pt-4" style="max-width: 600px;">
 
   <%= form_with model: event, local: true, class: "needs-validation" do |f| %>
 
@@ -90,3 +89,7 @@
 
   <% end %>
 </div>
+
+  <div>
+    <%= link_to "Back to events", artist_dashboard_path(current_artist) %>
+  </div>
