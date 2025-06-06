@@ -93,9 +93,9 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html {
         if artist_signed_in?
-          redirect_to artist_dashboard_path, status: :see_other, notice: "Event has been cancelled successfully."
+          redirect_to artist_dashboard_path(current_artist), status: :see_other, notice: "Event has been cancelled successfully."
         elsif owner_signed_in?
-          redirect_to owner_dashboard_path, status: :see_other, notice: "Event has been cancelled successfully."
+          redirect_to owner_dashboard_path(current_owner), status: :see_other, notice: "Event has been cancelled successfully."
         else
           redirect_to events_path, status: :see_other, notice: "Event has been cancelled successfully."
         end
