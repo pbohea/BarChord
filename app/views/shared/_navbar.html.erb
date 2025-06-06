@@ -51,36 +51,39 @@
   </div>
 </div>
 
-<!-- Sign In Modal -->
-<div class="modal fade" id="signinModal" data-turbo="false" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="signinModalLabel">Sign In As</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body d-grid gap-2">
-        <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary w-100" %>
-        <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success w-100" %>
-        <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info w-100" %>
+<% unless hotwire_native_app? %>
+  <!-- Only include Bootstrap modals for web version -->
+  <!-- Sign In Modal -->
+  <div class="modal fade" id="signinModal" data-turbo="false" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signinModalLabel">Sign In As</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-grid gap-2">
+          <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary w-100" %>
+          <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success w-100" %>
+          <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info w-100" %>
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- Sign Up Modal -->
-<div class="modal fade" id="signupModal" data-turbo="false" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="signupModalLabel">Sign Up As</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <div class="modal-body d-grid gap-2">
-        <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary w-100" %>
-        <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success w-100" %>
-        <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info w-100" %>
+  <!-- Sign Up Modal -->
+  <div class="modal fade" id="signupModal" data-turbo="false" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="signupModalLabel">Sign Up As</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body d-grid gap-2">
+          <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary w-100" %>
+          <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success w-100" %>
+          <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info w-100" %>
+        </div>
       </div>
     </div>
   </div>
-</div>
+<% end %>

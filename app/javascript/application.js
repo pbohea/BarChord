@@ -189,3 +189,135 @@ if (isNativeApp) {
     }
   })
 }
+
+// Custom modal functions for native app
+function showSignInModal() {
+  console.log('Showing sign in modal'); // Debug log
+  const modal = document.getElementById('signinModal');
+  console.log('Modal element:', modal);
+  
+  if (modal) {
+    console.log('Modal classes before:', modal.className);
+    modal.classList.remove('hiding');
+    modal.classList.add('show');
+    console.log('Modal classes after:', modal.className);
+    console.log('Modal display style:', window.getComputedStyle(modal).display);
+    document.body.style.overflow = 'hidden';
+  } else {
+    console.log('Sign in modal not found');
+  }
+}
+
+function hideSignInModal() {
+  console.log('Hiding sign in modal'); // Debug log
+  const modal = document.getElementById('signinModal');
+  if (modal) {
+    modal.classList.add('hiding');
+    document.body.style.overflow = '';
+    
+    setTimeout(() => {
+      modal.classList.remove('show', 'hiding');
+    }, 200);
+  }
+}
+
+function showSignUpModal() {
+  console.log('Showing sign up modal'); // Debug log
+  const modal = document.getElementById('signupModal');
+  console.log('Modal element:', modal);
+  
+  if (modal) {
+    console.log('Modal classes before:', modal.className);
+    modal.classList.remove('hiding');
+    modal.classList.add('show');
+    console.log('Modal classes after:', modal.className);
+    console.log('Modal display style:', window.getComputedStyle(modal).display);
+    console.log('Modal z-index:', window.getComputedStyle(modal).zIndex);
+    document.body.style.overflow = 'hidden';
+  } else {
+    console.log('Sign up modal not found');
+  }
+}
+
+function hideSignUpModal() {
+  console.log('Hiding sign up modal'); // Debug log
+  const modal = document.getElementById('signupModal');
+  if (modal) {
+    modal.classList.add('hiding');
+    document.body.style.overflow = '';
+    
+    setTimeout(() => {
+      modal.classList.remove('show', 'hiding');
+    }, 200);
+  }
+}
+
+// Make functions global
+window.showSignInModal = showSignInModal;
+window.hideSignInModal = hideSignInModal;
+window.showSignUpModal = showSignUpModal;
+window.hideSignUpModal = hideSignUpModal;
+
+// Modal event listeners
+document.addEventListener('turbo:load', function() {
+  console.log('Setting up modal event listeners'); // Debug log
+  
+  // Check if CSS is loaded
+  const testModal = document.getElementById('signupModal');
+  if (testModal) {
+    console.log('Modal CSS check - z-index:', window.getComputedStyle(testModal).zIndex);
+    console.log('Modal CSS check - position:', window.getComputedStyle(testModal).position);
+  }
+  
+  // Button click handlers
+  const signInButton = document.getElementById('signInButton');
+  const signUpButton = document.getElementById('signUpButton');
+  
+  if (signInButton) {
+    console.log('Found sign in button, adding listener');
+    signInButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Sign in button clicked');
+      showSignInModal();
+    });
+  }
+  
+  if (signUpButton) {
+    console.log('Found sign up button, adding listener');
+    signUpButton.addEventListener('click', function(e) {
+      e.preventDefault();
+      console.log('Sign up button clicked');
+      showSignUpModal();
+    });
+  }
+  
+  // Close modal handlers
+  document.querySelectorAll('[data-close-modal]').forEach(element => {
+    element.addEventListener('click', function(e) {
+      e.preventDefault();
+      const modalType = this.dataset.closeModal;
+      console.log('Closing modal:', modalType);
+      
+      if (modalType === 'signin') {
+        hideSignInModal();
+      } else if (modalType === 'signup') {
+        hideSignUpModal();
+      }
+    });
+  });
+
+  // Close modals with escape key
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') {
+      hideSignInModal();
+      hideSignUpModal();
+    }
+  });
+
+  // Prevent body scroll when modal is open
+  document.addEventListener('touchmove', function(e) {
+    if (document.querySelector('.custom-modal.show')) {
+      e.preventDefault();
+    }
+  }, { passive: false });
+});

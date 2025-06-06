@@ -1,3 +1,116 @@
+<style>
+/* Custom Modal Styles - Inline to ensure they load */
+.custom-modal {
+  display: none !important;
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  z-index: 99999 !important;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.custom-modal.show {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.custom-modal-overlay {
+  position: absolute !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100% !important;
+  height: 100% !important;
+  background-color: rgba(0, 0, 0, 0.5) !important;
+  backdrop-filter: blur(2px);
+}
+
+.custom-modal-content {
+  position: relative !important;
+  background: white !important;
+  border-radius: 12px !important;
+  max-width: 90% !important;
+  width: 400px !important;
+  max-height: 90vh !important;
+  overflow: hidden !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3) !important;
+  transform: scale(1) !important;
+  z-index: 100000 !important;
+}
+
+.custom-modal-header {
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+  padding: 20px 24px 16px !important;
+  border-bottom: 1px solid #e9ecef !important;
+}
+
+.custom-modal-header h5 {
+  margin: 0 !important;
+  font-size: 1.25rem !important;
+  font-weight: 600 !important;
+  color: #212529 !important;
+}
+
+.custom-modal-close {
+  background: none !important;
+  border: none !important;
+  font-size: 24px !important;
+  color: #6c757d !important;
+  cursor: pointer !important;
+  padding: 0 !important;
+  width: 30px !important;
+  height: 30px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border-radius: 50% !important;
+  transition: background-color 0.2s;
+}
+
+.custom-modal-close:hover {
+  background-color: #f8f9fa !important;
+  color: #495057 !important;
+}
+
+.custom-modal-body {
+  padding: 20px 24px 24px !important;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .custom-modal-content {
+    background: #2d3748 !important;
+    color: #e2e8f0 !important;
+  }
+  
+  .custom-modal-header {
+    border-bottom-color: #4a5568 !important;
+  }
+  
+  .custom-modal-header h5 {
+    color: #e2e8f0 !important;
+  }
+  
+  .custom-modal-close {
+    color: #a0aec0 !important;
+  }
+  
+  .custom-modal-close:hover {
+    background-color: #4a5568 !important;
+    color: #e2e8f0 !important;
+  }
+}
+</style>
+
 <div class="d-flex flex-column justify-content-between" style="height: 100dvh; overflow: hidden;">
  
   <div class="container py-4">
@@ -19,14 +132,45 @@
       </div>
     <% else %>
       <div class="d-grid gap-2">
-        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signinModal">Sign In</button>
-        <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+        <button class="btn btn-outline-primary" id="signInButton" data-action="signin">Sign In</button>
+        <button class="btn btn-outline-secondary" id="signUpButton" data-action="signup">Sign Up</button>
       </div>
     <% end %>
   </div>
 
-
   <div class="text-center py-3">
     <%= link_to "About LocalLive", about_path, class: "text-primary text-decoration-none fw-semibold" %>
+  </div>
+</div>
+
+<!-- Custom Sign In Modal -->
+<div id="signinModal" class="custom-modal">
+  <div class="custom-modal-overlay" data-close-modal="signin"></div>
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h5>Sign In As</h5>
+      <button class="custom-modal-close" data-close-modal="signin">&times;</button>
+    </div>
+    <div class="custom-modal-body">
+      <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary w-100 mb-2" %>
+      <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success w-100 mb-2" %>
+      <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info w-100" %>
+    </div>
+  </div>
+</div>
+
+<!-- Custom Sign Up Modal -->
+<div id="signupModal" class="custom-modal">
+  <div class="custom-modal-overlay" data-close-modal="signup"></div>
+  <div class="custom-modal-content">
+    <div class="custom-modal-header">
+      <h5>Sign Up As</h5>
+      <button class="custom-modal-close" data-close-modal="signup">&times;</button>
+    </div>
+    <div class="custom-modal-body">
+      <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary w-100 mb-2" %>
+      <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success w-100 mb-2" %>
+      <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info w-100" %>
+    </div>
   </div>
 </div>
