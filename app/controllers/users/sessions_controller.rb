@@ -19,7 +19,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    root_path
+    menu_path
   end
 
   def respond_to_on_destroy
@@ -34,4 +34,3 @@ class Users::SessionsController < Devise::SessionsController
     Current.user = user if defined?(Current)
   end
 end
-
