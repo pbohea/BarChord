@@ -91,7 +91,15 @@ class EventsController < ApplicationController
     @event.destroy!
 
     respond_to do |format|
-      format.html { redirect_to events_path, status: :see_other, notice: "Event was successfully destroyed." }
+      format.html {
+        if artist_signed_in?
+          redirect_to artist_dashboard_path, status: :see_other, notice: "Event has been cancelled successfully."
+        elsif owner_signed_in?
+          redirect_to owner_dashboard_path, status: :see_other, notice: "Event has been cancelled successfully."
+        else
+          redirect_to events_path, status: :see_other, notice: "Event has been cancelled successfully."
+        end
+      }
     end
   end
 
