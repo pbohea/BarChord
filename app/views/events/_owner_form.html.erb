@@ -75,8 +75,21 @@
 
     <!-- Cover Checkbox -->
     <div class="form-check mb-3">
-      <%= f.check_box :cover, class: "form-check-input" %>
+      <%= f.check_box :cover, 
+          class: "form-check-input", 
+          id: "event_cover",
+          onchange: "toggleCoverAmount()" %>
       <%= f.label :cover, "Cover Charge?", class: "form-check-label" %>
+    </div>
+
+    <!-- Cover Amount Field (hidden by default) -->
+    <div class="mb-3" id="cover-amount-field" style="display: none;">
+      <%= f.label :cover_amount, "Cover Amount ($)", class: "form-label" %>
+      <%= f.number_field :cover_amount, 
+          class: "form-control", 
+          placeholder: "Enter amount",
+          min: 1,
+          step: 1 %>
     </div>
 
     <!-- Indoors Checkbox -->

@@ -1,13 +1,4 @@
-<!-- Add this temporarily at the top of your edit form to debug -->
-<div style="background: yellow; padding: 10px; margin: 10px 0;">
-  <p><strong>Debug Info:</strong></p>
-  <p>Start time raw: <%= event.start_time.inspect %></p>
-  <p>Start time formatted: <%= event.start_time&.strftime("%H:%M") %></p>
-  <p>End time raw: <%= event.end_time.inspect %></p>
-  <p>End time formatted: <%= event.end_time&.strftime("%H:%M") %></p>
-  <p>First few time options: <%= time_options.first(3) %></p>
-</div>
-
+<!-- FORM 3: Edit Event Form -->
 <div class="container mt-5" style="max-width: 600px;">
   <h2 class="mb-4 text-center">Edit Event</h2>
 
@@ -71,8 +62,21 @@
 
     <!-- Cover Checkbox -->
     <div class="form-check mb-3">
-      <%= f.check_box :cover, class: "form-check-input" %>
+      <%= f.check_box :cover, 
+          class: "form-check-input", 
+          id: "event_cover",
+          onchange: "toggleCoverAmount()" %>
       <%= f.label :cover, "Cover Charge?", class: "form-check-label" %>
+    </div>
+
+    <!-- Cover Amount Field (show/hide based on existing value) -->
+    <div class="mb-3" id="cover-amount-field" style="display: <%= event.cover? ? 'block' : 'none' %>;">
+      <%= f.label :cover_amount, "Cover Amount ($)", class: "form-label" %>
+      <%= f.number_field :cover_amount, 
+          class: "form-control", 
+          placeholder: "Enter amount",
+          min: 1,
+          step: 1 %>
     </div>
 
     <!-- Indoors Checkbox -->
@@ -87,3 +91,35 @@
 
   <% end %>
 </div>
+
+<!-- Your existing layout content -->
+
+<script>
+function toggleCoverAmount() {
+  const checkbox = document.getElementById('event_cover');
+  const coverAmountField = document.getElementById('cover-amount-field');
+  
+  if (checkbox && coverAmountField) {
+    const coverAmountInput = coverAmountField.querySelector('input[type="number"]');
+    
+    if (checkbox.checked) {
+      coverAmountField.style.display = 'block';
+      if (coverAmountInput) coverAmountInput.required = true;
+    } else {
+      coverAmountField.style.display = 'none';
+      if (coverAmountInput) {
+        coverAmountInput.required = false;
+        coverAmountInput.value = '';
+      }
+    }
+  }
+}
+
+// Run on page load to set initial state
+document.addEventListener('DOMContentLoaded', function() {
+  toggleCoverAmount();
+});
+</script>
+
+</body>
+</html>

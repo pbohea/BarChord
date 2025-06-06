@@ -1,3 +1,4 @@
+<!-- FORM 1: Artist Create Event Form -->
 <div class="container pt-4" style="max-width: 600px;">
 
   <%= form_with model: event, local: true, class: "needs-validation" do |f| %>
@@ -20,15 +21,6 @@
 
       <%= hidden_field_tag "event[venue_id]", nil, data: { venue_autocomplete_target: "hidden" } %>
     </div>
-
-    <!-- Dropdown fallback -->
-<!--    <div class="mb-3">-->
-      <%#= f.label :venue_id, "Or Select from Dropdown", class: "form-label" %>
-      <%#= f.select :venue_id, 
-          options_from_collection_for_select(Venue.all, :id, :name), 
-          { prompt: "Select a venue" }, 
-          { class: "form-select" } %>
-<!--    </div>-->
 
     <!-- Error block -->
     <% if event.errors[:base].any? %>
@@ -73,8 +65,21 @@
 
     <!-- Cover Checkbox -->
     <div class="form-check mb-3">
-      <%= f.check_box :cover, class: "form-check-input" %>
+      <%= f.check_box :cover, 
+          class: "form-check-input", 
+          id: "event_cover",
+          onchange: "toggleCoverAmount()" %>
       <%= f.label :cover, "Cover Charge?", class: "form-check-label" %>
+    </div>
+
+    <!-- Cover Amount Field (hidden by default) -->
+    <div class="mb-3" id="cover-amount-field" style="display: none;">
+      <%= f.label :cover_amount, "Cover Amount ($)", class: "form-label" %>
+      <%= f.number_field :cover_amount, 
+          class: "form-control", 
+          placeholder: "Enter amount",
+          min: 1,
+          step: 1 %>
     </div>
 
     <!-- Indoors Checkbox -->
@@ -90,6 +95,6 @@
   <% end %>
 </div>
 
-  <div>
-    <%= link_to "Back to events", artist_dashboard_path(current_artist) %>
-  </div>
+<div>
+  <%= link_to "Back to events", artist_dashboard_path(current_artist) %>
+</div>

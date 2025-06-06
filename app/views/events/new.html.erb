@@ -13,3 +13,35 @@
 
 
 </div>
+
+<!-- Your existing layout content -->
+
+<script>
+function toggleCoverAmount() {
+  const checkbox = document.getElementById('event_cover');
+  const coverAmountField = document.getElementById('cover-amount-field');
+  
+  if (checkbox && coverAmountField) {
+    const coverAmountInput = coverAmountField.querySelector('input[type="number"]');
+    
+    if (checkbox.checked) {
+      coverAmountField.style.display = 'block';
+      if (coverAmountInput) coverAmountInput.required = true;
+    } else {
+      coverAmountField.style.display = 'none';
+      if (coverAmountInput) {
+        coverAmountInput.required = false;
+        coverAmountInput.value = '';
+      }
+    }
+  }
+}
+
+// Run on page load to set initial state
+document.addEventListener('DOMContentLoaded', function() {
+  toggleCoverAmount();
+});
+</script>
+
+</body>
+</html>
