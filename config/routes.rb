@@ -31,6 +31,7 @@ Rails.application.routes.draw do
   get "events/map", to: "events#map"
 
   resources :venues do
+    get :search, on: :collection
     member do
       get :upcoming_events
     end

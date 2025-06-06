@@ -1,4 +1,11 @@
 <div class="container my-4" style="max-width: 500px;">
+
+<div class="container my-4" style="max-width: 500px;">
+  <div class="text-center mb-4">
+    <%= link_to "Add New Event", new_event_path, class: "btn btn-primary" %>
+  </div>
+  
+  
   <h2 class="text-center mb-4">Upcoming Events</h2>
 
   <% if @upcoming_events.any? %>

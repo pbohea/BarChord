@@ -1,8 +1,13 @@
 <% content_for :title, "New event" %>
 
-<h1>New Event</h1>
 
-<%= render partial: "form", event: @event %>
+<% if owner_signed_in? %>
+  <%= render partial: "owner_form", locals: { event: @event } %>
+<% elsif artist_signed_in? %>
+  <%= render partial: "artist_form", locals: { event: @event } %>
+<% else %>
+  <p>You must be signed in as an owner or artist to create events.</p>
+<% end %>
 
 <br>
 

@@ -27,6 +27,15 @@ class VenuesController < ApplicationController
     @venue = Venue.new
   end
 
+  def search
+    query = params[:query].to_s.strip.downcase
+    venues = Venue.where("LOWER(name) LIKE ?", "%#{query}%")
+                  .select(:id, :name)
+                  .limit(5)
+
+    render json: venues
+  end
+
   # GET /venues/1/edit
   def edit
   end
