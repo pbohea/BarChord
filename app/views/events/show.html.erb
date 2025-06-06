@@ -52,31 +52,32 @@
         <strong>Cover Charge:</strong>
         <%= @event.cover? ? number_to_currency(@event.cover_amount || 5) : "No Cover" %>
       </li>
+
+      <li class="list-group-item">
+        <% if @event.venue.latitude.present? && @event.venue.longitude.present? %>
+          <div class="position-relative" style="z-index: 2;">
+            <%= link_to "Show on Map",
+                  "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
+                  class: "btn btn-sm btn-outline-primary",
+                  data: { turbo_frame: "_top" } %>
+          </div>
+        <% end %>
+      </li>
     </ul>
   </div>
 
-  <% if @event.venue.website.present? %>
-    <div class="d-grid mt-3">
-      <%= link_to "Go to event", @event.venue.website,
-            class: "btn btn-primary",
-            target: "_blank",
-            rel: "noopener",
-            data: { turbo: false } %>
-    </div>
-  <% end %>
-
-<!-- Add this wherever appropriate in your show view -->
-<% if can_modify_event?(@event) %>
-  <div class="mt-4">
-    <%= link_to "Edit Event", 
+  <!-- Add this wherever appropriate in your show view -->
+  <% if can_modify_event?(@event) %>
+    <div class="mt-4">
+      <%= link_to "Edit Event", 
         edit_event_path(@event), 
         class: "btn btn-warning me-2" %>
-    
-    <%= button_to "Cancel Event", 
+
+      <%= button_to "Cancel Event", 
         event_path(@event), 
         method: :delete, 
         class: "btn btn-danger",
         data: { confirm: "Are you sure you want to cancel this event? This action cannot be undone." },
         form: { class: "d-inline" } %>
-  </div>
-<% end %>
+    </div>
+  <% end %>
