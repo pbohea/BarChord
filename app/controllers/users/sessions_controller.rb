@@ -22,6 +22,11 @@ class Users::SessionsController < Devise::SessionsController
     root_path
   end
 
+  def respond_to_on_destroy
+    # Force a proper HTML redirect instead of turbo_stream
+    redirect_to after_sign_out_path_for(resource_name), status: :see_other
+  end
+
   private
 
   def track_user_session(user)
@@ -30,24 +35,3 @@ class Users::SessionsController < Devise::SessionsController
   end
 end
 
-# GET /resource/sign_in
-# def new
-#   super
-# end
-
-# POST /resource/sign_in
-# def create
-#   super
-# end
-
-# DELETE /resource/sign_out
-# def destroy
-#   super
-# end
-
-# protected
-
-# If you have extra params to permit, append them to the sanitizer.
-# def configure_sign_in_params
-#   devise_parameter_sanitizer.permit(:sign_in, keys: [:attribute])
-# end

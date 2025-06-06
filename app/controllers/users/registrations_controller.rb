@@ -26,6 +26,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
     stored_location_for(resource) || user_dashboard_path(resource)
   end
 
+  def respond_with(resource, _opts = {})
+    if resource.persisted?
+      # Force a proper HTML redirect instead of turbo_stream
+      redirect_to after_sign_up_path_for(resource), status: :see_other
+    else
+      super
+    end
+  end
+
   private
 
   def track_user_session(user)
