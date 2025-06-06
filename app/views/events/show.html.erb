@@ -1,17 +1,14 @@
 <% content_for :title, "Event Information" %>
 
-<div class="container my-4" style="max-width: 500px;">
+<div class="container mb-3 pt-3" style="max-width: 500px;">
   <div class="card shadow-sm">
     <div class="card-body text-center">
 
-      <!-- Venue Name Button at Top -->
+      <!-- Venue Name Link at Top -->
       <div class="d-flex justify-content-center">
-        <button type="button"
-            class="btn btn-outline-primary mb-3"
-            data-bs-toggle="modal"
-            data-bs-target="#venueShowModal">
-          <%= @event.venue.name %>
-        </button>
+        <%= link_to @event.venue.name, 
+              venue_path(@event.venue), 
+              class: "btn btn-outline-primary mb-3" %>
       </div>
 
       <!-- Artist Image -->
@@ -67,16 +64,3 @@
             data: { turbo: false } %>
     </div>
   <% end %>
-
-  <!-- Modal -->
-  <div class="modal fade" id="venueShowModal" tabindex="-1" aria-labelledby="venueShowLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <turbo-frame id="venue_show_frame" src="<%= venue_path(@event.venue) %>">
-          <div class="text-center text-muted p-4">Loading venue...</div>
-        </turbo-frame>
-      </div>
-    </div>
-  </div>
-
-</div>
