@@ -1409,40 +1409,49 @@ task sample_data: :environment do
     venues << venue
   end
 
-  allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
-  # events
-  90.times do
-    # Generate a random start time
-    random_start = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
-
-    # Round to nearest 15-minute interval
-    hour = random_start.hour
-    minute = (random_start.min / 15.0).round * 15
-
-    # Handle minute overflow
-    if minute == 60
-      hour += 1
-      minute = 0
-    end
-
-    # Create the properly rounded start time
-    start_time = random_start.change(hour: hour, min: minute, sec: 0)
-
-    cover = [true, false].sample
-
-    Event.create!(
-      category: allowed_categories.sample,
-      date: start_time.to_date,
-      start_time: start_time,
-      end_time: start_time + 2.hours,
-      description: Faker::Lorem.sentence(word_count: 6),
-      cover: cover,
-      cover_amount: cover ? rand(5..20) : nil,
-      indoors: [true, false].sample,
-      venue_id: venues.sample.id,
-      artist_id: artists.sample.id,
-    )
+allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
+90.times do
+  # Generate a random start time
+  random_start = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
+  
+  # Round to nearest 15-minute interval
+  hour = random_start.hour
+  minute = (random_start.min / 15.0).round * 15
+  
+  if minute == 60
+    hour += 1
+    minute = 0
   end
+  
+  # Create the properly rounded start time
+  start_datetime = random_start.change(hour: hour, min: minute, sec: 0)
+  
+  # Calculate end time
+  durations = [1.hour, 1.5.hours, 2.hours, 2.5.hours, 3.hours, 4.hours]
+  duration = durations.sample
+  
+  # For late events, make them longer to create overnight events
+  if start_datetime.hour >= 22
+    duration = [3.hours, 4.hours, 5.hours, 6.hours].sample
+  end
+  
+  end_datetime = start_datetime + duration
+  
+  cover = [true, false].sample
+
+  Event.create!(
+    category: allowed_categories.sample,
+    date: start_datetime.to_date,
+    start_time: start_datetime,     # Pass as datetime object
+    end_time: end_datetime,         # Pass as datetime object  
+    description: Faker::Lorem.sentence(word_count: 6),
+    cover: cover,
+    cover_amount: cover ? rand(5..20) : nil,
+    indoors: [true, false].sample,
+    venue_id: venues.sample.id,
+    artist_id: artists.sample.id,
+  )
+end
 
   #create followed artists and venues
 

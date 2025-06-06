@@ -21,10 +21,53 @@ class Event < ApplicationRecord
   belongs_to :venue
   belongs_to :artist, optional: true
 
+  before_save :adjust_end_time_for_overnight_events
+  before_save :set_artist_name_from_artist
+
   scope :upcoming, -> { where("date >= ?", Date.today).order(:date, :start_time) }
   scope :past,     -> { where("date < ?", Date.today).order(date: :desc, start_time: :desc) }
 
   validate :artist_presence
+
+  private
+
+  def adjust_end_time_for_overnight_events
+    return unless date.present? && start_time.present? && end_time.present?
+
+    # Parse the time strings if they come from the form
+    start_hour, start_min = parse_time_string(start_time)
+    end_hour, end_min = parse_time_string(end_time)
+
+    # Create full datetime objects
+    start_datetime = date.beginning_of_day + start_hour.hours + start_min.minutes
+    end_datetime = date.beginning_of_day + end_hour.hours + end_min.minutes
+
+    # If end time is earlier than start time, assume it's the next day
+    if end_datetime <= start_datetime
+      end_datetime += 1.day
+    end
+
+    self.start_time = start_datetime
+    self.end_time = end_datetime
+  end
+
+  def parse_time_string(time_input)
+    if time_input.is_a?(String)
+      # Handle "HH:MM" format from form
+      hour, min = time_input.split(':').map(&:to_i)
+    else
+      # Handle datetime object
+      hour = time_input.hour
+      min = time_input.min
+    end
+    [hour, min]
+  end
+
+  def set_artist_name_from_artist
+    if artist_id.present? && artist.present?
+      self.artist_name = artist.username
+    end
+  end
 
   def artist_presence
     if artist_id.blank? && artist_name.blank?
