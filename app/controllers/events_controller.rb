@@ -7,7 +7,7 @@ class EventsController < ApplicationController
     Rails.logger.info "🔍 EVENTS INDEX HIT - User-Agent: #{request.user_agent}"
     Rails.logger.info "🔍 REQUEST FORMAT: #{request.format}"
     Rails.logger.info "🔍 REQUEST PARAMS: #{params.inspect}"
-    
+
     if params[:address].present? || params[:lat].present?
       # User is searching by location - filter results
       @events = find_nearby_events
@@ -28,13 +28,13 @@ class EventsController < ApplicationController
   # GET /events/nearby - New filtered endpoint
   def nearby
     Rails.logger.info "🔍 NEARBY ENDPOINT HIT with params: #{params.inspect}"
-    
+
     @events = find_nearby_events
     @search_params = extract_search_params
-    
+
     Rails.logger.info "📊 Found #{@events.count} events after filtering"
     Rails.logger.info "🎯 Search params: #{@search_params}"
-    
+
     respond_to do |format|
       format.html { render :index }
       format.json { render :nearby }
@@ -113,18 +113,18 @@ class EventsController < ApplicationController
 
   def find_nearby_events
     Rails.logger.info "🔍 Starting find_nearby_events"
-    
+
     # Start with upcoming events
     events = Event.upcoming.includes(:venue, :artist)
     Rails.logger.info "📅 Found #{events.count} upcoming events total"
-    
+
     # If we have location coordinates, filter by distance
     if search_coordinates.present?
       lat, lng = search_coordinates
       radius = search_radius
-      
+
       Rails.logger.info "📍 Searching near [#{lat}, #{lng}] within #{radius} miles"
-      
+
       # Use geocoder's near method without ordering to avoid distance column issue
       begin
         nearby_venues = Venue.near([lat, lng], radius, units: :mi, order: false)
@@ -136,25 +136,25 @@ class EventsController < ApplicationController
         all_venues = Venue.where.not(latitude: nil, longitude: nil)
         venue_ids = all_venues.select do |venue|
           distance = Geocoder::Calculations.distance_between(
-            [lat, lng], 
-            [venue.latitude, venue.longitude], 
-            units: :mi
+            [lat, lng],
+            [venue.latitude, venue.longitude],
+            units: :mi,
           )
           distance <= radius
         end.map(&:id)
         Rails.logger.info "🏢 Manual calculation found #{venue_ids.count} venues within radius"
       end
-      
+
       events = events.where(venue_id: venue_ids)
       Rails.logger.info "🎭 Filtered to #{events.count} events"
-      
+
       # Sort by distance from search location
       events = events.to_a.sort_by do |event|
         if event.venue.latitude && event.venue.longitude
           distance = Geocoder::Calculations.distance_between(
-            [lat, lng], 
+            [lat, lng],
             [event.venue.latitude, event.venue.longitude],
-            units: :mi
+            units: :mi,
           )
           Rails.logger.debug "📏 Event #{event.id} distance: #{distance.round(2)} miles"
           distance
@@ -166,23 +166,23 @@ class EventsController < ApplicationController
     else
       Rails.logger.info "❌ No search coordinates provided"
     end
-    
+
     events
   end
 
   def search_coordinates
     @search_coordinates ||= begin
-      if params[:lat].present? && params[:lng].present? && 
-         params[:lat] != "" && params[:lng] != ""
-        # Use coordinates if they're provided (from iOS geolocation)
-        [params[:lat].to_f, params[:lng].to_f]
-      elsif params[:address].present?
-        # Fallback to geocoding the address
-        geocode_address(params[:address])
-      else
-        nil
+        if params[:lat].present? && params[:lng].present? &&
+           params[:lat] != "" && params[:lng] != ""
+          # Use coordinates if they're provided (from iOS geolocation)
+          [params[:lat].to_f, params[:lng].to_f]
+        elsif params[:address].present?
+          # Fallback to geocoding the address
+          geocode_address(params[:address])
+        else
+          nil
+        end
       end
-    end
   end
 
   def search_radius
@@ -194,17 +194,17 @@ class EventsController < ApplicationController
   def geocode_address(address)
     # Add country context to improve geocoding accuracy
     search_query = if address.match?(/^\d{5}(-\d{4})?$/)
-      # If it looks like a US ZIP code, add country context
-      "#{address}, USA"
-    else
-      address
-    end
-    
+        # If it looks like a US ZIP code, add country context
+        "#{address}, USA"
+      else
+        address
+      end
+
     result = Geocoder.search(search_query).first
     if result&.coordinates
       coordinates = result.coordinates
       Rails.logger.info "📍 Geocoded '#{address}' (searched: '#{search_query}') to: #{coordinates[0]}, #{coordinates[1]}"
-      
+
       # Sanity check - reject coordinates that are clearly wrong for US addresses
       lat, lng = coordinates
       if address.match?(/^\d{5}(-\d{4})?$/) # US ZIP code
@@ -214,7 +214,7 @@ class EventsController < ApplicationController
           return nil
         end
       end
-      
+
       coordinates
     else
       Rails.logger.warn "❌ Failed to geocode address: '#{address}'"
@@ -229,7 +229,7 @@ class EventsController < ApplicationController
       lat: coords&.first,
       lng: coords&.last,
       radius: search_radius,
-      has_location: coords.present?
+      has_location: coords.present?,
     }
   end
 
@@ -249,14 +249,30 @@ class EventsController < ApplicationController
 
   # Authorization logic
   def authorize_owner_or_admin!
-    venue_owner_id = @event.venue&.owner_id
-
-    authorized = owner_signed_in? && current_owner.id == venue_owner_id
-    authorized ||= user_signed_in? && current_user.email == "pbohea@gmail.com"
-
-    unless authorized
-      redirect_to events_path, alert: "You are not authorized to modify this event."
+    unless can_modify_event?(@event)
+      redirect_to @event, alert: "You don't have permission to modify this event."
     end
+  end
+
+  def can_modify_event?(event)
+    return false unless event
+
+    # Artist who is performing can modify
+    if artist_signed_in? && current_artist == event.artist
+      return true
+    end
+
+    # Owner of the venue can modify
+    if owner_signed_in? && current_owner.venues.include?(event.venue)
+      return true
+    end
+
+    # Admin access (keeping your existing admin logic)
+    if user_signed_in? && current_user.email == "pbohea@gmail.com"
+      return true
+    end
+
+    false
   end
 
   # notifications

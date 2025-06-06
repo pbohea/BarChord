@@ -22,13 +22,13 @@
     </div>
 
     <!-- Dropdown fallback -->
-    <div class="mb-3">
-      <%= f.label :venue_id, "Or Select from Dropdown", class: "form-label" %>
-      <%= f.select :venue_id, 
+<!--    <div class="mb-3">-->
+      <%#= f.label :venue_id, "Or Select from Dropdown", class: "form-label" %>
+      <%#= f.select :venue_id, 
           options_from_collection_for_select(Venue.all, :id, :name), 
           { prompt: "Select a venue" }, 
           { class: "form-select" } %>
-    </div>
+<!--    </div>-->
 
     <!-- Error block -->
     <% if event.errors[:base].any? %>

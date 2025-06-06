@@ -1,0 +1,89 @@
+<!-- Add this temporarily at the top of your edit form to debug -->
+<div style="background: yellow; padding: 10px; margin: 10px 0;">
+  <p><strong>Debug Info:</strong></p>
+  <p>Start time raw: <%= event.start_time.inspect %></p>
+  <p>Start time formatted: <%= event.start_time&.strftime("%H:%M") %></p>
+  <p>End time raw: <%= event.end_time.inspect %></p>
+  <p>End time formatted: <%= event.end_time&.strftime("%H:%M") %></p>
+  <p>First few time options: <%= time_options.first(3) %></p>
+</div>
+
+<div class="container mt-5" style="max-width: 600px;">
+  <h2 class="mb-4 text-center">Edit Event</h2>
+
+  <%= form_with model: event, local: true, class: "needs-validation" do |f| %>
+
+    <!-- Display current artist and venue (non-editable) -->
+    <div class="mb-3">
+      <label class="form-label">Artist</label>
+      <p class="form-control-plaintext"><%= event.artist.username %></p>
+    </div>
+
+    <div class="mb-3">
+      <label class="form-label">Venue</label>
+      <p class="form-control-plaintext"><%= event.venue.name %></p>
+    </div>
+
+    <!-- Category Dropdown -->
+    <div class="mb-3">
+      <%= f.label :category, class: "form-label" %>
+      <%= f.select :category, ["Guitar", "Piano", "Band", "DJ"], 
+          {}, 
+          { class: "form-select", required: true } %>
+    </div>
+
+    <!-- Description -->
+    <div class="mb-3">
+      <%= f.label :description, class: "form-label" %>
+      <%= f.text_area :description, 
+          class: "form-control", 
+          placeholder: "Describe the event", 
+          rows: 3 %>
+    </div>
+
+    <!-- Date Dropdown (Next 14 Days) -->
+    <div class="mb-3">
+      <%= f.label :date, class: "form-label" %>
+      <%= f.select :date,
+        (0..13).map { |i|
+        date = Date.today + i.days
+        [date.strftime("%A, %B %-d"), date.to_s]
+        },
+        {},
+        { class: "form-select", required: true } %>
+    </div>
+
+    <!-- Start Time Dropdown -->
+    <div class="mb-3">
+      <%= f.label :start_time, "Start Time", class: "form-label" %>
+      <%= f.select :start_time, time_options, 
+      { selected: event.start_time&.strftime("%H:%M") }, 
+      { class: "form-select", required: true } %>
+    </div>
+
+    <!-- End Time Dropdown -->
+    <div class="mb-3">
+      <%= f.label :end_time, "End Time", class: "form-label" %>
+      <%= f.select :end_time, time_options, 
+      { selected: event.end_time&.strftime("%H:%M") }, 
+      { class: "form-select", required: true } %>
+    </div>
+
+    <!-- Cover Checkbox -->
+    <div class="form-check mb-3">
+      <%= f.check_box :cover, class: "form-check-input" %>
+      <%= f.label :cover, "Cover Charge?", class: "form-check-label" %>
+    </div>
+
+    <!-- Indoors Checkbox -->
+    <div class="form-check mb-4">
+      <%= f.check_box :indoors, class: "form-check-input" %>
+      <%= f.label :indoors, "Indoors?", class: "form-check-label" %>
+    </div>
+
+    <div class="d-grid">
+      <%= f.submit "Update Event", class: "btn btn-primary" %>
+    </div>
+
+  <% end %>
+</div>

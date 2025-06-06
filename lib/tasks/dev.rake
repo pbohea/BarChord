@@ -1412,7 +1412,22 @@ task sample_data: :environment do
   allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
   # events
   90.times do
-    start_time = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
+    # Generate a random start time
+    random_start = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
+
+    # Round to nearest 15-minute interval
+    hour = random_start.hour
+    minute = (random_start.min / 15.0).round * 15
+
+    # Handle minute overflow
+    if minute == 60
+      hour += 1
+      minute = 0
+    end
+
+    # Create the properly rounded start time
+    start_time = random_start.change(hour: hour, min: minute, sec: 0)
+
     cover = [true, false].sample
 
     Event.create!(
