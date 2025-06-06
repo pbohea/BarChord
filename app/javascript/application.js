@@ -114,9 +114,8 @@ if (isNativeApp) {
       viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover');
     }
     
-    // Prevent scroll-based appearance changes
-    document.body.style.overscrollBehavior = 'none';
-    document.documentElement.style.overscrollBehavior = 'none';
+    // REMOVED: The overscrollBehavior = 'none' lines that were disabling swipe-to-refresh
+    // We want to allow overscroll for pull-to-refresh functionality
     
     // Ensure proper safe area handling
     document.documentElement.style.setProperty('--safe-area-inset-top', 'env(safe-area-inset-top)');
@@ -154,4 +153,39 @@ if (isNativeApp) {
     }
     return originalAddEventListener.call(this, type, listener, options);
   };
+}
+
+// Handle swipe-to-refresh for events page specifically
+if (isNativeApp) {
+  document.addEventListener('turbo:load', function() {
+    // For events page, configure custom refresh behavior
+    const isEventsPage = window.location.pathname === '/events' || window.location.pathname.includes('/events?')
+    
+    if (isEventsPage) {
+      // Try multiple event names that Hotwire Native might use
+      const refreshEvents = ['refresh', 'pull-to-refresh', 'hotwire:refresh', 'turbo:refresh']
+      
+      refreshEvents.forEach(eventName => {
+        document.addEventListener(eventName, function(event) {
+          console.log(`Caught refresh event: ${eventName}`) // Debug log
+          
+          // For events page, reload the entire page to preserve search state
+          window.location.reload()
+          
+          // Prevent default refresh behavior
+          if (event.preventDefault) {
+            event.preventDefault()
+          }
+        })
+      })
+      
+      // Also try window-level events
+      if (window.HotwireNative) {
+        // Try to override the refresh action directly
+        window.addEventListener('beforeunload', function() {
+          console.log('Page unloading - might be refresh')
+        })
+      }
+    }
+  })
 }
