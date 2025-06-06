@@ -12,9 +12,75 @@ window.$ = jquery;
 import Rails from "@rails/ujs"
 Rails.start();
 
+// Disable browser scroll restoration 
+if ('scrollRestoration' in history) {
+  history.scrollRestoration = 'manual'
+}
 
+// Add CSS to completely disable scroll behavior
+const style = document.createElement('style')
+style.textContent = `
+  html, body {
+    scroll-behavior: auto !important;
+  }
+  
+  /* For WebKit/iOS */
+  html {
+    -webkit-scroll-behavior: auto !important;
+  }
+`
+document.head.appendChild(style)
 
-document.addEventListener("turbo:load", () => {
+let savedScrollPosition = null
+
+// Save scroll position whenever we're about to leave the events page
+function saveEventsScrollPosition() {
+  const isEventsPage = window.location.pathname === '/events' || window.location.pathname.includes('/events?')
+  if (isEventsPage) {
+    savedScrollPosition = window.pageYOffset
+    console.log('Saved scroll position:', savedScrollPosition) // Debug log
+  }
+}
+
+// Save position when navigating away from events page
+document.addEventListener('turbo:before-visit', saveEventsScrollPosition)
+
+// Also save position when clicking links (this catches event card clicks)
+document.addEventListener('click', (event) => {
+  // Check if clicked element or its parent is a link
+  const link = event.target.closest('a')
+  if (link) {
+    saveEventsScrollPosition()
+  }
+})
+
+// Restore position instantly on events page load
+document.addEventListener('turbo:load', () => {
+  const isEventsPage = window.location.pathname === '/events' || window.location.pathname.includes('/events?')
+  
+  if (isEventsPage && savedScrollPosition !== null) {
+    console.log('Restoring scroll position:', savedScrollPosition) // Debug log
+    
+    // Try multiple methods to set position instantly
+    document.documentElement.scrollTop = savedScrollPosition
+    document.body.scrollTop = savedScrollPosition
+    
+    // Also try the traditional way as backup
+    window.scrollTo({
+      top: savedScrollPosition,
+      left: 0,
+      behavior: 'auto'
+    })
+    
+    // Don't clear savedScrollPosition here - keep it for subsequent returns
+  }
+  
+  // Clear saved position when we navigate to a non-events page
+  if (!isEventsPage) {
+    savedScrollPosition = null
+  }
+
+  // Existing alert handling
   document.querySelectorAll('.alert').forEach((alert) => {
     setTimeout(() => {
       alert.classList.remove('show')
@@ -33,7 +99,6 @@ document.addEventListener("turbo:frame-render", (event) => {
     }
   }
 })
-
 
 // Add this to your application.js or create a separate native.js file
 
