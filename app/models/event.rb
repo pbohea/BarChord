@@ -23,9 +23,10 @@ class Event < ApplicationRecord
 
   before_save :adjust_end_time_for_overnight_events
   before_save :set_artist_name_from_artist
+  before_save :set_category_from_artist
 
   scope :upcoming, -> { where("date >= ?", Date.today).order(:date, :start_time) }
-  scope :past,     -> { where("date < ?", Date.today).order(date: :desc, start_time: :desc) }
+  scope :past, -> { where("date < ?", Date.today).order(date: :desc, start_time: :desc) }
 
   validate :artist_presence
 
@@ -54,7 +55,7 @@ class Event < ApplicationRecord
   def parse_time_string(time_input)
     if time_input.is_a?(String)
       # Handle "HH:MM" format from form
-      hour, min = time_input.split(':').map(&:to_i)
+      hour, min = time_input.split(":").map(&:to_i)
     else
       # Handle datetime object
       hour = time_input.hour
@@ -68,6 +69,13 @@ class Event < ApplicationRecord
       self.artist_name = artist.username
     end
   end
+
+  def set_category_from_artist
+    if artist_id.present? && artist.present? && artist.category.present?
+      self.category = artist.category
+    end
+  end
+
 
   def artist_presence
     if artist_id.blank? && artist_name.blank?

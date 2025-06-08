@@ -40,6 +40,8 @@ task sample_data: :environment do
     )
   end
 
+  allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
+  allowed_genres = ["Rock", "Country", "90s", "Alternative"]
   # artists
   artists = []
   10.times do
@@ -50,7 +52,8 @@ task sample_data: :environment do
       email: "#{name.downcase}_artist@example.com",
       password: "password",
       username: "#{name.downcase} music",
-      genre: Faker::Music.genre,
+      genre: allowed_genres.sample,
+      category: allowed_categories.sample,
       website: "https://example.com",
       bio: Faker::Quote.matz,
       instagram_url: "https://www.google.com",
@@ -1409,7 +1412,6 @@ task sample_data: :environment do
     venues << venue
   end
 
-allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
 90.times do
   # Generate a random start time
   random_start = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
@@ -1440,7 +1442,6 @@ allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
   cover = [true, false].sample
 
   Event.create!(
-    category: allowed_categories.sample,
     date: start_datetime.to_date,
     start_time: start_datetime,     # Pass as datetime object
     end_time: end_datetime,         # Pass as datetime object  
