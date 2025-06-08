@@ -56,10 +56,22 @@
       <li class="list-group-item">
         <% if @event.venue.latitude.present? && @event.venue.longitude.present? %>
           <div class="position-relative" style="z-index: 2;">
-            <%= link_to "Show on Map",
-                  "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
-                  class: "btn btn-sm btn-outline-primary",
-                  data: { turbo_frame: "_top" } %>
+            <!-- Mobile Native App Button -->
+            <div class="d-block d-md-none">
+              <%= link_to "Show on Map",
+              "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
+              class: "btn btn-sm btn-outline-primary",
+              data: { turbo_frame: "_top" } %>
+            </div>
+
+            <!-- Web/Desktop Google Maps Button -->
+            <div class="d-none d-md-block">
+              <%= link_to "Open in Google Maps",
+              "https://www.google.com/maps?q=#{@event.venue.latitude},#{@event.venue.longitude}",
+              class: "btn btn-sm btn-outline-primary",
+              target: "_blank",
+              rel: "noopener noreferrer" %>
+            </div>
           </div>
         <% end %>
       </li>

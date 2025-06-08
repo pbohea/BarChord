@@ -144,10 +144,22 @@
             <!-- map button at bottom -->
             <% if venue.latitude.present? && venue.longitude.present? %>
               <div>
-                <%= link_to "Map",
-                "/events/map?lat=#{venue.latitude}&lng=#{venue.longitude}&venue_id=#{venue.id}",
-                class: "btn btn-sm btn-outline-primary",
-                data: { turbo_frame: "_top" } %>
+                <!-- Mobile Native App Button -->
+                <div class="d-block d-md-none">
+                  <%= link_to "Map",
+                      "/events/map?lat=#{venue.latitude}&lng=#{venue.longitude}&venue_id=#{venue.id}",
+                      class: "btn btn-sm btn-outline-primary",
+                      data: { turbo_frame: "_top" } %>
+                </div>
+                
+                <!-- Web/Desktop Google Maps Button -->
+                <div class="d-none d-md-block">
+                  <%= link_to "Map",
+                      "https://www.google.com/maps/search/#{CGI.escape(venue.name)}/@#{venue.latitude},#{venue.longitude},17z",
+                      class: "btn btn-sm btn-outline-primary",
+                      target: "_blank",
+                      rel: "noopener noreferrer" %>
+                </div>
               </div>
             <% end %>
           </div>
