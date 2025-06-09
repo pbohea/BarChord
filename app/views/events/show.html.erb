@@ -3,7 +3,7 @@
   <!-- Hero Section with Artist Info -->
   <div class="position-relative text-white">
     <!-- Background Gradient Overlay -->
-    <div class="px-4 pt-2 pb-4">
+    <div class="px-4 pt-3 pb-4">
       <!-- Artist Profile Section -->
       <div class="text-center">
         <!-- Artist Image with Glow Effect -->
@@ -32,22 +32,26 @@
         </div>
 
         <!-- Artist Name -->
-        <h2 class="fw-bold mb-3">
-          <%= link_to @event.artist.username, artist_path(@event.artist),
-                class: "text-decoration-none text-dark",
-                data: { turbo_frame: "_top" } %>
-        </h2>
+        <h1 class="fw-bold display-5 mb-2" style="background: linear-gradient(90deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          <%= link_to @event.artist.username.titleize, artist_path(@event.artist),
+        class: "text-decoration-none",
+        data: { turbo_frame: "_top" } %>
+        </h1>
 
-        <!-- Venue Name - Below Artist -->
-        <div class="text-center">
-          <h6 class="text-dark text-uppercase tracking-wider mb-3" style="font-size: 0.75rem; letter-spacing: 1px;">
-            Performing at
-          </h6>
-          <h4 class="fw-bold mb-1">
-            <%= link_to @event.venue.name, 
-                  venue_path(@event.venue), 
-                  class: "text-decoration-none text-dark" %>
-          </h4>
+        <!-- Date & Time -->
+        <div class="text-uppercase text-secondary mb-3" style="letter-spacing: 1px; font-size: 0.9rem;">
+          <i class="bi bi-clock me-1"></i>
+          <%= @event.date.strftime("%A, %b %-d") %> • 
+          <%= @event.start_time.strftime("%-I:%M %p") %> - 
+          <%= @event.end_time.strftime("%-I:%M %p") %>
+        </div>
+
+        <!-- Venue Name -->
+        <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-4" style="font-size: 0.95rem;">
+          <i class="bi bi-geo-alt me-1"></i>
+          <%= link_to "#{@event.venue.name}, #{@event.venue.city.titleize}", 
+              venue_path(@event.venue), 
+              class: "text-decoration-none text-dark" %>
         </div>
 
         <!-- Category/Description -->
@@ -64,14 +68,13 @@
     <div class="card border-0 shadow-lg" style="border-radius: 24px; backdrop-filter: blur(10px);">
       <div class="card-body p-4">
 
-        <!-- Date & Time Combined -->
-        <div class="mb-4">
+        <!--        <div class="mb-4">
           <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
             <div class="fw-semibold text-dark">
-              <%= @event.date.strftime("%A, %b %-d") %> • <%= @event.start_time.strftime("%-I:%M %p") %> - <%= @event.end_time.strftime("%-I:%M %p") %>
-            </div>
+              <%#= @event.date.strftime("%A, %b %-d") %> • <%= @event.start_time.strftime("%-I:%M %p") %> - <%= @event.end_time.strftime("%-I:%M %p") %>-->
+        <!--            </div>
           </div>
-        </div>
+        </div>-->
 
         <!-- Detailed Info -->
         <div class="space-y-4">

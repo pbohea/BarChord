@@ -42,6 +42,18 @@ task sample_data: :environment do
 
   allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
   allowed_genres = ["Rock", "Country", "90s", "Alternative"]
+  bios = [
+    "Acoustic guitarist playing heartfelt covers from artists like John Mayer and The Lumineers. Always down for a crowd singalong.",
+    "Indie-folk duo blending originals and soulful renditions of classic hits. Known for chill patio vibes and tight harmonies.",
+    "High-energy cover band playing everything from '90s alt rock to early 2000s pop-punk. Bring your voice — we’ll bring the volume.",
+    "Vinyl-loving DJ spinning funky house, retro pop, and deep cuts that keep the crowd moving all night.",
+    "Piano bar regular mixing Broadway favorites with classic rock singalongs. Requests welcome!",
+    "Country guitarist with a modern edge. Think Morgan Wallen meets Eric Church — plus a few surprises.",
+    "Loop pedal wizard layering vocals, guitar, and rhythm live. Covers, mashups, and a bit of improv.",
+    "Brooklyn-based 3-piece band playing nostalgic '90s covers and alternative deep cuts. Intimate shows, loud memories.",
+    "Soulful solo artist bringing smooth vocals and acoustic takes on R&B classics. Ideal for date nights and dim lighting.",
+    "DJ specializing in dancefloor-filling mashups, throwbacks, and late-night energy sets. No skips.",
+  ]
   # artists
   artists = []
   10.times do
@@ -55,7 +67,7 @@ task sample_data: :environment do
       genre: allowed_genres.sample,
       category: allowed_categories.sample,
       website: "https://example.com",
-      bio: Faker::Quote.matz,
+      bio: bios.sample,
       instagram_url: "https://www.google.com",
       tiktok_url: "https://www.google.com",
       youtube_url: "https://www.google.com",
@@ -1412,47 +1424,58 @@ task sample_data: :environment do
     venues << venue
   end
 
-90.times do
-  # Generate a random start time
-  random_start = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
-  
-  # Round to nearest 15-minute interval
-  hour = random_start.hour
-  minute = (random_start.min / 15.0).round * 15
-  
-  if minute == 60
-    hour += 1
-    minute = 0
-  end
-  
-  # Create the properly rounded start time
-  start_datetime = random_start.change(hour: hour, min: minute, sec: 0)
-  
-  # Calculate end time
-  durations = [1.hour, 1.5.hours, 2.hours, 2.5.hours, 3.hours, 4.hours]
-  duration = durations.sample
-  
-  # For late events, make them longer to create overnight events
-  if start_datetime.hour >= 22
-    duration = [3.hours, 4.hours, 5.hours, 6.hours].sample
-  end
-  
-  end_datetime = start_datetime + duration
-  
-  cover = [true, false].sample
+  90.times do
+    # Generate a random start time
+    random_start = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
 
-  Event.create!(
-    date: start_datetime.to_date,
-    start_time: start_datetime,     # Pass as datetime object
-    end_time: end_datetime,         # Pass as datetime object  
-    description: Faker::Lorem.sentence(word_count: 6),
-    cover: cover,
-    cover_amount: cover ? rand(5..20) : nil,
-    indoors: [true, false].sample,
-    venue_id: venues.sample.id,
-    artist_id: artists.sample.id,
-  )
-end
+    # Round to nearest 15-minute interval
+    hour = random_start.hour
+    minute = (random_start.min / 15.0).round * 15
+
+    if minute == 60
+      hour += 1
+      minute = 0
+    end
+
+    # Create the properly rounded start time
+    start_datetime = random_start.change(hour: hour, min: minute, sec: 0)
+
+    # Calculate end time
+    durations = [1.hour, 1.5.hours, 2.hours, 2.5.hours, 3.hours, 4.hours]
+    duration = durations.sample
+
+    # For late events, make them longer to create overnight events
+    if start_datetime.hour >= 22
+      duration = [3.hours, 4.hours, 5.hours, 6.hours].sample
+    end
+
+    end_datetime = start_datetime + duration
+
+    cover = [true, false].sample
+    descriptions = [
+      "Join us for an intimate acoustic night featuring local talent and cold drinks. Perfect for a laid-back evening with friends.",
+      "Experience a soulful evening of blues and brews at your favorite neighborhood bar. Live tunes kick off right after sunset.",
+      "Don't miss this high-energy cover band playing your favorite hits from the '90s to today. Great vibes, great sound.",
+      "A solo singer-songwriter takes the stage with original songs and heartfelt lyrics. Grab a seat early — it's gonna fill up.",
+      "Enjoy a cozy evening of jazz and cocktails in a candlelit setting. Smooth melodies, small bites, and a local crowd.",
+      "A rotating lineup of local acts brings variety to the mic. Expect everything from indie rock to mellow folk sets.",
+      "Come catch a one-night-only performance from a rising local artist. Genre-bending sounds and an open-air patio await.",
+      "This duo blends guitar and harmonies into a perfect mix of old-school and modern covers. Drinks are half-off until 8 PM.",
+      "Live music under the stars, featuring a mix of acoustic sets and upbeat originals. Bring your crew and settle in.",
+      "A relaxed Sunday set with brunch vibes, acoustic instruments, and feel-good music all morning long.",
+    ]
+    Event.create!(
+      date: start_datetime.to_date,
+      start_time: start_datetime,     # Pass as datetime object
+      end_time: end_datetime,         # Pass as datetime object
+      description: descriptions.sample,
+      cover: cover,
+      cover_amount: cover ? rand(5..20) : nil,
+      indoors: [true, false].sample,
+      venue_id: venues.sample.id,
+      artist_id: artists.sample.id,
+    )
+  end
 
   #create followed artists and venues
 
