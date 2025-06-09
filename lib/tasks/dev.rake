@@ -1408,8 +1408,8 @@ task sample_data: :environment do
       category: attrs[:category],
       website: attrs[:website],
       latitude: attrs[:latitude],
-      longitude: attrs[:longitude],
-      owner_id: owners.sample.id,
+      longitude: attrs[:longitude]
+      #owner_id: owners.sample.id,
     )
 
     # Generate unique avatar image

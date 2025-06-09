@@ -1,0 +1,43 @@
+<div class="container pt-4" style="max-width: 600px;">
+  <%= form_with url: claim_venue_path, method: :post, local: true, class: "needs-validation" do |f| %>
+
+    <!-- Owner ID (assumes current_owner helper) -->
+    <%= hidden_field_tag :owner_id, current_owner.id %>
+
+    <!-- Autocomplete Venue Search -->
+    <div class="mb-3" data-controller="venue-autocomplete">
+      <%= label_tag "venue_search", "Search for Your Venue", class: "form-label" %>
+      <%= text_field_tag "venue_search", "",
+          placeholder: "Start typing venue name...",
+          class: "form-control",
+          data: {
+            action: "input->venue-autocomplete#search",
+            venue_autocomplete_target: "input"
+          } %>
+
+      <ul class="list-group mt-1" data-venue-autocomplete-target="results"></ul>
+      <%= hidden_field_tag "venue_id", nil, data: { venue_autocomplete_target: "hidden" } %>
+    </div>
+
+    <!-- Confirmation Section (auto-populated) -->
+    <div id="venue-details" class="alert alert-secondary d-none" data-venue-autocomplete-target="details">
+      <h5>Does this look right?</h5>
+      <p><strong>Name:</strong> <span data-venue-autocomplete-target="name"></span></p>
+      <p><strong>Address:</strong> <span data-venue-autocomplete-target="address"></span></p>
+    </div>
+
+    <!-- Error message if needed -->
+    <% if flash[:error].present? %>
+      <div class="alert alert-danger"><%= flash[:error] %></div>
+    <% end %>
+
+    <div class="d-grid mt-4">
+      <%= f.submit "Request to Claim Venue", class: "btn btn-success" %>
+    </div>
+
+  <% end %>
+</div>
+
+<div class="mt-3">
+  <%= link_to "Back to Dashboard", owner_dashboard_path(current_owner), class: "btn btn-outline-secondary" %>
+</div>

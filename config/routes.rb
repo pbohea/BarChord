@@ -30,6 +30,9 @@ Rails.application.routes.draw do
   # Keep the old route for compatibility
   get "events/map", to: "events#map"
 
+  get "venues/claim", to: "venues#claim", as: "claim_venue"
+  post "venues/claim", to: "venues#claim_submit"
+
   resources :venues do
     get :search, on: :collection
     member do
@@ -67,6 +70,7 @@ Rails.application.routes.draw do
   get "/owners_about", to: "pages#owners_about"
   get "/artists_about", to: "pages#artists_about"
   get "/menu", to: "pages#menu", as: :menu
+
 
   #for autocomplete search
   get "/artists/search", to: "artists#search"
