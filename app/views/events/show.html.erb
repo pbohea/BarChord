@@ -1,141 +1,133 @@
 <% content_for :title, "Event Information" %>
 
 <!--<div class="container-fluid px-0" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); min-height: 100vh;">-->
-  <!-- Hero Section with Artist Info -->
-  <div class="position-relative text-white">
-    <!-- Background Gradient Overlay -->
-    <div class="px-4 pt-5 pb-4">
-      <!-- Artist Profile Section -->
-      <div class="text-center">
-        <!-- Artist Image with Glow Effect -->
-        <div class="position-relative d-inline-block mb-3">
-          <% if @event.artist&.image&.attached? %>
-            <%= link_to artist_path(@event.artist), data: { turbo_frame: "_top" } do %>
-              <%= image_tag @event.artist.image.variant(resize_to_fill: [120, 120]),
+<!-- Hero Section with Artist Info -->
+<div class="position-relative text-white">
+  <!-- Background Gradient Overlay -->
+  <div class="px-4 pt-5 pb-4">
+    <!-- Artist Profile Section -->
+    <div class="text-center">
+      <!-- Artist Image with Glow Effect -->
+      <div class="position-relative d-inline-block mb-3">
+        <% if @event.artist&.image&.attached? %>
+          <%= link_to artist_path(@event.artist), data: { turbo_frame: "_top" } do %>
+            <%= image_tag @event.artist.image.variant(resize_to_fill: [120, 120]),
                     class: "rounded-circle border border-white border-3",
                     style: "object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);" %>
-            <% end %>
-          <% else %>
-            <div class="rounded-circle bg-white bg-opacity-20 d-flex align-items-center justify-content-center mx-auto border border-white border-3" 
+          <% end %>
+        <% else %>
+          <div class="rounded-circle bg-white bg-opacity-20 d-flex align-items-center justify-content-center mx-auto border border-white border-3" 
                  style="width: 120px; height: 120px; color: white; backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-              <i class="fas fa-microphone fa-3x"></i>
-            </div>
-          <% end %>
+            <i class="fas fa-microphone fa-3x"></i>
+          </div>
+        <% end %>
 
-          <!-- Live Indicator (if event is today) -->
-          <% if @event.date == Date.current %>
-            <div class="position-absolute top-0 end-0 bg-danger rounded-pill px-2 py-1" 
+        <!-- Live Indicator (if event is today) -->
+        <% if @event.date == Date.current %>
+          <div class="position-absolute top-0 end-0 bg-danger rounded-pill px-2 py-1" 
                  style="font-size: 0.7rem; animation: pulse 2s infinite;">
-              <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
-              TONIGHT
-            </div>
-          <% end %>
-        </div>
+            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+            TONIGHT
+          </div>
+        <% end %>
+      </div>
 
-        <!-- Artist Name -->
-        <h2 class="fw-bold mb-2">
-          <%= link_to @event.artist.username, artist_path(@event.artist),
+      <!-- Artist Name -->
+      <h2 class="fw-bold mb-2">
+        <%= link_to @event.artist.username, artist_path(@event.artist),
                 class: "text-decoration-none text-dark",
                 data: { turbo_frame: "_top" } %>
-        </h2>
+      </h2>
 
-        <!-- Venue Name - Below Artist -->
-        <div class="text-center">
-          <h6 class="text-dark text-uppercase tracking-wider mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">
-            Performing at
-          </h6>
-          <h4 class="fw-bold mb-0">
-            <%= link_to @event.venue.name, 
+      <!-- Venue Name - Below Artist -->
+      <div class="text-center">
+        <h6 class="text-dark text-uppercase tracking-wider mb-1" style="font-size: 0.75rem; letter-spacing: 1px;">
+          Performing at
+        </h6>
+        <h4 class="fw-bold mb-0">
+          <%= link_to @event.venue.name, 
                   venue_path(@event.venue), 
                   class: "text-decoration-none text-dark" %>
-          </h4>
-        </div>
-
-        <!-- Category/Description -->
-        <p class="text-dark mb-3 fs-6">
-          <%= @event.description.presence || @event.category %>
-        </p>
-
+        </h4>
       </div>
+
+      <!-- Category/Description -->
+      <p class="text-dark mb-3 fs-6">
+        <%= @event.description.presence || @event.category %>
+      </p>
+
     </div>
   </div>
+</div>
 
-  <!-- Event Details Card -->
-  <div class="px-3 pb-4">
-    <div class="card border-0 shadow-lg" style="border-radius: 24px; backdrop-filter: blur(10px);">
-      <div class="card-body p-4">
+<!-- Event Details Card -->
+<div class="px-3 pb-4">
+  <div class="card border-0 shadow-lg" style="border-radius: 24px; backdrop-filter: blur(10px);">
+    <div class="card-body p-4">
 
-        <!-- Date & Time Combined -->
-        <div class="mb-4">
-          <div class="text-center p-4 rounded-4" style="background: linear-gradient(135deg, #667eea, #764ba2);">
-            <i class="bi bi-calendar-clock text-white fs-3 mb-2 d-block"></i>
-            <div class="text-white">
-              <div class="fw-bold fs-5">
-                <%= @event.date.strftime("%A, %b %-d") %> • <%= @event.start_time.strftime("%-I:%M %p") %> - <%= @event.end_time.strftime("%-I:%M %p") %>
-              </div>
+      <!-- Date & Time Combined -->
+      <div class="mb-4">
+        <div class="text-center p-4 rounded-4" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+          <i class="bi bi-calendar-clock text-white fs-3 mb-2 d-block"></i>
+          <div class="text-white">
+            <div class="fw-bold fs-5">
+              <%= @event.date.strftime("%A, %b %-d") %> • <%= @event.start_time.strftime("%-I:%M %p") %> - <%= @event.end_time.strftime("%-I:%M %p") %>
             </div>
           </div>
         </div>
+      </div>
 
-        <!-- Detailed Info -->
-        <div class="space-y-4">
-          <!-- Full Time Range -->
+      <!-- Detailed Info -->
+      <div class="space-y-4">
+        <!-- Full Time Range -->
 
-          <!-- Indoor/Outdoor -->
-          <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
-            <i class="bi bi-<%= @event.indoors? ? 'house-door' : 'sun' %> fs-3 mb-2 d-block" 
+        <!-- Indoor/Outdoor -->
+        <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
+          <i class="bi bi-<%= @event.indoors? ? 'house-door' : 'sun' %> fs-3 mb-2 d-block" 
                style="color: <%= @event.indoors? ? '#2ed573' : '#ffa502' %>;"></i>
-            <div class="fw-semibold text-dark">
-              <%= @event.indoors? ? "Indoor Event" : "Outdoor Event" %>
-            </div>
-            <!--            <div class="text-muted small">-->
-            <%#= @event.indoors? ? "Climate controlled venue" : "Open air performance" %>
-            <!--            </div>-->
+          <div class="fw-semibold text-dark">
+            <%= @event.indoors? ? "Indoor Event" : "Outdoor Event" %>
           </div>
+        </div>
 
-          <!-- Cover Charge -->
-          <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
-            <i class="bi bi-<%= @event.cover? ? 'credit-card' : 'gift' %> fs-3 mb-2 d-block" 
-               style="color: <%= @event.cover? ? '#ff4757' : '#2ed573' %>;"></i>
-            <!--            <div class="fw-semibold text-dark">-->
-            <%#= @event.cover? ? "Admission" : "Free Entry" %>
-            <!--            </div>-->
-            <div class="fw-semibold text-dark">
-              <%= @event.cover? ? number_to_currency(@event.cover_amount || 5) : "No cover charge" %>
-            </div>
+        <!-- Cover Charge -->
+        <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
+          <div class="fw-semibold text-dark">
+            <%= @event.cover? ? "Cover: #{number_to_currency(@event.cover_amount || 5)}" : "No cover charge" %>
           </div>
+        </div>
 
-          <!-- Map Section -->
-          <% if @event.venue.latitude.present? && @event.venue.longitude.present? %>
-            <div class="text-center p-3 rounded-3" style="background-color: #f8f9fa;">
-              <i class="bi bi-geo-alt fs-3 mb-2 d-block" style="color: #5352ed;"></i>
-              <!--              <div class="fw-semibold text-dark mb-2">Get Directions</div>
+        <!-- Map Section -->
+        <% if @event.venue.latitude.present? && @event.venue.longitude.present? %>
+          <div class="text-center p-3 rounded-3" style="background-color: #f8f9fa;">
+            <i class="bi bi-geo-alt fs-3 mb-2 d-block" style="color: #5352ed;"></i>
+            <!--              <div class="fw-semibold text-dark mb-2">Get Directions</div>
 -->
-              <!-- Mobile Native App Button -->
-              <div class="d-block d-md-none">
-                <%= link_to "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
+            <!-- Mobile Native App Button -->
+            <div class="d-block d-md-none">
+              <%= link_to "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
                     class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
                     style: "background: linear-gradient(135deg, #667eea, #764ba2); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
                     data: { turbo_frame: "_top" } do %>
-                  <i class="bi bi-map me-2"></i>Show on Map
-                <% end %>
-              </div>
+                <i class="bi bi-map me-2"></i>Show on Map
+              <% end %>
+            </div>
 
-              <!-- Web/Desktop Google Maps Button -->
-              <div class="d-none d-md-block">
-                <%= link_to "https://www.google.com/maps/search/#{CGI.escape(@event.venue.name)}/@#{@event.venue.latitude},#{@event.venue.longitude},17z",
+            <!-- Web/Desktop Google Maps Button -->
+            <div class="d-none d-md-block">
+              <%= link_to "https://www.google.com/maps/search/#{CGI.escape(@event.venue.name)}/@#{@event.venue.latitude},#{@event.venue.longitude},17z",
                     class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
                     style: "background: linear-gradient(135deg, #667eea, #764ba2); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
                     target: "_blank",
                     rel: "noopener noreferrer" do %>
-                  <i class="bi bi-google me-2"></i>Open in Google Maps
-                <% end %>
-              </div>
+                <i class="bi bi-google me-2"></i>Open in Google Maps
+              <% end %>
             </div>
-          <% end %>
-        </div>
+          </div>
+        <% end %>
       </div>
     </div>
+  </div>
   <!--</div>-->
 
   <!-- Admin Actions (if applicable) -->
