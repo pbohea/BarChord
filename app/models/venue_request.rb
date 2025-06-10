@@ -1,3 +1,34 @@
+# == Schema Information
+#
+# Table name: venue_requests
+#
+#  id                :bigint           not null, primary key
+#  category          :string           not null
+#  city              :string           not null
+#  name              :string           not null
+#  notes             :text
+#  owner_phone       :string
+#  ownership_claim   :boolean          default(FALSE), not null
+#  request_type      :string
+#  requester_type    :string           not null
+#  state             :string(2)        not null
+#  status            :integer          default("pending"), not null
+#  street_address    :string           not null
+#  website           :string
+#  zip_code          :string(10)       not null
+#  created_at        :datetime         not null
+#  updated_at        :datetime         not null
+#  existing_venue_id :integer
+#  requester_id      :integer          not null
+#  venue_id          :integer
+#
+# Indexes
+#
+#  index_venue_requests_on_ownership_claim                  (ownership_claim)
+#  index_venue_requests_on_requester_type_and_requester_id  (requester_type,requester_id)
+#  index_venue_requests_on_status                           (status)
+#  index_venue_requests_on_venue_id                         (venue_id)
+#
 class VenueRequest < ApplicationRecord
   has_one_attached :utility_bill
 
@@ -5,14 +36,17 @@ class VenueRequest < ApplicationRecord
   validates :street_address, presence: true, length: { minimum: 5, maximum: 200 }
   validates :city, presence: true, length: { minimum: 2, maximum: 50 }
   validates :state, presence: true, inclusion: {
-            in: %w[AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY],
-          }
+                      in: %w[AL AK AZ AR CA CO CT DE FL GA HI ID IL IN IA KS KY LA ME MD MA MI MN MS MO MT NE NV NH NJ NM NY NC ND OH OK OR PA RI SC SD TN TX UT VT VA WA WV WI WY],
+                    }
   validates :zip_code, presence: true, format: { with: /\A\d{5}(-\d{4})?\z/ }
   validates :category, presence: true, inclusion: {
-               in: %w[bar restaurant concert_hall club coffee_shop theater outdoor other],
-             }
+                         in: %w[bar restaurant concert_hall club coffee_shop theater outdoor other],
+                       }
   validates :requester_type, presence: true, inclusion: { in: %w[artist owner] }
   validates :requester_id, presence: true, numericality: { greater_than: 0 }
+
+  validates :request_type, presence: true, inclusion: { in: %w[new_venue existing_venue_claim] }
+  validates :existing_venue_id, presence: true, if: :existing_venue_claim?
 
   # Owner-specific validations
   validates :owner_phone, presence: true, if: :ownership_claim?
@@ -23,6 +57,18 @@ class VenueRequest < ApplicationRecord
 
   def ownership_claim?
     ownership_claim == true
+  end
+
+  def existing_venue_claim?
+    request_type == "existing_venue_claim"
+  end
+
+  def new_venue_request?
+    request_type == "new_venue"
+  end
+
+  def existing_venue
+    Venue.find_by(id: existing_venue_id) if existing_venue_claim?
   end
 
   def full_address
@@ -43,29 +89,32 @@ class VenueRequest < ApplicationRecord
 
     begin
       ActiveRecord::Base.transaction do
-        # Create the venue
-        venue = Venue.create!(
-          name: name,
-          street_address: street_address,
-          city: city,
-          state: state,
-          zip_code: zip_code,
-          website: website,
-          category: category,
-        )
-
-        # If this is an ownership claim, assign the owner
-        if ownership_claim? && requester_type == "owner"
+        if existing_venue_claim?
+          # Just assign ownership to existing venue
+          venue = existing_venue
           venue.update!(owner_id: requester_id)
+          update!(status: :approved, venue_id: venue.id)
+          venue
+        else
+          # Create new venue (existing logic)
+          venue = Venue.create!(
+            name: name,
+            street_address: street_address,
+            city: city,
+            state: state,
+            zip_code: zip_code,
+            website: website,
+            category: category,
+          )
+
+          if ownership_claim? && requester_type == "owner"
+            venue.update!(owner_id: requester_id)
+          end
+
+          venue.geocode if venue.respond_to?(:geocode)
+          update!(status: :approved, venue_id: venue.id)
+          venue
         end
-
-        # Geocode the venue if geocoding is available
-        venue.geocode if venue.respond_to?(:geocode)
-
-        # Update request status
-        update!(status: :approved, venue_id: venue.id)
-
-        venue
       end
     rescue => e
       Rails.logger.error "Failed to approve venue request #{id}: #{e.message}"

@@ -34,4 +34,8 @@ module ApplicationHelper
       "secondary"
     end
   end
+
+  def is_admin_email?(email)
+    email == "pbohea@gmail.com"
+  end
 end

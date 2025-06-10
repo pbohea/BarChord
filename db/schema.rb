@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_10_161406) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_163121) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -334,6 +334,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_10_161406) do
     t.string "owner_phone"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "existing_venue_id"
+    t.string "request_type"
     t.index ["ownership_claim"], name: "index_venue_requests_on_ownership_claim"
     t.index ["requester_type", "requester_id"], name: "index_venue_requests_on_requester_type_and_requester_id"
     t.index ["status"], name: "index_venue_requests_on_status"

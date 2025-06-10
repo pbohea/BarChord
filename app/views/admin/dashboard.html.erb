@@ -1,0 +1,179 @@
+<% content_for :title, "Admin Dashboard" %>
+
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Admin Dashboard</h1>
+    <%= link_to "All Venue Requests", admin_venue_requests_path, class: "btn btn-primary" %>
+  </div>
+
+  <!-- Stats Cards -->
+  <div class="row mb-4">
+    <div class="col-md-3">
+      <div class="card text-white bg-warning">
+        <div class="card-body">
+          <h5 class="card-title">Pending Requests</h5>
+          <h2><%= @stats[:pending_count] %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-success">
+        <div class="card-body">
+          <h5 class="card-title">Approved</h5>
+          <h2><%= @stats[:approved_count] %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-danger">
+        <div class="card-body">
+          <h5 class="card-title">Rejected</h5>
+          <h2><%= @stats[:rejected_count] %></h2>
+        </div>
+      </div>
+    </div>
+    <div class="col-md-3">
+      <div class="card text-white bg-info">
+        <div class="card-body">
+          <h5 class="card-title">Ownership Claims</h5>
+          <h2><%= @stats[:ownership_claims] %></h2>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pending Requests (Need Action) -->
+  <% if @pending_venue_requests.any? %>
+    <div class="card mb-4">
+      <div class="card-header bg-warning text-dark">
+        <h4 class="mb-0">
+          <i class="fas fa-clock me-2"></i>
+          Pending Requests (<%= @pending_venue_requests.count %>)
+        </h4>
+      </div>
+      <div class="card-body">
+        <div class="row">
+          <% @pending_venue_requests.each do |request| %>
+            <div class="col-md-6 col-lg-4 mb-3">
+              <div class="card border-warning">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                  <h6 class="mb-0">
+                    <%= request.name %>
+                    <% if request.ownership_claim? %>
+                      <i class="fas fa-crown text-warning ms-1" title="Ownership Claim"></i>
+                    <% end %>
+                  </h6>
+                  <span class="badge bg-secondary">
+                    <%= request.request_type.humanize %>
+                  </span>
+                </div>
+                <div class="card-body">
+                  <% if request.existing_venue_claim? %>
+                    <p class="card-text">
+                      <strong>Claiming:</strong> <%= request.existing_venue.name if request.existing_venue %><br>
+                      <strong>Address:</strong> <%= request.full_address %>
+                    </p>
+                  <% else %>
+                    <p class="card-text">
+                      <strong>Address:</strong> <%= request.full_address %><br>
+                      <strong>Type:</strong> <%= request.category.humanize %>
+                    </p>
+                  <% end %>
+                  
+                  <p class="card-text">
+                    <strong>Requested by:</strong> <%= request.requester_type.humanize %> #<%= request.requester_id %><br>
+                    <% if request.ownership_claim? %>
+                      <strong>Phone:</strong> <%= request.owner_phone %><br>
+                    <% end %>
+                    <small class="text-muted">
+                      <%= time_ago_in_words(request.created_at) %> ago
+                    </small>
+                  </p>
+
+                  <% if request.utility_bill.attached? %>
+                    <p>
+                      <%= link_to "View Document", url_for(request.utility_bill), 
+                          target: "_blank", 
+                          class: "btn btn-sm btn-outline-info" %>
+                    </p>
+                  <% end %>
+                </div>
+                <div class="card-footer">
+                  <div class="btn-group w-100">
+                    <%= button_to "Approve", approve_venue_request_path(request), 
+                        method: :patch, 
+                        class: "btn btn-success btn-sm",
+                        data: { 
+                          confirm: request.existing_venue_claim? ? 
+                            "Approve ownership claim for #{request.name}?" : 
+                            "Create new venue #{request.name}?" 
+                        } %>
+                    <%= button_to "Reject", reject_venue_request_path(request), 
+                        method: :patch, 
+                        class: "btn btn-danger btn-sm",
+                        data: { confirm: "Reject this request?" } %>
+                  </div>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% else %>
+    <div class="alert alert-success">
+      <h4>All caught up! 🎉</h4>
+      <p>No pending venue requests at the moment.</p>
+    </div>
+  <% end %>
+
+  <!-- Recent Activity -->
+  <div class="row">
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-success text-white">
+          <h5 class="mb-0">Recently Approved</h5>
+        </div>
+        <div class="card-body">
+          <% if @recent_approved.any? %>
+            <% @recent_approved.each do |request| %>
+              <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                <div>
+                  <strong><%= request.name %></strong><br>
+                  <small class="text-muted"><%= time_ago_in_words(request.updated_at) %> ago</small>
+                </div>
+                <% if request.venue_id %>
+                  <%= link_to "View", venue_path(request.venue_id), class: "btn btn-sm btn-outline-primary" %>
+                <% end %>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">No recent approvals</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+    
+    <div class="col-md-6">
+      <div class="card">
+        <div class="card-header bg-danger text-white">
+          <h5 class="mb-0">Recently Rejected</h5>
+        </div>
+        <div class="card-body">
+          <% if @recent_rejected.any? %>
+            <% @recent_rejected.each do |request| %>
+              <div class="d-flex justify-content-between align-items-center border-bottom py-2">
+                <div>
+                  <strong><%= request.name %></strong><br>
+                  <small class="text-muted"><%= time_ago_in_words(request.updated_at) %> ago</small>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted">No recent rejections</p>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

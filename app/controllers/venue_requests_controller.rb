@@ -1,5 +1,5 @@
 class VenueRequestsController < ApplicationController
-  before_action :authenticate_user_or_artist_or_owner!, except: [:index, :approve, :reject]
+  before_action :authenticate_user_or_artist_or_owner!, only: [:new, :create]
   before_action :authorize_admin!, only: [:index, :approve, :reject]
   before_action :set_venue_request, only: [:approve, :reject]
 
@@ -24,10 +24,29 @@ class VenueRequestsController < ApplicationController
       @venue_request.requester_type = 'artist'
       @venue_request.requester_id = current_artist.id
       @venue_request.ownership_claim = false
+      @venue_request.request_type = 'new_venue'
     elsif owner_signed_in?
       @venue_request.requester_type = 'owner' 
       @venue_request.requester_id = current_owner.id
       @venue_request.ownership_claim = true
+      
+      # Set request type based on whether existing_venue_id is present
+      if params[:existing_venue_id].present?
+        @venue_request.request_type = 'existing_venue_claim'
+        @venue_request.existing_venue_id = params[:existing_venue_id]
+        # For existing venues, copy the venue details
+        if venue = Venue.find_by(id: params[:existing_venue_id])
+          @venue_request.name = venue.name
+          @venue_request.street_address = venue.street_address
+          @venue_request.city = venue.city
+          @venue_request.state = venue.state
+          @venue_request.zip_code = venue.zip_code
+          @venue_request.website = venue.website
+          @venue_request.category = venue.category
+        end
+      else
+        @venue_request.request_type = 'new_venue'
+      end
     else
       redirect_to root_path, alert: "You must be signed in."
       return
@@ -98,7 +117,6 @@ class VenueRequestsController < ApplicationController
   end
 
   def is_admin?
-    # Using your existing admin logic
     user_signed_in? && current_user.email == "pbohea@gmail.com"
   end
 end
