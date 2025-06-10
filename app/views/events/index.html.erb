@@ -79,10 +79,10 @@
         <% venue = event.venue %>
         <% artist = event.artist %>
 
-        <div class="card mb-4 shadow border-0 position-relative"
-         data-controller="event-card"
-         data-event-card-url-value="<%= event_path(event) %>"
-         data-action="click->event-card#goToEvent">
+        <div class="card border-0 shadow-lg mb-4 position-relative" style="border-radius: 24px; background-color: #ffffff;"
+          data-controller="event-card"
+          data-event-card-url-value="<%= event_path(event) %>"
+          data-action="click->event-card#goToEvent">
 
           <div class="card-body text-center">
             <!-- venue name at top -->
