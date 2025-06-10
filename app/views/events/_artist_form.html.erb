@@ -21,12 +21,18 @@
 
       <%= hidden_field_tag "event[venue_id]", nil, data: { venue_autocomplete_target: "hidden" } %>
 
+      <div class="mt-2 text-center">
+        <%= link_to "Can't find your venue? Add it here", new_venue_request_path, 
+      class: "btn btn-outline-secondary btn-sm",
+      target: "_blank" %>
+      </div>
+      
       <!-- Venue verification section -->
       <div class="border border-info rounded p-3 bg-info-subtle mt-3 d-none" data-venue-autocomplete-target="details">
         <h5>Does this look right?</h5>
         <p><strong>Name:</strong> <span data-venue-autocomplete-target="name"></span></p>
         <p><strong>Address:</strong> <span data-venue-autocomplete-target="address"></span></p>
-        
+
         <div class="form-check mt-3">
           <input class="form-check-input" 
                  type="checkbox" 
@@ -47,7 +53,7 @@
       <% end %>
 
       <!-- MOVE ALL FORM FIELDS INSIDE THE VENUE-AUTOCOMPLETE CONTROLLER -->
-      
+
       <!-- Category Dropdown -->
       <div class="mb-3">
         <%= f.label :category, class: "form-label" %>
@@ -118,7 +124,8 @@
                data-venue-autocomplete-target="submitButton">
       </div>
 
-    </div> <!-- End of venue-autocomplete controller -->
+    </div>
+ <!-- End of venue-autocomplete controller -->
 
   <% end %>
 </div>
