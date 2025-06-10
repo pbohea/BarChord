@@ -1,12 +1,13 @@
 <% content_for :title, @artist.username %>
 
 <div class="container mb-3 pt-3" style="max-width: 500px;">
-  <div class="card shadow-sm">
+  <div class="card border-0 shadow-lg mb-4" style="border-radius: 24px; background-color: #f8f9fa;">
     <div class="card-body text-center">
       <!-- Profile Image -->
       <% if @artist.image.present? %>
-        <img src="<%= url_for(@artist.image) %>" alt="Artist Photo" class="rounded-circle mb-3" style="width: 120px; height: 120px; object-fit: cover;">
-      <% else %>
+        <img src="<%= url_for(@artist.image) %>" alt="Artist Photo" 
+     class="rounded-circle border border-white border-3 mb-3" 
+     style="width: 120px; height: 120px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">      <% else %>
         <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center" style="width: 120px; height: 120px; color: white;">
           <i class="fas fa-user fa-2x"></i>
         </div>
