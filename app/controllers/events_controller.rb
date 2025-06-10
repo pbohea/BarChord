@@ -57,6 +57,14 @@ class EventsController < ApplicationController
 
   # POST /events
   def create
+    # Check for venue verification first
+    unless params[:venue_verification] == "1"
+      @event = Event.new(event_params) # Rebuild the event object to preserve form data
+      flash.now[:alert] = "Please verify that the venue information is correct before creating the event."
+      render :new, status: :unprocessable_entity
+      return
+    end
+
     @event = Event.new(event_params)
 
     respond_to do |format|
@@ -64,7 +72,14 @@ class EventsController < ApplicationController
         notify_followers(@event)
         notify_artist(@event)
 
-        format.html { redirect_to @event, notice: "Event was successfully created." }
+        # Redirect based on who created the event
+        if artist_signed_in?
+          format.html { redirect_to artist_dashboard_path(current_artist), notice: "Event was successfully created." }
+        elsif owner_signed_in?
+          format.html { redirect_to owner_dashboard_path(current_owner), notice: "Event was successfully created." }
+        else
+          format.html { redirect_to @event, notice: "Event was successfully created." }
+        end
         format.json { render :show, status: :created, location: @event }
       else
         format.html { render :new, status: :unprocessable_entity }
