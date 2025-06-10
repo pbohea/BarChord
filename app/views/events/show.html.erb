@@ -1,200 +1,177 @@
 <% content_for :title, "Event Information" %>
-<div class="min-vh-100" style="background-color: #f8f9fa;">
-  <!-- Hero Section with Artist Info -->
-  <div class="position-relative text-white">
-    <!-- Background Gradient Overlay -->
 
-    <div class="px-4 pt-3 pb-4 position-relative">
-      <!-- Artist Profile Section -->
-      <div class="text-center">
-        <!-- Artist Image with Glow Effect -->
-        <div class="position-relative d-inline-block mb-3">
+<div class="min-vh-100" style="background-color: #f8f9fa;">
+  <div class="px-3 pt-4" style="max-width: 500px; margin: 0 auto;">
+
+    <!-- Event Profile Card -->
+    <div class="card border-0 shadow-lg mb-4 position-relative" style="border-radius: 24px; background-color: #ffffff;">
+      <!-- Live Status Badge -->
+      <% if @event.date == Date.current %>
+        <% if Time.current.between?(@event.start_time, @event.end_time) %>
+          <div class="position-absolute top-0 end-0 bg-success rounded-pill px-2 py-1 mt-3 me-3"
+               style="font-size: 0.7rem; animation: pulse 1.5s infinite; z-index: 10;">
+            <i class="fas fa-bolt me-1" style="font-size: 0.5rem;"></i>
+            NOW
+          </div>
+        <% else %>
+          <div class="position-absolute top-0 end-0 bg-success rounded-pill px-2 py-1 mt-3 me-3"
+               style="font-size: 0.7rem; animation: pulse 2s infinite; z-index: 10;">
+            <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
+            TODAY
+          </div>
+        <% end %>
+      <% end %>
+
+      <div class="card-body text-center">
+        <!-- Artist Image -->
+        <div class="d-inline-block mb-4">
           <% if @event.artist&.image&.attached? %>
             <%= link_to artist_path(@event.artist), data: { turbo_frame: "_top" } do %>
               <%= image_tag @event.artist.image.variant(resize_to_fill: [120, 120]),
                     class: "rounded-circle border border-white border-3",
-                    style: "object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);" %>
+                    style: "width: 120px; height: 120px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);" %>
             <% end %>
           <% else %>
-            <div class="rounded-circle bg-white bg-opacity-20 d-flex align-items-center justify-content-center mx-auto border border-white border-3" 
-                 style="width: 120px; height: 120px; color: white; backdrop-filter: blur(10px); box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-              <i class="fas fa-microphone fa-3x"></i>
+            <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center border border-white border-3" 
+                 style="width: 120px; height: 120px; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
+              <i class="fas fa-microphone fa-2x"></i>
             </div>
           <% end %>
-
-          <% if @event.date == Date.current %>
-            <% if Time.current.between?(@event.start_time, @event.end_time) %>
-              <div class="position-absolute top-0 end-0 bg-success rounded-pill px-2 py-1 mt-2 me-2"
-         style="font-size: 0.7rem; animation: pulse 1.5s infinite;">
-                <i class="fas fa-bolt me-1" style="font-size: 0.5rem;"></i>
-                NOW
-              </div>
-            <% else %>
-              <div class="position-absolute top-0 end-0 bg-success rounded-pill px-2 py-1 mt-1 me-1"
-         style="font-size: 0.7rem; animation: pulse 2s infinite;">
-                <i class="fas fa-circle me-1" style="font-size: 0.5rem;"></i>
-                TODAY
-              </div>
-            <% end %>
-          <% end %>
-
-          <!-- Artist Name -->
-<h1 class="fw-bold display-5 mb-2 mt-2"
-    style="background: linear-gradient(90deg, #0d6efd, #4dabf7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-  <%= link_to @event.artist.username.titleize, artist_path(@event.artist),
-              class: "text-decoration-none",
-              data: { turbo_frame: "_top" } %>
-</h1>
-
-          <!-- Date & Time -->
-          <!-- Date & Time Pill -->
-          <div class="text-center mb-2">
-            <div class="d-inline-block px-3 py-1 rounded-pill bg-white text-primary shadow-sm" style="font-size: 0.9rem; letter-spacing: 0.5px;">
-              <i class="bi bi-clock me-1"></i>
-              <%= @event.date.strftime("%A, %b %-d") %> • 
-              <%= @event.start_time.strftime("%-I:%M %p") %> - 
-              <%= @event.end_time.strftime("%-I:%M %p") %>
-            </div>
-          </div>
-
-          <!-- Venue Name -->
-          <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2" style="font-size: 0.95rem;">
-            <i class="bi bi-geo-alt me-1"></i>
-            <%= link_to "#{@event.venue.name}, #{@event.venue.city}", 
-              venue_path(@event.venue), 
-              class: "text-decoration-none text-dark" %>
-          </div>
-
-          <!-- Category/Description -->
-          <p class="text-dark mb-3 fs-6">
-            <%= @event.description.presence || @event.category  %>
-          </p>
-
         </div>
+
+        <!-- Date & Time -->
+        <div class="d-block">
+          <div class="d-inline-block px-3 py-1 rounded-pill bg-primary text-white fw-semibold mb-4"
+               style="font-size: 0.9rem; background: linear-gradient(90deg, #0d6efd, #4dabf7) !important;">
+            <i class="bi bi-clock me-1"></i>
+            <%= @event.date.strftime("%A, %b %-d") %> • 
+            <%= @event.start_time.strftime("%-I:%M %p") %> - 
+            <%= @event.end_time.strftime("%-I:%M %p") %>
+          </div>
+        </div>
+
+        <!-- Artist Name -->
+        <h5 class="fw-bold mb-2"
+            style="background: linear-gradient(90deg, #0d6efd, #4dabf7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+          <%= link_to @event.artist.username.titleize, artist_path(@event.artist),
+                      class: "text-decoration-none",
+                      data: { turbo_frame: "_top" } %>
+        </h5>
+
+        <!-- Venue Name -->
+        <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2"
+             style="font-size: 0.9rem;">
+          <i class="bi bi-geo-alt me-1"></i>
+          <%= link_to "#{@event.venue.name}, #{@event.venue.city}", 
+                      venue_path(@event.venue), 
+                      class: "text-decoration-none text-dark" %>
+        </div>
+
+        <!-- Description -->
+        <% if @event.description.present? || @event.category.present? %>
+          <p class="mt-2">
+            <%= simple_format(@event.description.presence || @event.category) %>
+          </p>
+        <% end %>
       </div>
     </div>
 
     <!-- Event Details Card -->
-    <div class="px-3 pb-4">
-      <div class="card border-0 shadow-lg" style="border-radius: 24px; backdrop-filter: blur(10px);">
-        <div class="card-body p-4">
-
-          <!--        <div class="mb-4">
-          <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
-            <div class="fw-semibold text-dark">
-              <%#= @event.date.strftime("%A, %b %-d") %> • <%= @event.start_time.strftime("%-I:%M %p") %> - <%= @event.end_time.strftime("%-I:%M %p") %>-->
-          <!--            </div>
+    <div class="card border-0 shadow-lg mb-4" style="border-radius: 24px; background-color: #ffffff;">
+      <div class="card-body">
+        <h5 class="text-center text-muted mb-3">Event Details</h5>
+        
+        <!-- Indoor/Outdoor -->
+        <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
+          <i class="bi bi-<%= @event.indoors? ? 'house-door' : 'sun' %> fs-3 mb-2 d-block" 
+             style="color: <%= @event.indoors? ? '#2ed573' : '#ffa502' %>;"></i>
+          <div class="fw-semibold text-dark">
+            <%= @event.indoors? ? "Indoor Event" : "Outdoor Event" %>
           </div>
-        </div>-->
+        </div>
 
-          <!-- Detailed Info -->
-          <div class="space-y-4">
-            <!-- Full Time Range -->
+        <!-- Cover Charge -->
+        <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
+          <i class="bi bi-cash fs-3 mb-2 d-block" style="color: #2ed573;"></i>
+          <div class="fw-semibold text-dark">
+            <%= @event.cover? ? "Cover: #{number_to_currency(@event.cover_amount || 5)}" : "No cover charge" %>
+          </div>
+        </div>
 
-            <!-- Indoor/Outdoor -->
-            <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
-              <i class="bi bi-<%= @event.indoors? ? 'house-door' : 'sun' %> fs-3 mb-2 d-block" 
-               style="color: <%= @event.indoors? ? '#2ed573' : '#ffa502' %>;"></i>
-              <div class="fw-semibold text-dark">
-                <%= @event.indoors? ? "Indoor Event" : "Outdoor Event" %>
-              </div>
+        <!-- Map Section -->
+        <% if @event.venue.latitude.present? && @event.venue.longitude.present? %>
+          <div class="text-center p-3 rounded-3" style="background-color: #f8f9fa;">
+            <i class="bi bi-geo-alt fs-3 mb-2 d-block" style="color: #5352ed;"></i>
+            
+            <!-- Mobile Native App Button -->
+            <div class="d-block d-md-none">
+              <%= link_to "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
+                          class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
+                          style: "background: linear-gradient(90deg, #0d6efd, #4dabf7); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
+                          data: { turbo_frame: "_top" } do %>
+                <i class="bi bi-map me-2"></i>Show on Map
+              <% end %>
             </div>
 
-            <!-- Cover Charge -->
-            <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
-              <div class="fw-semibold text-dark">
-                <%= @event.cover? ? "Cover: #{number_to_currency(@event.cover_amount || 5)}" : "No cover charge" %>
-              </div>
+            <!-- Web/Desktop Google Maps Button -->
+            <div class="d-none d-md-block">
+              <%= link_to "https://www.google.com/maps/search/#{CGI.escape(@event.venue.name)}/@#{@event.venue.latitude},#{@event.venue.longitude},17z",
+                          class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
+                          style: "background: linear-gradient(90deg, #0d6efd, #4dabf7); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
+                          target: "_blank",
+                          rel: "noopener noreferrer" do %>
+                <i class="bi bi-google me-2"></i>Open in Google Maps
+              <% end %>
             </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
 
-            <!-- Map Section -->
-            <% if @event.venue.latitude.present? && @event.venue.longitude.present? %>
-              <div class="text-center p-3 rounded-3" style="background-color: #f8f9fa;">
-                <i class="bi bi-geo-alt fs-3 mb-2 d-block" style="color: #5352ed;"></i>
-                <!--              <div class="fw-semibold text-dark mb-2">Get Directions</div>
--->
-                <!-- Mobile Native App Button -->
-                <div class="d-block d-md-none">
-                  <%= link_to "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
-                    class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
-                    style: "background: linear-gradient(90deg, #0d6efd, #4dabf7); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
-                    data: { turbo_frame: "_top" } do %>
-                    <i class="bi bi-map me-2"></i>Show on Map
-                  <% end %>
-                </div>
+    <!-- Admin Actions (if applicable) -->
+    <% if can_modify_event?(@event) %>
+      <div class="card border-0 shadow-lg mb-4" style="border-radius: 24px; background-color: #ffffff;">
+        <div class="card-body">
+          <h5 class="text-center text-muted mb-3">Event Management</h5>
+          <div class="d-flex gap-3 justify-content-center">
+            <%= link_to edit_event_path(@event), 
+                        class: "btn btn-warning rounded-pill px-4 py-2 fw-semibold flex-fill text-center",
+                        style: "box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);" do %>
+              <i class="bi bi-pencil me-2"></i>Edit Event
+            <% end %>
 
-                <!-- Web/Desktop Google Maps Button -->
-                <div class="d-none d-md-block">
-                  <%= link_to "https://www.google.com/maps/search/#{CGI.escape(@event.venue.name)}/@#{@event.venue.latitude},#{@event.venue.longitude},17z",
-                    class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
-                    style: "background: linear-gradient(90deg, #0d6efd, #4dabf7); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
-                    target: "_blank",
-                    rel: "noopener noreferrer" do %>
-                    <i class="bi bi-google me-2"></i>Open in Google Maps
-                  <% end %>
-                </div>
-              </div>
+            <%= button_to event_path(@event), 
+                          method: :delete, 
+                          class: "btn btn-danger rounded-pill px-4 py-2 fw-semibold flex-fill",
+                          style: "box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);",
+                          data: { confirm: "Are you sure you want to cancel this event? This action cannot be undone." },
+                          form: { class: "flex-fill" } do %>
+              <i class="bi bi-trash me-2"></i>Cancel Event
             <% end %>
           </div>
         </div>
       </div>
-      <!--</div>-->
+    <% end %>
 
-      <!-- Admin Actions (if applicable) -->
-      <% if can_modify_event?(@event) %>
-        <div class="px-3 pb-4">
-          <div class="card border-0 shadow" style="border-radius: 20px; background: rgba(255,255,255,0.1); backdrop-filter: blur(10px);">
-            <div class="card-body p-4">
-              <h6 class="text-white mb-3 text-center">Event Management</h6>
-              <div class="d-flex gap-3 justify-content-center">
-                <%= link_to edit_event_path(@event), 
-              class: "btn btn-warning rounded-pill px-4 py-2 fw-semibold flex-fill text-center",
-              style: "box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);" do %>
-                  <i class="bi bi-pencil me-2"></i>Edit Event
-                <% end %>
-
-                <%= button_to event_path(@event), 
-              method: :delete, 
-              class: "btn btn-danger rounded-pill px-4 py-2 fw-semibold flex-fill",
-              style: "box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);",
-              data: { confirm: "Are you sure you want to cancel this event? This action cannot be undone." },
-              form: { class: "flex-fill" } do %>
-                  <i class="bi bi-trash me-2"></i>Cancel Event
-                <% end %>
-              </div>
-            </div>
-          </div>
-        </div>
-      <% end %>
-    </div>
   </div>
+</div>
 
-  <style>
-    @keyframes pulse {
-      0% { opacity: 1; }
-      50% { opacity: 0.5; }
-      100% { opacity: 1; }
-    }
+<style>
+  @keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+  }
 
-    .tracking-wider {
-      letter-spacing: 0.1em;
-    }
+  .btn {
+    transition: all 0.3s ease;
+  }
 
-    .space-y-4 > * + * {
-      margin-top: 1rem;
-    }
+  .btn:hover {
+    transform: translateY(-2px);
+  }
 
-    /* Smooth hover effects */
-    .btn {
-      transition: all 0.3s ease;
-    }
-
-    .btn:hover {
-      transform: translateY(-2px);
-    }
-
-    /* Card hover effect */
-    .card {
-      transition: transform 0.3s ease;
-    }
-  </style>
+  .card {
+    transition: transform 0.3s ease;
+  }
+</style>
