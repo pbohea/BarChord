@@ -30,7 +30,7 @@ class VenuesController < ApplicationController
   def search
     query = params[:query].to_s.strip.downcase
     venues = Venue.where("LOWER(name) LIKE ?", "%#{query}%")
-                  .select(:id, :name)
+                  .select(:id, :name, :street_address, :city, :state, :zip_code)
                   .limit(5)
 
     render json: venues
