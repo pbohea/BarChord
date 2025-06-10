@@ -1,4 +1,4 @@
-<div class="card">
+<div class="card mt-4">
   <div class="card-header">
     <h5 class="card-title mb-0">Request New Venue</h5>
   </div>
@@ -24,9 +24,22 @@
         <div class="col-md-6">
           <%= f.label :state, "State", class: "form-label" %>
           <%= f.select :state, options_for_select([
-            ['Illinois', 'IL'], ['California', 'CA'], ['New York', 'NY'],
-            ['Texas', 'TX'], ['Florida', 'FL']
-          ]), { prompt: 'Select State' }, { class: "form-select", required: true } %>
+    ['Alabama', 'AL'], ['Alaska', 'AK'], ['Arizona', 'AZ'], ['Arkansas', 'AR'],
+    ['California', 'CA'], ['Colorado', 'CO'], ['Connecticut', 'CT'], ['Delaware', 'DE'],
+    ['Florida', 'FL'], ['Georgia', 'GA'], ['Hawaii', 'HI'], ['Idaho', 'ID'],
+    ['Illinois', 'IL'], ['Indiana', 'IN'], ['Iowa', 'IA'], ['Kansas', 'KS'],
+    ['Kentucky', 'KY'], ['Louisiana', 'LA'], ['Maine', 'ME'], ['Maryland', 'MD'],
+    ['Massachusetts', 'MA'], ['Michigan', 'MI'], ['Minnesota', 'MN'], ['Mississippi', 'MS'],
+    ['Missouri', 'MO'], ['Montana', 'MT'], ['Nebraska', 'NE'], ['Nevada', 'NV'],
+    ['New Hampshire', 'NH'], ['New Jersey', 'NJ'], ['New Mexico', 'NM'], ['New York', 'NY'],
+    ['North Carolina', 'NC'], ['North Dakota', 'ND'], ['Ohio', 'OH'], ['Oklahoma', 'OK'],
+    ['Oregon', 'OR'], ['Pennsylvania', 'PA'], ['Rhode Island', 'RI'], ['South Carolina', 'SC'],
+    ['South Dakota', 'SD'], ['Tennessee', 'TN'], ['Texas', 'TX'], ['Utah', 'UT'],
+    ['Vermont', 'VT'], ['Virginia', 'VA'], ['Washington', 'WA'], ['West Virginia', 'WV'],
+    ['Wisconsin', 'WI'], ['Wyoming', 'WY'],
+    ['District of Columbia', 'DC'], ['Puerto Rico', 'PR'], ['Guam', 'GU'],
+    ['American Samoa', 'AS'], ['U.S. Virgin Islands', 'VI'], ['Northern Mariana Islands', 'MP']
+  ]), { prompt: 'Select State or Territory' }, { class: "form-select", required: true } %>
         </div>
         <div class="col-md-6">
           <%= f.label :zip_code, "ZIP Code", class: "form-label" %>
@@ -45,7 +58,7 @@
         <div class="mb-3 p-3 bg-light border-start border-primary border-4">
           <p class="mb-0 text-muted">
             <i class="fas fa-info-circle me-2"></i>
-            As an owner, this will also request ownership of the venue.
+            Since you're signed in as an owner, this will also request ownership of the venue. 
           </p>
         </div>
 
@@ -55,7 +68,7 @@
         </div>
 
         <div class="mb-3">
-          <%= f.label :utility_bill, "Upload Verification Document", class: "form-label" %>
+          <%= f.label :utility_bill, "Upload a utility bill, liquor license, lease, deed, or other document to prove ownership", class: "form-label" %>
           <%= f.file_field :utility_bill, class: "form-control", required: true %>
         </div>
       <% end %>

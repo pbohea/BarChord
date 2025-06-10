@@ -9,6 +9,7 @@ task sample_data: :environment do
     puts "Deleting existing records..."
     Event.destroy_all
     VenueFollow.delete_all
+    VenueRequest.destroy_all
     Venue.destroy_all
     ArtistFollow.delete_all
     Artist.destroy_all

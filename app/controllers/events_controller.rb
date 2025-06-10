@@ -57,8 +57,8 @@ class EventsController < ApplicationController
 
   # POST /events
   def create
-    # Check for venue verification first
-    unless params[:venue_verification] == "1"
+    # Only check for venue verification if an artist is creating the event
+    if artist_signed_in? && params[:venue_verification] != "1"
       @event = Event.new(event_params) # Rebuild the event object to preserve form data
       flash.now[:alert] = "Please verify that the venue information is correct before creating the event."
       render :new, status: :unprocessable_entity
