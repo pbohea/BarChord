@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "results", "hidden", "details", "name", "address"]
+  static targets = ["input", "results", "hidden", "details", "name", "address", "verification", "submitButton"]
 
   connect() {
     console.log("Venue autocomplete controller connected")
@@ -93,6 +93,12 @@ export default class extends Controller {
       this.detailsTarget.classList.remove("d-none")
       console.log("Removed d-none class")
     }
+
+    // Reset verification checkbox and disable submit button
+    if (this.hasVerificationTarget) {
+      this.verificationTarget.checked = false
+    }
+    this.updateSubmitButton()
   }
 
   hideDetails() {
@@ -103,6 +109,31 @@ export default class extends Controller {
     }
     if (this.hasHiddenTarget) {
       this.hiddenTarget.value = ""
+    }
+    // Reset verification and disable submit when hiding
+    if (this.hasVerificationTarget) {
+      this.verificationTarget.checked = false
+    }
+    this.updateSubmitButton()
+  }
+
+  toggleSubmit() {
+    console.log("toggleSubmit called")
+    this.updateSubmitButton()
+  }
+
+  updateSubmitButton() {
+    console.log("updateSubmitButton called")
+    console.log("Has submit button target:", this.hasSubmitButtonTarget)
+    console.log("Has verification target:", this.hasVerificationTarget)
+    
+    if (this.hasSubmitButtonTarget && this.hasVerificationTarget) {
+      const isChecked = this.verificationTarget.checked
+      console.log("Checkbox is checked:", isChecked)
+      console.log("Setting submit button disabled to:", !isChecked)
+      this.submitButtonTarget.disabled = !isChecked
+    } else {
+      console.log("Missing targets!")
     }
   }
 

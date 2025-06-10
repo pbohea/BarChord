@@ -11,7 +11,7 @@
              placeholder="Start typing venue name..." 
              class="form-control" 
              data-action="input->venue-autocomplete#search" 
-      data-venue-autocomplete-target="input">
+             data-venue-autocomplete-target="input">
 
       <ul class="list-group mt-1" data-venue-autocomplete-target="results"></ul>
       <input type="hidden" name="venue_id" id="venue_id" data-venue-autocomplete-target="hidden">
@@ -20,9 +20,26 @@
         <h5>Does this look right?</h5>
         <p><strong>Name:</strong> <span data-venue-autocomplete-target="name"></span></p>
         <p><strong>Address:</strong> <span data-venue-autocomplete-target="address"></span></p>
+        
+        <div class="form-check mt-3">
+          <input class="form-check-input" 
+                 type="checkbox" 
+                 id="venue_verification" 
+                 name="venue_verification" 
+                 data-venue-autocomplete-target="verification"
+                 data-action="change->venue-autocomplete#toggleSubmit">
+          <label class="form-check-label" for="venue_verification">
+            <strong>Yes, this is my venue and the information is correct</strong>
+          </label>
+        </div>
       </div>
-    </div>
 
-    <%= f.submit "Request to Claim Venue", class: "btn btn-success mt-3" %>
+      <!-- Move submit button INSIDE the controller div -->
+      <input type="submit" 
+             value="Request to Claim Venue" 
+             class="btn btn-success mt-3" 
+             disabled 
+             data-venue-autocomplete-target="submitButton">
+    </div>
   <% end %>
 </div>

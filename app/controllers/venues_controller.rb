@@ -89,6 +89,12 @@ class VenuesController < ApplicationController
   end
 
   def claim_submit
+    # Check for checkbox - it sends "on" when checked, or nil when unchecked
+    unless params[:venue_verification] == "on"
+      redirect_to claim_venue_path, alert: "Please verify that the venue information is correct before claiming."
+      return
+    end
+
     @venue = Venue.find(params[:venue_id])
 
     if current_owner && @venue.owner_id.nil?
