@@ -21,6 +21,7 @@ json.events @events do |event|
     json.id event.venue.id
     json.name event.venue.name
     json.category event.venue.category
+    json.city event.venue.city
     
     # Create the coordinate object that iOS expects
     json.coordinate do
