@@ -39,11 +39,12 @@
           <% end %>
 
           <!-- Artist Name -->
-          <h1 class="fw-bold display-5 mb-2" style="background: linear-gradient(90deg, #667eea, #764ba2); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-            <%= link_to @event.artist.username.titleize, artist_path(@event.artist),
-        class: "text-decoration-none",
-        data: { turbo_frame: "_top" } %>
-          </h1>
+<h1 class="fw-bold display-5 mb-2 mt-2"
+    style="background: linear-gradient(90deg, #0d6efd, #4dabf7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+  <%= link_to @event.artist.username.titleize, artist_path(@event.artist),
+              class: "text-decoration-none",
+              data: { turbo_frame: "_top" } %>
+</h1>
 
           <!-- Date & Time -->
           <!-- Date & Time Pill -->
@@ -116,7 +117,7 @@
                 <div class="d-block d-md-none">
                   <%= link_to "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
                     class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
-                    style: "background: linear-gradient(135deg, #667eea, #764ba2); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
+                    style: "background: linear-gradient(90deg, #0d6efd, #4dabf7); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
                     data: { turbo_frame: "_top" } do %>
                     <i class="bi bi-map me-2"></i>Show on Map
                   <% end %>
@@ -126,7 +127,7 @@
                 <div class="d-none d-md-block">
                   <%= link_to "https://www.google.com/maps/search/#{CGI.escape(@event.venue.name)}/@#{@event.venue.latitude},#{@event.venue.longitude},17z",
                     class: "btn btn-primary rounded-pill px-4 py-2 fw-semibold",
-                    style: "background: linear-gradient(135deg, #667eea, #764ba2); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
+                    style: "background: linear-gradient(90deg, #0d6efd, #4dabf7); border: none; box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);",
                     target: "_blank",
                     rel: "noopener noreferrer" do %>
                     <i class="bi bi-google me-2"></i>Open in Google Maps

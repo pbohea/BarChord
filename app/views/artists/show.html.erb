@@ -1,4 +1,4 @@
-<% content_for :title, @artist.username %>
+<% content_for :title, "Artist Profile" %>
 
 <div class="min-vh-100" style="background-color: #f8f9fa;">
   <div class="px-3 pt-4" style="max-width: 500px; margin: 0 auto;">
@@ -20,11 +20,16 @@
 
         <!-- Display Name -->
         <% if @artist.website.present? %>
-          <h4 class="mb-1">
-            <%= link_to @artist.username, @artist.website, target: "_blank", rel: "noopener", class: "text-decoration-none" %>
+          <h4 class="fw-bold mb-2 mt-2 display-6"
+    style="background: linear-gradient(90deg, #0d6efd, #4dabf7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
+            <% if @artist.website.present? %>
+              <%= link_to @artist.username, @artist.website,
+                target: "_blank", rel: "noopener",
+                class: "text-decoration-none" %>
+            <% else %>
+              <%= @artist.username %>
+            <% end %>
           </h4>
-        <% else %>
-          <h4 class="mb-1"><%= @artist.username %></h4>
         <% end %>
 
         <!-- Social Links -->
