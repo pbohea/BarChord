@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_08_001453) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_10_161406) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -315,6 +315,29 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_001453) do
     t.datetime "updated_at", null: false
     t.index ["user_id"], name: "index_venue_follows_on_user_id"
     t.index ["venue_id"], name: "index_venue_follows_on_venue_id"
+  end
+
+  create_table "venue_requests", force: :cascade do |t|
+    t.string "name", null: false
+    t.string "street_address", null: false
+    t.string "city", null: false
+    t.string "state", limit: 2, null: false
+    t.string "zip_code", limit: 10, null: false
+    t.string "website"
+    t.string "category", null: false
+    t.string "requester_type", null: false
+    t.integer "requester_id", null: false
+    t.integer "status", default: 0, null: false
+    t.integer "venue_id"
+    t.text "notes"
+    t.boolean "ownership_claim", default: false, null: false
+    t.string "owner_phone"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["ownership_claim"], name: "index_venue_requests_on_ownership_claim"
+    t.index ["requester_type", "requester_id"], name: "index_venue_requests_on_requester_type_and_requester_id"
+    t.index ["status"], name: "index_venue_requests_on_status"
+    t.index ["venue_id"], name: "index_venue_requests_on_venue_id"
   end
 
   create_table "venues", force: :cascade do |t|

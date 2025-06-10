@@ -19,4 +19,19 @@ module ApplicationHelper
 
     false
   end
+
+  def status_color(status)
+    case status.to_s
+    when "pending"
+      "warning"
+    when "approved"
+      "success"
+    when "rejected"
+      "danger"
+    when "duplicate"
+      "secondary"
+    else
+      "secondary"
+    end
+  end
 end

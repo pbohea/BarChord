@@ -56,6 +56,12 @@ Rails.application.routes.draw do
 
   resources :venue_follows, only: [:create, :destroy]
 
+  resources :venue_requests, only: [:index, :new, :create] do
+    member do
+      patch :approve
+      patch :reject
+    end
+  end
   resources :configurations, only: [] do
     get :ios_v1, on: :collection
   end
@@ -70,7 +76,6 @@ Rails.application.routes.draw do
   get "/owners_about", to: "pages#owners_about"
   get "/artists_about", to: "pages#artists_about"
   get "/menu", to: "pages#menu", as: :menu
-
 
   #for autocomplete search
   get "/artists/search", to: "artists#search"

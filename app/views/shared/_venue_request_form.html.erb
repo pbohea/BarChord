@@ -1,0 +1,73 @@
+<div class="card">
+  <div class="card-header">
+    <h5 class="card-title mb-0">Request New Venue</h5>
+  </div>
+  <div class="card-body">
+    <%= form_with model: VenueRequest.new, url: venue_requests_path, local: true do |f| %>
+
+      <div class="mb-3">
+        <%= f.label :name, "Venue Name", class: "form-label" %>
+        <%= f.text_field :name, class: "form-control", required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :street_address, "Street Address", class: "form-label" %>
+        <%= f.text_field :street_address, class: "form-control", required: true %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :city, "City", class: "form-label" %>
+        <%= f.text_field :city, class: "form-control", required: true %>
+      </div>
+
+      <div class="row mb-3">
+        <div class="col-md-6">
+          <%= f.label :state, "State", class: "form-label" %>
+          <%= f.select :state, options_for_select([
+            ['Illinois', 'IL'], ['California', 'CA'], ['New York', 'NY'],
+            ['Texas', 'TX'], ['Florida', 'FL']
+          ]), { prompt: 'Select State' }, { class: "form-select", required: true } %>
+        </div>
+        <div class="col-md-6">
+          <%= f.label :zip_code, "ZIP Code", class: "form-label" %>
+          <%= f.text_field :zip_code, class: "form-control", required: true %>
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :category, "Venue Type", class: "form-label" %>
+        <%= f.select :category, options_for_select([
+          ['Bar', 'bar'], ['Restaurant', 'restaurant'], ['Club', 'club']
+        ]), { prompt: 'Select type' }, { class: "form-select", required: true } %>
+      </div>
+
+      <% if owner_signed_in? %>
+        <div class="mb-3 p-3 bg-light border-start border-primary border-4">
+          <p class="mb-0 text-muted">
+            <i class="fas fa-info-circle me-2"></i>
+            As an owner, this will also request ownership of the venue.
+          </p>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :owner_phone, "Phone Number", class: "form-label" %>
+          <%= f.telephone_field :owner_phone, class: "form-control", required: true %>
+        </div>
+
+        <div class="mb-3">
+          <%= f.label :utility_bill, "Upload Verification Document", class: "form-label" %>
+          <%= f.file_field :utility_bill, class: "form-control", required: true %>
+        </div>
+      <% end %>
+
+      <div class="d-grid">
+        <% if owner_signed_in? %>
+          <%= f.submit "Request Venue & Claim Ownership", class: "btn btn-success" %>
+        <% else %>
+          <%= f.submit "Request Venue", class: "btn btn-success" %>
+        <% end %>
+      </div>
+
+    <% end %>
+  </div>
+</div>
