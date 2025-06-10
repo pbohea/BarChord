@@ -1,6 +1,5 @@
 <% content_for :title, @artist.username %>
 
-
 <div class="container mb-3 pt-3" style="max-width: 500px;">
   <div class="card shadow-sm">
     <div class="card-body text-center">
@@ -13,7 +12,7 @@
         </div>
       <% end %>
 
-            <!-- Display Name -->
+      <!-- Display Name -->
       <% if @artist.website.present? %>
         <h4 class="mb-1">
           <%= link_to @artist.username, @artist.website, target: "_blank", rel: "noopener", class: "text-decoration-none" %>
@@ -78,13 +77,18 @@
         data-event-card-url-value="<%= event_path(event) %>"
         data-action="click->event-card#goToEvent"
             style="cursor: pointer;">
-            <strong><%= event.date.strftime("%A, %B %-d") %></strong><br>
+            <!-- Date & Time Pill -->
+            <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2" style="font-size: 0.9rem;">
+              <i class="bi bi-clock me-1"></i>
+              <%= event.date.strftime("%A, %b %-d") %> • 
+              <%= event.start_time.strftime("%-I:%M %p") %>
+            </div>
+            <br>
             <small>
-              <%= event.start_time.strftime("%-I:%M %p") %><br>
               at 
               <%= link_to event.venue.name, venue_path(event.venue),
-              class: "text-decoration-none",
-              onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+    class: "text-decoration-none",
+    onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
             </small>
           </li>
         <% end %>

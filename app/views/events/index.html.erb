@@ -134,11 +134,14 @@
               <%= event.category %>
             </div>
 
-            <!-- date and time on one line -->
+            <!-- Date & Time Pill -->
             <div class="mb-3">
-              <p class="mb-0 text-muted small fw-semibold">
-                <%= event.date.strftime("%A, %B %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %> – <%= event.end_time.strftime("%-I:%M %p") %>
-              </p>
+              <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold" style="font-size: 0.9rem;">
+                <i class="bi bi-clock me-1"></i>
+                <%= event.date.strftime("%A, %b %-d") %> • 
+                <%= event.start_time.strftime("%-I:%M %p") %> – 
+                <%= event.end_time.strftime("%-I:%M %p") %>
+              </div>
             </div>
 
             <!-- map button at bottom -->
@@ -151,7 +154,7 @@
                       class: "btn btn-sm btn-outline-primary",
                       data: { turbo_frame: "_top" } %>
                 </div>
-                
+
                 <!-- Web/Desktop Google Maps Button -->
                 <div class="d-none d-md-block">
                   <%= link_to "Map",

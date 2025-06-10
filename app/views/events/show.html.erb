@@ -59,7 +59,7 @@
           <!-- Venue Name -->
           <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2" style="font-size: 0.95rem;">
             <i class="bi bi-geo-alt me-1"></i>
-            <%= link_to "#{@event.venue.name}, #{@event.venue.city.titleize}", 
+            <%= link_to "#{@event.venue.name}, #{@event.venue.city}", 
               venue_path(@event.venue), 
               class: "text-decoration-none text-dark" %>
           </div>
