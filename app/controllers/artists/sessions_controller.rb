@@ -17,7 +17,7 @@ class Artists::SessionsController < Devise::SessionsController
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    menu_path
+    new_artist_session_path
   end
 
   private

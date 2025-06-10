@@ -19,7 +19,7 @@ class Users::SessionsController < Devise::SessionsController
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    menu_path
+    new_user_session_path
   end
 
   def respond_to_on_destroy
