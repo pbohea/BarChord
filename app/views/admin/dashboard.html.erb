@@ -79,7 +79,7 @@
                       <strong>Type:</strong> <%= request.category.humanize %>
                     </p>
                   <% end %>
-                  
+
                   <p class="card-text">
                     <strong>Requested by:</strong> <%= request.requester_type.humanize %> #<%= request.requester_id %><br>
                     <% if request.ownership_claim? %>
@@ -98,9 +98,20 @@
                     </p>
                   <% end %>
                 </div>
+                <%= form_with url: update_coordinates_admin_venue_request_path(request), method: :patch, local: true, class: "mt-3" do |f| %>
+                  <div class="mb-2">
+                    <%= f.label :latitude, class: "form-label" %>
+                    <%= f.text_field :latitude, class: "form-control", placeholder: "Enter latitude", required: true %>
+                  </div>
+                  <div class="mb-2">
+                    <%= f.label :longitude, class: "form-label" %>
+                    <%= f.text_field :longitude, class: "form-control", placeholder: "Enter longitude", required: true %>
+                  </div>
+                  <%= f.submit "Save Coordinates & Approve", class: "btn btn-outline-success btn-sm w-100" %>
+                <% end %>
                 <div class="card-footer">
                   <div class="btn-group w-100">
-                    <%= button_to "Approve", approve_venue_request_path(request), 
+                    <%= button_to "Approve", approve_admin_venue_request_path(request), 
                         method: :patch, 
                         class: "btn btn-success btn-sm",
                         data: { 
@@ -108,7 +119,7 @@
                             "Approve ownership claim for #{request.name}?" : 
                             "Create new venue #{request.name}?" 
                         } %>
-                    <%= button_to "Reject", reject_venue_request_path(request), 
+                    <%= button_to "Reject", reject_admin_venue_request_path(request), 
                         method: :patch, 
                         class: "btn btn-danger btn-sm",
                         data: { confirm: "Reject this request?" } %>
@@ -153,7 +164,7 @@
         </div>
       </div>
     </div>
-    
+
     <div class="col-md-6">
       <div class="card">
         <div class="card-header bg-danger text-white">

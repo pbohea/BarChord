@@ -56,12 +56,20 @@ Rails.application.routes.draw do
 
   resources :venue_follows, only: [:create, :destroy]
 
-  resources :venue_requests, only: [:index, :new, :create] do
-    member do
-      patch :approve
-      patch :reject
+  # new venue requests (public)
+  resources :venue_requests, only: [:index, :new, :create]
+
+  # admin-only
+  namespace :admin do
+    resources :venue_requests do
+      member do
+        patch :approve
+        patch :reject
+        patch :update_coordinates
+      end
     end
   end
+
   resources :configurations, only: [] do
     get :ios_v1, on: :collection
   end
@@ -78,7 +86,7 @@ Rails.application.routes.draw do
   get "/menu", to: "pages#menu", as: :menu
   # Admin routes
   get "/admin", to: "admin#dashboard", as: "admin_dashboard"
-  get "/admin/venue_requests", to: "admin#venue_requests", as: "admin_venue_requests"
+  #get "/admin/venue_requests", to: "admin#venue_requests", as: "admin_venue_requests"
 
   #for autocomplete search
   get "/artists/search", to: "artists#search"

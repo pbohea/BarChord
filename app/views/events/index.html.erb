@@ -112,9 +112,9 @@
             <% if artist&.image&.attached? %>
               <div class="mb-1">
                 <%= link_to artist_path(artist), data: { turbo_frame: "_top" } do %>
-                  <%= image_tag artist.image.variant(resize_to_fill: [100, 100]),
-                    class: "rounded-circle shadow",
-                    style: "object-fit: cover;" %>
+                  <%= image_tag url_for(artist.image.variant(resize_to_fill: [100, 100])),
+  class: "rounded-circle shadow",
+  style: "object-fit: cover;" %>
                 <% end %>
               </div>
             <% end %>
