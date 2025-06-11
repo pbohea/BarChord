@@ -85,6 +85,17 @@ class VenueRequestsController < ApplicationController
       redirect_to root_path, alert: "You must be signed in to view this receipt."
       return
     end
+
+    # Render different templates based on request type AND user type
+    if @venue_request.existing_venue_claim?
+      render :claim_receipt  # Only owners can claim
+    elsif @venue_request.requester_type == "owner"
+      render :new_venue_receipt_owner
+    elsif @venue_request.requester_type == "artist"
+      render :new_venue_receipt_artist
+    else
+      render :new_venue_receipt_owner  # fallback
+    end
   end
 
   private
