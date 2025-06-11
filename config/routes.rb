@@ -57,6 +57,7 @@ Rails.application.routes.draw do
   # new venue requests (public)
   resources :venue_requests, only: [:index, :new, :create] do
     get :claim, on: :collection
+    get :receipt, on: :member
   end
 
   # admin-only

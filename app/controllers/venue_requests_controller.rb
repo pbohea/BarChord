@@ -1,5 +1,5 @@
 class VenueRequestsController < ApplicationController
-  before_action :authenticate_user_or_artist_or_owner!, only: [:new, :create, :claim]
+  before_action :authenticate_user_or_artist_or_owner!, only: [:new, :create, :claim, :receipt]
 
   def new
     @venue_request = VenueRequest.new
@@ -54,15 +54,7 @@ class VenueRequestsController < ApplicationController
     end
 
     if @venue_request.save
-      success_message = @venue_request.ownership_claim? ? "Venue and ownership claim submitted!" : "Venue request submitted!"
-
-      if artist_signed_in?
-        redirect_to artist_dashboard_path(current_artist), notice: success_message
-      elsif owner_signed_in?
-        redirect_to owner_dashboard_path(current_owner), notice: success_message
-      else
-        redirect_to root_path, notice: success_message
-      end
+      redirect_to receipt_venue_request_path(@venue_request)
     else
       Rails.logger.error "VenueRequest validation errors: #{@venue_request.errors.full_messages}"
       puts "=== VALIDATION ERRORS ==="
@@ -76,6 +68,22 @@ class VenueRequestsController < ApplicationController
       else
         render :new, status: :unprocessable_entity
       end
+    end
+  end
+
+  def receipt
+    @venue_request = VenueRequest.find(params[:id])
+
+    # Security check - only the requester should see their receipt
+    if @venue_request.requester_type == "owner" && current_owner && @venue_request.requester_id != current_owner.id
+      redirect_to root_path, alert: "You don't have permission to view this receipt."
+      return
+    elsif @venue_request.requester_type == "artist" && current_artist && @venue_request.requester_id != current_artist.id
+      redirect_to root_path, alert: "You don't have permission to view this receipt."
+      return
+    elsif !current_owner && !current_artist
+      redirect_to root_path, alert: "You must be signed in to view this receipt."
+      return
     end
   end
 

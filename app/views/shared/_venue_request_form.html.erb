@@ -3,7 +3,7 @@
     <h5 class="card-title mb-0">Request New Venue</h5>
   </div>
   <div class="card-body">
-    <%= form_with model: VenueRequest.new, url: venue_requests_path, local: true do |f| %>
+    <%= form_with model: VenueRequest.new, url: venue_requests_path, local: true, multipart: true do |f| %>
 
       <div class="mb-3">
         <%= f.label :name, "Venue Name", class: "form-label" %>
@@ -49,9 +49,14 @@
 
       <div class="mb-3">
         <%= f.label :category, "Venue Type", class: "form-label" %>
-        <%= f.select :category, options_for_select([
-          ['Bar', 'bar'], ['Restaurant', 'restaurant'], ['Club', 'club']
-        ]), { prompt: 'Select type' }, { class: "form-select", required: true } %>
+        <%= f.select :category, options_for_select(
+          Venue::CATEGORIES.map { |category| [category, category] }
+        ), { prompt: 'Select type' }, { class: "form-select", required: true } %>
+      </div>
+
+      <div class="mb-3">
+        <%= f.label :website, "Website (optional)", class: "form-label" %>
+        <%= f.url_field :website, class: "form-control", placeholder: "https://example.com" %>
       </div>
 
       <% if owner_signed_in? %>
