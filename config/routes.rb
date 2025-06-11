@@ -30,9 +30,6 @@ Rails.application.routes.draw do
   # Keep the old route for compatibility
   get "events/map", to: "events#map"
 
-  get "venues/claim", to: "venues#claim", as: "claim_venue"
-  post "venues/claim", to: "venues#claim_submit"
-
   resources :venues do
     get :search, on: :collection
     member do
@@ -58,7 +55,9 @@ Rails.application.routes.draw do
   resources :venue_follows, only: [:create, :destroy]
 
   # new venue requests (public)
-  resources :venue_requests, only: [:index, :new, :create]
+  resources :venue_requests, only: [:index, :new, :create] do
+    get :claim, on: :collection
+  end
 
   # admin-only
   namespace :admin do

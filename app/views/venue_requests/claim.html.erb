@@ -1,5 +1,5 @@
 <div class="container pt-4" style="max-width: 600px;">
-  <%= form_with url: venue_requests_path, method: :post, local: true do |f| %>
+  <%= form_with url: venue_requests_path, method: :post, local: true, multipart: true, data: { turbo: false } do |f| %>
     <%= hidden_field_tag :owner_id, current_owner.id %>
     <%= hidden_field_tag :request_type, 'existing_venue_claim' %>
 
@@ -16,7 +16,6 @@
 
       <ul class="list-group mt-1" data-venue-autocomplete-target="results"></ul>
       
-      <!-- Change this to existing_venue_id -->
       <input type="hidden" name="existing_venue_id" id="existing_venue_id" data-venue-autocomplete-target="hidden">
 
       <div class="border border-info rounded p-3 bg-info-subtle mt-3 d-none" data-venue-autocomplete-target="details">
@@ -37,15 +36,15 @@
           </label>
         </div>
 
-        <!-- Add phone and document upload for ownership claims -->
+        <!-- Use proper nested parameter names for venue_request -->
         <div class="mb-3 mt-3">
-          <%= label_tag :owner_phone, "Phone Number", class: "form-label" %>
-          <%= telephone_field_tag :owner_phone, "", class: "form-control", required: true %>
+          <%= label_tag "venue_request[owner_phone]", "Phone Number", class: "form-label" %>
+          <%= telephone_field_tag "venue_request[owner_phone]", "", class: "form-control", required: true %>
         </div>
 
         <div class="mb-3">
-          <%= label_tag :utility_bill, "Upload Verification Document", class: "form-label" %>
-          <%= file_field_tag :utility_bill, class: "form-control", required: true %>
+          <%= label_tag "venue_request[utility_bill]", "Upload Verification Document", class: "form-label" %>
+          <%= file_field_tag "venue_request[utility_bill]", class: "form-control", required: true %>
         </div>
       </div>
 

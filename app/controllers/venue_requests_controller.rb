@@ -1,8 +1,22 @@
 class VenueRequestsController < ApplicationController
-  before_action :authenticate_user_or_artist_or_owner!, only: [:new, :create]
+  before_action :authenticate_user_or_artist_or_owner!, only: [:new, :create, :claim]
 
   def new
     @venue_request = VenueRequest.new
+  end
+
+  def claim
+    # Only allow venue owners to access this
+    if owner_signed_in?
+      # Proceed to render the claim form
+      return
+    elsif artist_signed_in?
+      redirect_to artist_dashboard_path(current_artist), alert: "Only venue owners can claim venues."
+    elsif user_signed_in?
+      redirect_to user_dashboard_path(current_user), alert: "Only venue owners can claim venues."
+    else
+      redirect_to new_owner_session_path, alert: "You must sign in as an owner to claim a venue."
+    end
   end
 
   def create
@@ -50,7 +64,18 @@ class VenueRequestsController < ApplicationController
         redirect_to root_path, notice: success_message
       end
     else
-      render :new, status: :unprocessable_entity
+      Rails.logger.error "VenueRequest validation errors: #{@venue_request.errors.full_messages}"
+      puts "=== VALIDATION ERRORS ==="
+      puts @venue_request.errors.full_messages
+      puts "=== VENUE REQUEST ATTRIBUTES ==="
+      puts @venue_request.attributes.inspect
+      puts "========================="
+      # Re-render the appropriate form based on request type
+      if params[:existing_venue_id].present?
+        render :claim, status: :unprocessable_entity
+      else
+        render :new, status: :unprocessable_entity
+      end
     end
   end
 

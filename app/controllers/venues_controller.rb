@@ -1,6 +1,5 @@
 class VenuesController < ApplicationController
   before_action :set_venue, only: %i[ show edit update destroy ]
-  before_action :authenticate_owner!, only: [:claim]
   # GET /venues or /venues.json
   def index
     @venues = Venue.all
@@ -84,26 +83,6 @@ class VenuesController < ApplicationController
     render partial: "venues/upcoming_events", locals: { venue: @venue, events: @events }, layout: false
   end
 
-  def claim
-    #renders the form
-  end
-
-  def claim_submit
-    # Check for checkbox - it sends "on" when checked, or nil when unchecked
-    unless params[:venue_verification] == "on"
-      redirect_to claim_venue_path, alert: "Please verify that the venue information is correct before claiming."
-      return
-    end
-
-    @venue = Venue.find(params[:venue_id])
-
-    if current_owner && @venue.owner_id.nil?
-      @venue.update(owner_id: current_owner.id)
-      redirect_to owner_dashboard_path(current_owner), notice: "Venue successfully claimed!"
-    else
-      redirect_to claim_venue_path, alert: "That venue is already claimed or you're not signed in as an owner."
-    end
-  end
 
   private
 

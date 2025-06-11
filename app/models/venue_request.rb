@@ -40,7 +40,7 @@ class VenueRequest < ApplicationRecord
                     }
   validates :zip_code, presence: true, format: { with: /\A\d{5}(-\d{4})?\z/ }
   validates :category, presence: true, inclusion: {
-                         in: %w[bar restaurant concert_hall club coffee_shop theater outdoor other],
+                         in: Venue::CATEGORIES
                        }
   validates :requester_type, presence: true, inclusion: { in: %w[artist owner] }
   validates :requester_id, presence: true, numericality: { greater_than: 0 }

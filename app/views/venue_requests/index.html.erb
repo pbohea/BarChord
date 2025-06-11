@@ -4,13 +4,13 @@
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h2>Venue Requests</h2>
     <div class="btn-group">
-      <%= link_to "All", venue_requests_path, 
+      <%= link_to "All", admin_venue_requests_path, 
           class: "btn #{'btn-primary' if params[:status].blank?} #{'btn-outline-primary' unless params[:status].blank?}" %>
-      <%= link_to "Pending", venue_requests_path(status: :pending), 
+      <%= link_to "Pending", admin_venue_requests_path(status: :pending), 
           class: "btn #{'btn-warning' if params[:status] == 'pending'} #{'btn-outline-warning' unless params[:status] == 'pending'}" %>
-      <%= link_to "Approved", venue_requests_path(status: :approved), 
+      <%= link_to "Approved", admin_venue_requests_path(status: :approved), 
           class: "btn #{'btn-success' if params[:status] == 'approved'} #{'btn-outline-success' unless params[:status] == 'approved'}" %>
-      <%= link_to "Rejected", venue_requests_path(status: :rejected), 
+      <%= link_to "Rejected", admin_venue_requests_path(status: :rejected), 
           class: "btn #{'btn-danger' if params[:status] == 'rejected'} #{'btn-outline-danger' unless params[:status] == 'rejected'}" %>
     </div>
   </div>
@@ -66,13 +66,13 @@
             <div class="card-footer">
               <% if request.pending? %>
                 <div class="btn-group w-100">
-                  <%= button_to "Approve", approve_venue_request_path(request), 
+                  <%= button_to "Approve", approve_admin_venue_request_path(request), 
                       method: :patch, 
                       class: "btn btn-success btn-sm",
                       data: { 
                         confirm: "Are you sure you want to approve this venue request? This will create a new venue#{' and assign ownership' if request.ownership_claim?}." 
                       } %>
-                  <%= button_to "Reject", reject_venue_request_path(request), 
+                  <%= button_to "Reject", reject_admin_venue_request_path(request), 
                       method: :patch, 
                       class: "btn btn-danger btn-sm",
                       data: { 

@@ -4,7 +4,7 @@
   <div class="d-flex justify-content-center gap-3 mb-5 flex-wrap">
     <%= link_to "Add a Venue", new_venue_request_path, class: "btn btn-success" %>
     <%= link_to "Add an Event", new_event_path, class: "btn btn-primary" %>
-    <%= link_to "Claim a Venue", claim_venue_path, class: "btn btn-primary" %>
+    <%= link_to "Claim a Venue", claim_venue_requests_path, class: "btn btn-primary" %>
   </div>
 
   <% if @venues.any? %>
