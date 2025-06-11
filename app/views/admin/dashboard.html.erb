@@ -1,5 +1,5 @@
 <% content_for :title, "Admin Dashboard" %>
-<h1> IS THIS THA PAGE </h1>
+
 <div class="container mt-4">
   <div class="d-flex justify-content-between align-items-center mb-4">
     <h1>Admin Dashboard</h1>
@@ -63,9 +63,15 @@
                       <i class="fas fa-crown text-warning ms-1" title="Ownership Claim"></i>
                     <% end %>
                   </h6>
-                  <span class="badge bg-secondary">
-                    <%= request.request_type.humanize %>
-                  </span>
+                  <% if request.existing_venue_claim? %>
+                    <span class="badge bg-info">
+                      <i class="fas fa-handshake me-1"></i>Venue Claim
+                    </span>
+                  <% else %>
+                    <span class="badge bg-primary">
+                      <i class="fas fa-plus me-1"></i>New Venue
+                    </span>
+                  <% end %>
                 </div>
                 <div class="card-body">
                   <% if request.existing_venue_claim? %>
@@ -98,27 +104,62 @@
                     </p>
                   <% end %>
                 </div>
-                <%= form_with url: update_coordinates_admin_venue_request_path(request), method: :patch, local: true, class: "mt-3" do |f| %>
-                  <div class="mb-2">
-                    <%= f.label :latitude, class: "form-label" %>
-                    <%= f.text_field :latitude, class: "form-control", placeholder: "Enter latitude", required: true %>
-                  </div>
-                  <div class="mb-2">
-                    <%= f.label :longitude, class: "form-label" %>
-                    <%= f.text_field :longitude, class: "form-control", placeholder: "Enter longitude", required: true %>
-                  </div>
-                  <%= f.submit "Save Coordinates & Approve", class: "btn btn-outline-success btn-sm w-100" %>
+
+                <!-- Coordinates Form - Different for Claims vs New Venues -->
+                <% if request.existing_venue_claim? && request.existing_venue %>
+                  <!-- Venue Claim: Show existing coordinates for confirmation -->
+                  <%= form_with url: update_coordinates_admin_venue_request_path(request), method: :patch, local: true, class: "mt-3 px-3" do |f| %>
+                    <div class="alert alert-info alert-sm mb-2">
+                      <strong><i class="fas fa-map-marker-alt me-1"></i>Existing Venue Coordinates</strong>
+                    </div>
+                    <div class="mb-2">
+                      <%= f.label :latitude, "Latitude (confirm or update)", class: "form-label form-label-sm" %>
+                      <%= f.text_field :latitude, 
+                          value: request.existing_venue.latitude, 
+                          class: "form-control form-control-sm", 
+                          placeholder: "Latitude from existing venue" %>
+                    </div>
+                    <div class="mb-2">
+                      <%= f.label :longitude, "Longitude (confirm or update)", class: "form-label form-label-sm" %>
+                      <%= f.text_field :longitude, 
+                          value: request.existing_venue.longitude, 
+                          class: "form-control form-control-sm", 
+                          placeholder: "Longitude from existing venue" %>
+                    </div>
+                    <%= f.submit "Confirm Coordinates & Approve Claim", class: "btn btn-success btn-sm w-100 mb-2" %>
+                  <% end %>
+                <% else %>
+                  <!-- New Venue: Require manual coordinate entry -->
+                  <%= form_with url: update_coordinates_admin_venue_request_path(request), method: :patch, local: true, class: "mt-3 px-3" do |f| %>
+                    <div class="alert alert-primary alert-sm mb-2">
+                      <strong><i class="fas fa-plus-circle me-1"></i>New Venue - Enter Coordinates</strong>
+                    </div>
+                    <div class="mb-2">
+                      <%= f.label :latitude, "Latitude (required)", class: "form-label form-label-sm" %>
+                      <%= f.text_field :latitude, class: "form-control form-control-sm", placeholder: "Enter latitude", required: true %>
+                    </div>
+                    <div class="mb-2">
+                      <%= f.label :longitude, "Longitude (required)", class: "form-label form-label-sm" %>
+                      <%= f.text_field :longitude, class: "form-control form-control-sm", placeholder: "Enter longitude", required: true %>
+                    </div>
+                    <%= f.submit "Add Coordinates & Create Venue", class: "btn btn-primary btn-sm w-100 mb-2" %>
+                  <% end %>
                 <% end %>
+
+                <!-- Quick Approval Buttons -->
                 <div class="card-footer">
                   <div class="btn-group w-100">
-                    <%= button_to "Approve", approve_admin_venue_request_path(request), 
-                        method: :patch, 
-                        class: "btn btn-success btn-sm",
-                        data: { 
-                          confirm: request.existing_venue_claim? ? 
-                            "Approve ownership claim for #{request.name}?" : 
-                            "Create new venue #{request.name}?" 
-                        } %>
+                    <% if request.existing_venue_claim? %>
+                      <%= button_to "Quick Approve Claim", approve_admin_venue_request_path(request), 
+                          method: :patch, 
+                          class: "btn btn-outline-success btn-sm",
+                          data: { confirm: "Approve ownership claim for #{request.name}? (Uses existing coordinates)" } %>
+                    <% else %>
+                      <%= button_to "Quick Approve", approve_admin_venue_request_path(request), 
+                          method: :patch, 
+                          class: "btn btn-outline-success btn-sm",
+                          data: { confirm: "Create new venue #{request.name}? (No coordinates will be set)" } %>
+                    <% end %>
                     <%= button_to "Reject", reject_admin_venue_request_path(request), 
                         method: :patch, 
                         class: "btn btn-danger btn-sm",
@@ -150,7 +191,13 @@
             <% @recent_approved.each do |request| %>
               <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                 <div>
-                  <strong><%= request.name %></strong><br>
+                  <strong><%= request.name %></strong>
+                  <% if request.existing_venue_claim? %>
+                    <span class="badge badge-sm bg-info ms-1">Claim</span>
+                  <% else %>
+                    <span class="badge badge-sm bg-primary ms-1">New</span>
+                  <% end %>
+                  <br>
                   <small class="text-muted"><%= time_ago_in_words(request.updated_at) %> ago</small>
                 </div>
                 <% if request.venue_id %>
@@ -175,7 +222,13 @@
             <% @recent_rejected.each do |request| %>
               <div class="d-flex justify-content-between align-items-center border-bottom py-2">
                 <div>
-                  <strong><%= request.name %></strong><br>
+                  <strong><%= request.name %></strong>
+                  <% if request.existing_venue_claim? %>
+                    <span class="badge badge-sm bg-info ms-1">Claim</span>
+                  <% else %>
+                    <span class="badge badge-sm bg-primary ms-1">New</span>
+                  <% end %>
+                  <br>
                   <small class="text-muted"><%= time_ago_in_words(request.updated_at) %> ago</small>
                 </div>
               </div>

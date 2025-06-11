@@ -4,10 +4,16 @@ class Admin::VenueRequestsController < ApplicationController
 
   def index
     @venue_requests = VenueRequest.order(created_at: :desc)
-    render template: "venue_requests/index"
+
     if params[:status].present? && VenueRequest.statuses.key?(params[:status])
       @venue_requests = @venue_requests.where(status: params[:status])
     end
+
+    if params[:type].present?
+      @venue_requests = @venue_requests.where(request_type: params[:type])
+    end
+
+    render template: "admin/index"
   end
 
   def approve

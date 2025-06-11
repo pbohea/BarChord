@@ -14,28 +14,41 @@
           <h6>Filter by Status:</h6>
           <div class="btn-group">
             <%= link_to "All", admin_venue_requests_path, 
-                class: "btn #{'btn-primary' if params[:status].blank?} #{'btn-outline-primary' unless params[:status].blank?}" %>
-            <%= link_to "Pending", admin_venue_requests_path(status: :pending), 
-                class: "btn #{'btn-warning' if params[:status] == 'pending'} #{'btn-outline-warning' unless params[:status] == 'pending'}" %>
-            <%= link_to "Approved", admin_venue_requests_path(status: :approved), 
-                class: "btn #{'btn-success' if params[:status] == 'approved'} #{'btn-outline-success' unless params[:status] == 'approved'}" %>
-            <%= link_to "Rejected", admin_venue_requests_path(status: :rejected), 
-                class: "btn #{'btn-danger' if params[:status] == 'rejected'} #{'btn-outline-danger' unless params[:status] == 'rejected'}" %>
+                class: "btn #{params[:status].blank? ? 'btn-primary' : 'btn-outline-primary'}" %>
+            <%= link_to "Pending", admin_venue_requests_path(status: 'pending'), 
+                class: "btn #{params[:status] == 'pending' ? 'btn-warning' : 'btn-outline-warning'}" %>
+            <%= link_to "Approved", admin_venue_requests_path(status: 'approved'), 
+                class: "btn #{params[:status] == 'approved' ? 'btn-success' : 'btn-outline-success'}" %>
+            <%= link_to "Rejected", admin_venue_requests_path(status: 'rejected'), 
+                class: "btn #{params[:status] == 'rejected' ? 'btn-danger' : 'btn-outline-danger'}" %>
           </div>
         </div>
         <div class="col-md-6">
           <h6>Filter by Type:</h6>
           <div class="btn-group">
             <%= link_to "All Types", admin_venue_requests_path, 
-                class: "btn #{'btn-info' if params[:type].blank?} #{'btn-outline-info' unless params[:type].blank?}" %>
+                class: "btn #{params[:type].blank? ? 'btn-info' : 'btn-outline-info'}" %>
             <%= link_to "New Venues", admin_venue_requests_path(type: 'new_venue'), 
-                class: "btn #{'btn-info' if params[:type] == 'new_venue'} #{'btn-outline-info' unless params[:type] == 'new_venue'}" %>
+                class: "btn #{params[:type] == 'new_venue' ? 'btn-info' : 'btn-outline-info'}" %>
             <%= link_to "Ownership Claims", admin_venue_requests_path(type: 'existing_venue_claim'), 
-                class: "btn #{'btn-info' if params[:type] == 'existing_venue_claim'} #{'btn-outline-info' unless params[:type] == 'existing_venue_claim'}" %>
+                class: "btn #{params[:type] == 'existing_venue_claim' ? 'btn-info' : 'btn-outline-info'}" %>
           </div>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Results Count -->
+  <div class="mb-3">
+    <p class="text-muted">
+      Showing <%= @venue_requests.count %> request<%= 's' unless @venue_requests.count == 1 %>
+      <% if params[:status].present? %>
+        with status: <strong><%= params[:status].humanize %></strong>
+      <% end %>
+      <% if params[:type].present? %>
+        of type: <strong><%= params[:type].humanize %></strong>
+      <% end %>
+    </p>
   </div>
 
   <!-- Use the same venue requests cards from the VenueRequestsController index -->

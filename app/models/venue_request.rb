@@ -40,7 +40,7 @@ class VenueRequest < ApplicationRecord
                     }
   validates :zip_code, presence: true, format: { with: /\A\d{5}(-\d{4})?\z/ }
   validates :category, presence: true, inclusion: {
-                         in: Venue::CATEGORIES
+                         in: Venue::CATEGORIES,
                        }
   validates :requester_type, presence: true, inclusion: { in: %w[artist owner] }
   validates :requester_id, presence: true, numericality: { greater_than: 0 }
@@ -93,7 +93,13 @@ class VenueRequest < ApplicationRecord
           # Just assign ownership to existing venue
           venue = existing_venue
           venue.update!(owner_id: requester_id)
-          update!(status: :approved, venue_id: venue.id)
+
+          # Skip validation when updating status since we're just changing administrative fields
+          update_columns(
+            status: VenueRequest.statuses[:approved],
+            venue_id: venue.id,
+            updated_at: Time.current,
+          )
           venue
         else
           # Create new venue (existing logic)
@@ -112,7 +118,13 @@ class VenueRequest < ApplicationRecord
           end
 
           venue.geocode if venue.respond_to?(:geocode)
-          update!(status: :approved, venue_id: venue.id)
+
+          # Skip validation for status update
+          update_columns(
+            status: VenueRequest.statuses[:approved],
+            venue_id: venue.id,
+            updated_at: Time.current,
+          )
           venue
         end
       end
