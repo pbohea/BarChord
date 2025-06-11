@@ -49,6 +49,7 @@ Rails.application.routes.draw do
 
   resources :artists, only: [:show] do
     get :events, on: :member
+    get :promo_flyer, on: :member
     get :search, on: :collection
   end
 

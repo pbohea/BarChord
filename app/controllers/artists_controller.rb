@@ -19,9 +19,12 @@ class ArtistsController < ApplicationController
   end
 
   def dashboard
-  @artist = current_artist
-  @upcoming_events = @artist.upcoming_events
-  @past_events = @artist.past_events
+    @artist = current_artist
+    @upcoming_events = @artist.upcoming_events
+    @past_events = @artist.past_events
   end
 
+  def promo_flyer
+    @artist = Artist.find(params[:id])
+  end
 end

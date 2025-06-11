@@ -1,0 +1,41 @@
+<% require 'rqrcode' %>
+<% require 'rqrcode_svg' %>
+
+<% qr = RQRCode::QRCode.new("https://apps.apple.com/us/app/your-app-placeholder/id123456789") %>
+
+<style>
+  @media print {
+    .no-print {
+      display: none !important;
+    }
+  }
+
+  .qr-wrapper {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
+  .qr-wrapper svg {
+    width: 80vw;
+    max-width: 600px;
+    height: auto;
+  }
+</style>
+
+<div class="container py-4 text-center">
+  <div class="no-print mb-3">
+    <button onclick="window.print()" class="btn btn-primary">
+      Print Flyer
+    </button>
+  </div>
+
+  <h1 class="fw-bold mb-3">Find Me on LocalLive</h1>
+  <p class="lead mb-4">Scan the QR code below to download the app</p>
+  
+  <div class="d-flex justify-content-center">
+    <div class="text-center">
+      <%= raw qr.as_svg(module_size: 10, standalone: true) %>
+    </div>
+  </div>
+</div>
