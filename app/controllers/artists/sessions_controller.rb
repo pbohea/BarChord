@@ -13,11 +13,16 @@ class Artists::SessionsController < Devise::SessionsController
   protected
 
   def after_sign_in_path_for(resource)
-    artist_dashboard_path(resource) 
+    artist_dashboard_path(resource)
   end
 
   def after_sign_out_path_for(resource_or_scope)
     new_artist_session_path
+  end
+
+  def respond_to_on_destroy
+    # Force a proper HTML redirect instead of turbo_stream
+    redirect_to after_sign_out_path_for(resource_name), status: :see_other
   end
 
   private

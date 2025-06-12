@@ -17,7 +17,12 @@ class Owners::SessionsController < Devise::SessionsController
   end
 
   def after_sign_out_path_for(resource_or_scope)
-      new_owner_session_path
+    new_owner_session_path
+  end
+
+  def respond_to_on_destroy
+    # Force a proper HTML redirect instead of turbo_stream
+    redirect_to after_sign_out_path_for(resource_name), status: :see_other
   end
 
   private
