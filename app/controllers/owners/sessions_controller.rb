@@ -13,11 +13,17 @@ class Owners::SessionsController < Devise::SessionsController
   protected
 
   def after_sign_in_path_for(resource)
-    owner_dashboard_path(resource)
+    stored_location_for(resource)
   end
 
   def after_sign_out_path_for(resource_or_scope)
-    menu_path
+    if turbo_native_app?
+      # iOS app
+      menu_path
+    else
+      # Web browser
+      new_owner_session_path
+    end
   end
 
   def respond_to_on_destroy
