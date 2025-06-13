@@ -1,5 +1,7 @@
+<%  content_for :title,  "Dashboard"%>
+  
 <div class="container my-5" style="max-width: 720px;">
-  <h1 class="text-center mb-4">Welcome, <%= @owner.firstname || @owner.email %></h1>
+  <h1 class="text-center mb-4 mt-3">Welcome, <%= @owner.firstname || @owner.email %></h1>
 
   <div class="d-flex justify-content-center gap-3 mb-5 flex-wrap">
     <%= link_to "Add a Venue", new_venue_request_path, class: "btn btn-success" %>
