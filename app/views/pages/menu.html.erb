@@ -203,48 +203,16 @@
 </div>
 
 <script>
-// Enhanced iOS cache busting and logout handling
+// ONLY run this code on the menu page - won't interfere with map
 document.addEventListener('DOMContentLoaded', function() {
-  console.log('Menu page loaded - timestamp:', document.querySelector('meta[name="page-timestamp"]')?.content);
+  // Check if we're actually on the menu page
+  const isMenuPage = document.getElementById('auth-state'); // Only exists on menu page
+  if (!isMenuPage) {
+    console.log('Not on menu page - skipping menu-specific JavaScript');
+    return; // Exit early if not on menu page
+  }
   
-  // Set up visibility change handler with better logic
-  let hasBeenHidden = false;
-  
-  document.addEventListener('visibilitychange', function() {
-    if (document.hidden) {
-      hasBeenHidden = true;
-      console.log('Menu tab hidden');
-    } else if (hasBeenHidden) {
-      console.log('Menu tab became visible after being hidden');
-      
-      // Check if we should refresh based on authentication state mismatch
-      const authState = document.getElementById('auth-state');
-      const hasLogoutBtn = document.querySelector('.logout-btn');
-      const hasSignInBtn = document.querySelector('#signInButton');
-      
-      if (authState) {
-        const userSignedIn = authState.dataset.userSignedIn === 'true';
-        const artistSignedIn = authState.dataset.artistSignedIn === 'true';
-        const ownerSignedIn = authState.dataset.ownerSignedIn === 'true';
-        const anySignedIn = userSignedIn || artistSignedIn || ownerSignedIn;
-        
-        console.log('Auth state check:', { anySignedIn, hasLogoutBtn, hasSignInBtn });
-        
-        // If state mismatch, force refresh
-        if ((anySignedIn && !hasLogoutBtn) || (!anySignedIn && !hasSignInBtn)) {
-          console.log('Authentication state mismatch detected - refreshing');
-          window.location.reload(true);
-        }
-      }
-      
-      // Also check for logout flag
-      if (sessionStorage.getItem('justLoggedOut') === 'true') {
-        console.log('Logout flag detected - refreshing');
-        sessionStorage.removeItem('justLoggedOut');
-        window.location.reload(true);
-      }
-    }
-  });
+  console.log('Menu page loaded');
   
   // Handle logout button clicks (now works with button_to forms)
   document.addEventListener('click', function(e) {
@@ -257,8 +225,32 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // iOS specific: Handle page show (back/forward cache)
+  // ONLY run visibility handlers on menu page
+  let hasBeenHidden = false;
+  
+  document.addEventListener('visibilitychange', function() {
+    // Double-check we're still on menu page
+    if (!document.getElementById('auth-state')) return;
+    
+    if (document.hidden) {
+      hasBeenHidden = true;
+      console.log('Menu tab hidden');
+    } else if (hasBeenHidden) {
+      console.log('Menu tab became visible after being hidden');
+      
+      // Also check for logout flag
+      if (sessionStorage.getItem('justLoggedOut') === 'true') {
+        console.log('Logout flag detected - refreshing');
+        sessionStorage.removeItem('justLoggedOut');
+        window.location.reload(true);
+      }
+    }
+  });
+  
+  // iOS specific: Handle page show (back/forward cache) - ONLY for menu
   window.addEventListener('pageshow', function(e) {
+    if (!document.getElementById('auth-state')) return; // Not on menu page
+    
     console.log('Page show event - persisted:', e.persisted);
     if (e.persisted) {
       console.log('Page loaded from iOS back/forward cache - forcing refresh');
@@ -266,47 +258,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
   });
   
-  // Handle app coming to foreground
-  window.addEventListener('focus', function() {
-    console.log('Window focused');
-    
-    // Check if we recently logged out
-    const logoutTime = sessionStorage.getItem('logoutTime');
-    if (logoutTime) {
-      const timeSinceLogout = Date.now() - parseInt(logoutTime);
-      if (timeSinceLogout < 5000) { // Within 5 seconds
-        console.log('Recent logout detected on focus - checking state');
-        
-        // If still showing logout button after recent logout, refresh
-        if (document.querySelector('.logout-btn')) {
-          console.log('Still showing logout button after recent logout - refreshing');
-          sessionStorage.removeItem('logoutTime');
-          window.location.reload(true);
-        }
-      }
-    }
-  });
-  
   // Setup modals
   setupModals();
-  
-  // iOS detection and additional handling
-  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-    console.log('iOS detected - setting up additional cache prevention');
-    
-    // Prevent aggressive caching
-    window.addEventListener('beforeunload', function() {
-      if ('caches' in window) {
-        caches.keys().then(function(names) {
-          names.forEach(function(name) {
-            if (name.includes('menu') || name.includes('application')) {
-              caches.delete(name);
-            }
-          });
-        });
-      }
-    });
-  }
 });
 
 function setupModals() {
@@ -316,6 +269,7 @@ function setupModals() {
   
   if (signInButton && signinModal) {
     signInButton.addEventListener('click', function() {
+      console.log('Sign in button clicked');
       signinModal.classList.add('show');
     });
   }
@@ -326,6 +280,7 @@ function setupModals() {
   
   if (signUpButton && signupModal) {
     signUpButton.addEventListener('click', function() {
+      console.log('Sign up button clicked');
       signupModal.classList.add('show');
     });
   }
