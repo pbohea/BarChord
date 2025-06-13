@@ -1,9 +1,34 @@
 class ApplicationController < ActionController::Base
   # Modern browser enforcement (optional)
   allow_browser versions: :modern
+  
+  # Add cache control for authentication-sensitive pages
+  before_action :set_cache_headers_for_auth_pages
   before_action :store_user_location!, if: :storable_location?
 
   private
+
+  def set_cache_headers_for_auth_pages
+    # Always prevent caching for menu page and authentication-related pages
+    if should_prevent_caching?
+      response.headers['Cache-Control'] = 'no-cache, no-store, must-revalidate, private'
+      response.headers['Pragma'] = 'no-cache'
+      response.headers['Expires'] = '0'
+      response.headers['Last-Modified'] = Time.current.httpdate
+      response.headers['Vary'] = 'Accept-Encoding'
+    end
+  end
+
+  def should_prevent_caching?
+    # Prevent caching if user is authenticated OR if on menu/auth pages
+    user_signed_in? || 
+    artist_signed_in? || 
+    owner_signed_in? ||
+    controller_name == 'pages' && action_name == 'menu' ||
+    controller_name.include?('sessions') ||
+    controller_name.include?('registrations') ||
+    request.path.include?('/menu')
+  end
 
   def storable_location?
     request.get? &&
@@ -59,5 +84,4 @@ class ApplicationController < ActionController::Base
       devise_parameter_sanitizer.permit(:account_update, keys: [:username])
     end
   end
-
 end

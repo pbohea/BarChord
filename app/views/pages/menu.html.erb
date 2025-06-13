@@ -1,3 +1,11 @@
+<!-- Add cache busting meta tag at the top -->
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+
+<!-- Add a timestamp to detect stale content -->
+<meta name="page-timestamp" content="<%= Time.current.to_i %>">
+
 <style>
 /* Custom Modal Styles - Inline to ensure they load */
 .custom-modal {
@@ -112,6 +120,12 @@
 </style>
 
 <div class="d-flex flex-column justify-content-between" style="height: 100dvh; overflow: hidden;">
+  <!-- Add authentication state indicator (hidden, for JavaScript detection) -->
+  <div id="auth-state" 
+       data-user-signed-in="<%= user_signed_in? %>"
+       data-artist-signed-in="<%= artist_signed_in? %>"
+       data-owner-signed-in="<%= owner_signed_in? %>"
+       style="display: none;"></div>
  
   <div class="container py-4">
     <% if owner_signed_in? || artist_signed_in? || user_signed_in? %>
@@ -119,15 +133,27 @@
         <% if owner_signed_in? %>
           <%= link_to "Dashboard", owner_dashboard_path(current_owner), class: "btn btn-outline-primary", data: { turbo: false } %>
           <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
-          <%= link_to "Sign Out", destroy_owner_session_path, method: :delete, data: { turbo: false }, class: "btn btn-outline-danger" %>
+          <%= button_to "Sign Out", destroy_owner_session_path, 
+              method: :delete, 
+              class: "btn btn-outline-danger logout-btn w-100",
+              data: { turbo: false },
+              form_class: "d-inline-block w-100" %>
         <% elsif artist_signed_in? %>
           <%= link_to "Dashboard", artist_dashboard_path(current_artist), class: "btn btn-outline-primary", data: { turbo: false } %>
           <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
-          <%= link_to "Sign Out", destroy_artist_session_path, method: :delete, data: { turbo: false }, class: "btn btn-outline-danger" %>
+          <%= button_to "Sign Out", destroy_artist_session_path, 
+              method: :delete, 
+              class: "btn btn-outline-danger logout-btn w-100",
+              data: { turbo: false },
+              form_class: "d-inline-block w-100" %>
         <% elsif user_signed_in? %>
           <%= link_to "Dashboard", user_dashboard_path(current_user), class: "btn btn-outline-primary", data: { turbo: false } %>
           <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
-          <%= link_to "Sign Out", destroy_user_session_path, method: :delete, data: { turbo: false }, class: "btn btn-outline-danger" %>
+          <%= button_to "Sign Out", destroy_user_session_path, 
+              method: :delete, 
+              class: "btn btn-outline-danger logout-btn w-100",
+              data: { turbo: false },
+              form_class: "d-inline-block w-100" %>
         <% end %>
       </div>
     <% else %>
@@ -163,9 +189,6 @@
 <div id="signupModal" class="custom-modal">
   <div class="custom-modal-overlay" data-close-modal="signup"></div>
   <div class="custom-modal-content">
-<!--    <div class="custom-modal-header">
-      <button class="custom-modal-close" data-close-modal="signup">&times;</button>
-    </div>-->
     <div class="custom-modal-body">
       <p class="fw-semibold mb-1">Looking to find live music at bars near you?</p>
       <%= link_to "Sign up as a User", new_user_registration_path, class: "btn btn-outline-primary w-100 mb-4", data: { turbo: false } %>
@@ -178,3 +201,144 @@
     </div>
   </div>
 </div>
+
+<script>
+// Enhanced iOS cache busting and logout handling
+document.addEventListener('DOMContentLoaded', function() {
+  console.log('Menu page loaded - timestamp:', document.querySelector('meta[name="page-timestamp"]')?.content);
+  
+  // Set up visibility change handler with better logic
+  let hasBeenHidden = false;
+  
+  document.addEventListener('visibilitychange', function() {
+    if (document.hidden) {
+      hasBeenHidden = true;
+      console.log('Menu tab hidden');
+    } else if (hasBeenHidden) {
+      console.log('Menu tab became visible after being hidden');
+      
+      // Check if we should refresh based on authentication state mismatch
+      const authState = document.getElementById('auth-state');
+      const hasLogoutBtn = document.querySelector('.logout-btn');
+      const hasSignInBtn = document.querySelector('#signInButton');
+      
+      if (authState) {
+        const userSignedIn = authState.dataset.userSignedIn === 'true';
+        const artistSignedIn = authState.dataset.artistSignedIn === 'true';
+        const ownerSignedIn = authState.dataset.ownerSignedIn === 'true';
+        const anySignedIn = userSignedIn || artistSignedIn || ownerSignedIn;
+        
+        console.log('Auth state check:', { anySignedIn, hasLogoutBtn, hasSignInBtn });
+        
+        // If state mismatch, force refresh
+        if ((anySignedIn && !hasLogoutBtn) || (!anySignedIn && !hasSignInBtn)) {
+          console.log('Authentication state mismatch detected - refreshing');
+          window.location.reload(true);
+        }
+      }
+      
+      // Also check for logout flag
+      if (sessionStorage.getItem('justLoggedOut') === 'true') {
+        console.log('Logout flag detected - refreshing');
+        sessionStorage.removeItem('justLoggedOut');
+        window.location.reload(true);
+      }
+    }
+  });
+  
+  // Handle logout button clicks (now works with button_to forms)
+  document.addEventListener('click', function(e) {
+    if (e.target.matches('.logout-btn') || 
+        e.target.closest('form[action*="sign_out"]') ||
+        e.target.closest('.logout-btn')) {
+      console.log('Logout button/form clicked');
+      sessionStorage.setItem('justLoggedOut', 'true');
+      sessionStorage.setItem('logoutTime', Date.now().toString());
+    }
+  });
+  
+  // iOS specific: Handle page show (back/forward cache)
+  window.addEventListener('pageshow', function(e) {
+    console.log('Page show event - persisted:', e.persisted);
+    if (e.persisted) {
+      console.log('Page loaded from iOS back/forward cache - forcing refresh');
+      window.location.reload(true);
+    }
+  });
+  
+  // Handle app coming to foreground
+  window.addEventListener('focus', function() {
+    console.log('Window focused');
+    
+    // Check if we recently logged out
+    const logoutTime = sessionStorage.getItem('logoutTime');
+    if (logoutTime) {
+      const timeSinceLogout = Date.now() - parseInt(logoutTime);
+      if (timeSinceLogout < 5000) { // Within 5 seconds
+        console.log('Recent logout detected on focus - checking state');
+        
+        // If still showing logout button after recent logout, refresh
+        if (document.querySelector('.logout-btn')) {
+          console.log('Still showing logout button after recent logout - refreshing');
+          sessionStorage.removeItem('logoutTime');
+          window.location.reload(true);
+        }
+      }
+    }
+  });
+  
+  // Setup modals
+  setupModals();
+  
+  // iOS detection and additional handling
+  if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+    console.log('iOS detected - setting up additional cache prevention');
+    
+    // Prevent aggressive caching
+    window.addEventListener('beforeunload', function() {
+      if ('caches' in window) {
+        caches.keys().then(function(names) {
+          names.forEach(function(name) {
+            if (name.includes('menu') || name.includes('application')) {
+              caches.delete(name);
+            }
+          });
+        });
+      }
+    });
+  }
+});
+
+function setupModals() {
+  // Sign In Modal
+  const signInButton = document.getElementById('signInButton');
+  const signinModal = document.getElementById('signinModal');
+  
+  if (signInButton && signinModal) {
+    signInButton.addEventListener('click', function() {
+      signinModal.classList.add('show');
+    });
+  }
+  
+  // Sign Up Modal  
+  const signUpButton = document.getElementById('signUpButton');
+  const signupModal = document.getElementById('signupModal');
+  
+  if (signUpButton && signupModal) {
+    signUpButton.addEventListener('click', function() {
+      signupModal.classList.add('show');
+    });
+  }
+  
+  // Close modal handlers
+  document.addEventListener('click', function(e) {
+    if (e.target.hasAttribute('data-close-modal')) {
+      const modalType = e.target.getAttribute('data-close-modal');
+      const modal = document.getElementById(modalType + 'Modal');
+      if (modal) {
+        modal.classList.remove('show');
+      }
+    }
+  });
+}
+</script>
