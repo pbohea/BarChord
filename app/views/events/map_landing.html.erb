@@ -1,0 +1,52 @@
+<% content_for :title, "Find Live Music Near You" %>
+
+<div class="container my-5" style="max-width: 540px;">
+  <div class="card shadow-sm border-0">
+    <div class="card-body">
+
+      <h2 class="h5 text-center mb-4">Find events near you</h2>
+
+      <%= form_with url: events_map_path, method: :get, local: true, 
+          data: {
+            controller: "location-search",
+            "location-search-current-lat-value": params[:lat],
+            "location-search-current-lng-value": params[:lng],
+            "location-search-current-address-value": params[:address],
+            "location-search-current-radius-value": params[:radius] || 5
+          } do |f| %>
+
+        <div class="row g-2 mb-3">
+          <div class="col-8">
+            <%= f.text_field :address,
+              placeholder: "Enter address or ZIP code",
+              class: "form-control form-control-sm",
+              value: params[:address],
+              data: { "location-search-target": "addressInput" } %>
+          </div>
+          <div class="col-4">
+            <%= f.select :radius,
+              options_for_select([
+                ['1 mi', 1], ['5 mi', 5], ['10 mi', 10],
+                ['15 mi', 15], ['25 mi', 25], ['50 mi', 50]
+              ], params[:radius] || 5),
+              {}, { class: "form-select form-select-sm" } %>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 flex-wrap">
+          <%= f.submit "Show Map", class: "btn btn-primary btn-sm" %>
+
+          <button type="button"
+                  class="btn btn-outline-secondary btn-sm"
+                  data-action="click->location-search#useCurrentLocation">
+            <i class="bi bi-crosshair"></i> Use My Location
+          </button>
+        </div>
+
+        <%= f.hidden_field :lat, data: { "location-search-target": "latInput" } %>
+        <%= f.hidden_field :lng, data: { "location-search-target": "lngInput" } %>
+      <% end %>
+
+    </div>
+  </div>
+</div>

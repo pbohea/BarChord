@@ -127,16 +127,42 @@ class EventsController < ApplicationController
   end
 
   def map
-    @events = Event.upcoming.includes(:venue, :artist)
+    # Geocode if lat/lng missing but address is provided
+    if params[:lat].blank? || params[:lng].blank?
+      if params[:address].present?
+        coords = geocode_address(params[:address])
+        if coords
+          params[:lat] = coords[0]
+          params[:lng] = coords[1]
+        else
+          flash[:alert] = "Could not locate address"
+          redirect_to map_path and return
+        end
+      end
+    end
 
-    # Add venue-specific centering params for jbuilder template
     @center_lat = params[:lat]&.to_f
     @center_lng = params[:lng]&.to_f
     @selected_venue_id = params[:venue_id]&.to_i
 
+    if @center_lat && @center_lng
+      radius = search_radius
+      @events = Event.upcoming
+                     .includes(:venue, :artist)
+                     .where(venue_id: Venue.near([@center_lat, @center_lng], radius, units: :mi, order: false).pluck(:id))
+    else
+      @events = []
+    end
+
     respond_to do |format|
-      format.json # This will use map.json.jbuilder
+      format.json # renders map.json.jbuilder
       format.html
+    end
+  end
+
+  def map_landing
+    if params[:lat].present? && params[:lng].present?
+      redirect_to events_map_path(lat: params[:lat], lng: params[:lng], address: params[:address], radius: params[:radius])
     end
   end
 

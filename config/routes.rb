@@ -25,9 +25,7 @@ Rails.application.routes.draw do
 
   root to: "events#index"
 
-  # Add dedicated map route for tab navigation
-  get "map", to: "events#map"
-  # Keep the old route for compatibility
+  get "map", to: "events#map_landing"
   get "events/map", to: "events#map"
 
   resources :venues do
