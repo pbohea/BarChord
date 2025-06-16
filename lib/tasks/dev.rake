@@ -46,7 +46,7 @@ task sample_data: :environment do
   bios = [
     "Acoustic guitarist playing heartfelt covers from artists like John Mayer and The Lumineers. Always down for a crowd singalong.",
     "Indie-folk duo blending originals and soulful renditions of classic hits. Known for chill patio vibes and tight harmonies.",
-    "High-energy cover band playing everything from '90s alt rock to early 2000s pop-punk. Bring your voice — we’ll bring the volume.",
+    "High-energy cover band playing everything from '90s alt rock to early 2000s pop-punk. Bring your voice — we'll bring the volume.",
     "Vinyl-loving DJ spinning funky house, retro pop, and deep cuts that keep the crowd moving all night.",
     "Piano bar regular mixing Broadway favorites with classic rock singalongs. Requests welcome!",
     "Country guitarist with a modern edge. Think Morgan Wallen meets Eric Church — plus a few surprises.",
@@ -521,6 +521,73 @@ task sample_data: :environment do
       website: "http://www.theponychicago.com/",
       latitude: 41.93984459999999,
       longitude: -87.6701971,
+    },
+    # Virginia Beach venues
+    {
+      name: "Chick's Oyster Bar",
+      street_address: "2143 Vista Cir",
+      city: "Virginia Beach",
+      state: "VA",
+      zip_code: "23451",
+      category: "Bar",
+      website: "https://www.chicksoysterbar.com",
+      latitude: 36.9051014305217, 
+      longitude: -76.08533268196011,
+    },
+    {
+      name: "The Back Deck",
+      street_address: "3323 Shore Dr",
+      city: "Virginia Beach",
+      state: "VA",
+      zip_code: "23451",
+      category: "Bar",
+      website: "https://thebackdeckvb.com",
+      latitude: 36.906561701248606, 
+      longitude: -76.08728013696928,
+    },
+    {
+      name: "Commonwealth Brewing Company",
+      street_address: "2444 Pleasure House Rd",
+      city: "Virginia Beach",
+      state: "VA",
+      zip_code: "23455",
+      category: "Bar",
+      website: "https://commonwealthbrewingcompany.com",
+      latitude: 36.91339629963791, 
+      longitude: -76.13186828993565,
+    },
+    {
+      name: "HK on the Bay",
+      street_address: "4600 Lookout Rd",
+      city: "Virginia Beach",
+      state: "VA",
+      zip_code: "23455",
+      category: "Bar",
+      website: "https://www.hkonthebay.com",
+      latitude: 36.915746433951796, 
+      longitude: -76.12759873660148,
+    },
+    {
+      name: "Buoy 44",
+      street_address: "4536 Ocean View Ave",
+      city: "Virginia Beach",
+      state: "VA",
+      zip_code: "23455",
+      category: "Bar",
+      website: "https://www.buoy44vb.com",
+      latitude: 36.91739870885306, 
+      longitude: -76.12660951887025,
+    },
+    {
+      name: "Jose Tequila",
+      street_address: "3629 Shore Dr",
+      city: "Virginia Beach",
+      state: "VA",
+      zip_code: "23451",
+      category: "Bar",
+      website: "https://jose-tequilas.com",
+      latitude: 36.907715284133495, 
+      longitude: -76.0981830614175,
     },
     # Long Island venues
     {
@@ -1425,7 +1492,7 @@ task sample_data: :environment do
     venues << venue
   end
 
-  90.times do
+  120.times do
     # Generate a random start time
     random_start = Faker::Time.between(from: DateTime.now, to: DateTime.now + 2.day)
 
