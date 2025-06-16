@@ -89,6 +89,48 @@ document.addEventListener('turbo:load', () => {
   });
 });
 
+// Simple fix for Bootstrap offcanvas backdrop cleanup
+document.addEventListener('turbo:load', function() {
+  // Clean up any leftover backdrops on page load
+  cleanupOrphanedBackdrops();
+  
+  // Set up offcanvas cleanup when it's hidden
+  const offcanvasElement = document.getElementById('accountMenu');
+  if (offcanvasElement) {
+    offcanvasElement.addEventListener('hidden.bs.offcanvas', function() {
+      // Clean up after offcanvas is fully hidden
+      setTimeout(cleanupOrphanedBackdrops, 100);
+    });
+  }
+});
+
+// Clean up before navigating to prevent backdrops from carrying over
+document.addEventListener('turbo:before-visit', function() {
+  cleanupOrphanedBackdrops();
+});
+
+function cleanupOrphanedBackdrops() {
+  // Only clean up if no offcanvas or modal is actually open
+  const hasOpenOffcanvas = document.querySelector('.offcanvas.show');
+  const hasOpenModal = document.querySelector('.modal.show');
+  
+  if (!hasOpenOffcanvas && !hasOpenModal) {
+    // Remove any orphaned backdrop elements
+    document.querySelectorAll('.offcanvas-backdrop, .modal-backdrop').forEach(backdrop => {
+      backdrop.remove();
+    });
+    
+    // Clean up body classes and styles
+    document.body.classList.remove('modal-open', 'offcanvas-open');
+    document.body.style.overflow = '';
+    document.body.style.paddingRight = '';
+    
+    console.log('Cleaned up orphaned backdrops');
+  }
+}
+
+
+
 document.addEventListener("turbo:frame-render", (event) => {
   const frame = event.target
   if (frame.id && frame.id.startsWith("follow_button_")) {
