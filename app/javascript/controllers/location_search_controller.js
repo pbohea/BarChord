@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["addressInput", "latInput", "lngInput"]
+  static targets = ["addressInput", "latInput", "lngInput", "addressRadio", "currentRadio"]
   static values = {
     currentLat: Number,
     currentLng: Number,
@@ -17,7 +17,9 @@ export default class extends Controller {
     console.log("Has targets:", {
       address: this.hasAddressInputTarget,
       lat: this.hasLatInputTarget,
-      lng: this.hasLngInputTarget
+      lng: this.hasLngInputTarget,
+      addressRadio: this.hasAddressRadioTarget,
+      currentRadio: this.hasCurrentRadioTarget
     })
 
     // If we have current coordinates, populate the hidden fields
@@ -32,6 +34,38 @@ export default class extends Controller {
       this.latInputTarget.value = ""
       this.lngInputTarget.value = ""
     })
+
+    // Add radio button event listeners if they exist
+    if (this.hasAddressRadioTarget && this.hasCurrentRadioTarget) {
+      this.addressRadioTarget.addEventListener('change', () => {
+        if (this.addressRadioTarget.checked) {
+          this.enableAddressMode()
+        }
+      })
+      
+      this.currentRadioTarget.addEventListener('change', () => {
+        if (this.currentRadioTarget.checked) {
+          this.enableLocationMode()
+        }
+      })
+    }
+  }
+
+  enableAddressMode() {
+    console.log("Switching to address mode")
+    // Make address field required and clear coordinates
+    this.addressInputTarget.required = true
+    this.addressInputTarget.focus()
+    this.latInputTarget.value = ""
+    this.lngInputTarget.value = ""
+  }
+
+  enableLocationMode() {
+    console.log("Switching to location mode")
+    // Remove required from address field since we'll use coordinates
+    this.addressInputTarget.required = false
+    this.addressInputTarget.value = ""
+    // Don't auto-trigger location here - let them submit the form first
   }
 
   useCurrentLocation(event) {
@@ -129,6 +163,85 @@ export default class extends Controller {
     )
   }
 
+  getCurrentLocation(event) {
+    console.log("Get current location (radio button version)")
+    
+    // Remove required from address field since we're getting coordinates
+    this.addressInputTarget.required = false
+    
+    // Check if geolocation is supported
+    if (!navigator.geolocation) {
+      console.error("Geolocation is not supported by this browser")
+      alert("Geolocation is not supported by your browser")
+      // Re-enable address mode if geolocation fails
+      this.enableAddressMode()
+      if (this.hasAddressRadioTarget) this.addressRadioTarget.checked = true
+      return
+    }
+
+    const options = {
+      enableHighAccuracy: true,
+      timeout: 8000,
+      maximumAge: 300000
+    }
+
+    navigator.geolocation.getCurrentPosition(
+      (position) => {
+        console.log("Geolocation success:", position)
+
+        const lat = position.coords.latitude
+        const lng = position.coords.longitude
+
+        console.log(`Got coordinates: ${lat}, ${lng}`)
+
+        // Update hidden fields
+        this.latInputTarget.value = lat
+        this.lngInputTarget.value = lng
+
+        // Try to reverse geocode for display
+        this.reverseGeocode(lat, lng)
+          .then(address => {
+            if (address) {
+              this.addressInputTarget.value = address
+              console.log("Reverse geocoded to:", address)
+            } else {
+              this.addressInputTarget.value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
+            }
+          })
+          .catch(error => {
+            console.warn("Reverse geocoding failed:", error)
+            this.addressInputTarget.value = `${lat.toFixed(4)}, ${lng.toFixed(4)}`
+          })
+      },
+      (error) => {
+        console.error("Geolocation error:", error)
+
+        // Re-enable address mode if geolocation fails
+        this.enableAddressMode()
+        if (this.hasAddressRadioTarget) this.addressRadioTarget.checked = true
+
+        let message = "Unable to get your location. "
+        switch (error.code) {
+          case error.PERMISSION_DENIED:
+            message += "Location access was denied."
+            break
+          case error.POSITION_UNAVAILABLE:
+            message += "Location information is unavailable."
+            break
+          case error.TIMEOUT:
+            message += "Location request timed out."
+            break
+          default:
+            message += "An unknown error occurred."
+            break
+        }
+
+        alert(message + " Please enter an address manually.")
+      },
+      options
+    )
+  }
+
   submitForm() {
     console.log("=== SUBMIT FORM DEBUG ===")
     console.log("Auto-submitting form with location data")
@@ -196,11 +309,12 @@ export default class extends Controller {
       return null
     }
   }
+
   autoSubmit() {
     // Submit the form automatically when dropdowns change
     this.element.requestSubmit()
   }
-  // Add this method to your location-search controller
+
   validateLocation(event) {
     const addressInput = this.addressInputTarget.value.trim()
     const latInput = this.latInputTarget.value
@@ -210,13 +324,17 @@ export default class extends Controller {
     // Check if either address OR coordinates are provided
     if (!addressInput && (!latInput || !lngInput)) {
       event.preventDefault() // Stop form submission
-      errorDiv.classList.remove('d-none')
+      if (errorDiv) {
+        errorDiv.classList.remove('d-none')
+      }
       this.addressInputTarget.focus()
       return false
     }
 
     // Hide error if validation passes
-    errorDiv.classList.add('d-none')
+    if (errorDiv) {
+      errorDiv.classList.add('d-none')
+    }
     return true
   }
 }

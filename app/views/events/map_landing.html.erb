@@ -4,7 +4,6 @@
   <div class="card shadow-sm border-0">
     <div class="card-body p-4">
 
-
       <%= form_with url: events_map_path, method: :get, local: true,
           data: {
             controller: "location-search",
@@ -14,15 +13,32 @@
             "location-search-current-radius-value": params[:radius] || 5
           } do |f| %>
 
+        <!-- Location Options -->
         <div class="mb-3">
-          <%= f.label :address, "Address or ZIP code", class: "form-label small text-muted" %>
+          <label class="form-label small text-muted">Location</label>
+          
+          <div class="form-check mb-2">
+            <%= radio_button_tag :location_type, "address", true, 
+                class: "form-check-input", 
+                data: { "location-search-target": "addressRadio" } %>
+            <%= label_tag :location_type_address, "Enter address", class: "form-check-label" %>
+          </div>
+          
           <%= f.text_field :address,
-                class: "form-control form-control-sm",
-                placeholder: "e.g. 60614 or Chicago",
+                placeholder: "Enter address or ZIP code",
+                class: "form-control form-control-sm mb-2",
                 value: params[:address],
                 data: { "location-search-target": "addressInput" } %>
+          
+          <div class="form-check">
+            <%= radio_button_tag :location_type, "current", false, 
+                class: "form-check-input", 
+                data: { "location-search-target": "currentRadio", action: "change->location-search#getCurrentLocation" } %>
+            <%= label_tag :location_type_current, "Use my current location", class: "form-check-label" %>
+          </div>
         </div>
 
+        <!-- Search Radius -->
         <div class="mb-3">
           <%= f.label :radius, "Search Radius", class: "form-label small text-muted" %>
           <%= f.select :radius,
@@ -33,24 +49,26 @@
                 {}, class: "form-select form-select-sm" %>
         </div>
 
+        <!-- Date Range -->
         <div class="mb-3">
-          <%= f.label :date_range, "Show events for", class: "form-label" %>
+          <%= f.label :date_range, "Show events for", class: "form-label small text-muted" %>
           <%= f.select :date_range,
-        options_for_select([
-          ["Any Date", ""],
-          ["Today", "today"],
-          ["Next 7 Days", "next_7_days"]
-        ], params[:date_range]),
-        {}, class: "form-select form-select-sm" %>
+                options_for_select([
+                  ["Any Date", ""],
+                  ["Today", "today"],
+                  ["Next 7 Days", "next_7_days"]
+                ], params[:date_range]),
+                {}, class: "form-select form-select-sm" %>
         </div>
 
-        <div class="d-grid gap-2 mb-2">
+        <!-- Error message container -->
+        <div id="location-error" class="alert alert-danger d-none mb-3" role="alert">
+          Please enter an address or use your current location before searching.
+        </div>
+
+        <!-- Submit Button -->
+        <div class="d-grid">
           <%= f.submit "Show Map", class: "btn btn-primary btn-sm" %>
-          <button type="button"
-                  class="btn btn-outline-secondary btn-sm"
-                  data-action="click->location-search#useCurrentLocation">
-            <i class="bi bi-crosshair"></i> Use My Location
-          </button>
         </div>
 
         <%= f.hidden_field :lat, data: { "location-search-target": "latInput" } %>
