@@ -1427,7 +1427,7 @@ task sample_data: :environment do
 
   90.times do
     # Generate a random start time
-    random_start = Faker::Time.between(from: DateTime.now + 12.hours, to: DateTime.now + 1.day)
+    random_start = Faker::Time.between(from: DateTime.now, to: DateTime.now + 2.day)
 
     # Round to nearest 15-minute interval
     hour = random_start.hour
