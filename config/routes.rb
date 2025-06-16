@@ -23,7 +23,7 @@ Rails.application.routes.draw do
                          unlocks: "artists/unlocks",
                        }
 
-  root to: "events#index"
+  root to: "events#landing"
 
   get "map", to: "events#map_landing"
   get "events/map", to: "events#map"
@@ -35,10 +35,13 @@ Rails.application.routes.draw do
     end
   end
 
+  get "events/landing", to: "events#landing"
+
   resources :events do
     collection do
       #get :nearby
       get :map
+      get :landing
     end
   end
 

@@ -2,6 +2,10 @@ class EventsController < ApplicationController
   before_action :set_event, only: %i[show edit update destroy]
   before_action :authorize_owner_or_admin!, only: %i[edit update destroy]
 
+  def landing
+    #just renders landing page with form
+  end
+
   # GET /events
   def index
     Rails.logger.info "🔍 EVENTS INDEX HIT - User-Agent: #{request.user_agent}"
@@ -13,17 +17,17 @@ class EventsController < ApplicationController
       @events = find_nearby_events
       @search_params = extract_search_params
     else
-      # Default - show all upcoming events
+      # Default - show all upcoming events, but apply date filter if present
       @events = Event.upcoming.includes(:venue, :artist)
       @search_params = nil
     end
 
-    # Apply date range filter
+    # Apply date range filter regardless of location search
     @events = apply_date_range_filter(@events)
 
     respond_to do |format|
       format.html
-      format.json { render json: @events } # Add JSON support for iOS
+      format.json { render json: @events }
       format.turbo_stream { render :index }
     end
   end

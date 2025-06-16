@@ -13,6 +13,7 @@
                             "location-search-current-radius-value": params[:radius] || 5,
                             turbo_frame: "events-container" } do |f| %>
 
+        <!-- Address and Radius Row -->
         <div class="row g-2 mb-3">
           <div class="col-8">
             <%= f.text_field :address, 
@@ -32,8 +33,21 @@
           </div>
         </div>
 
+        <!-- Date Range Row -->
+        <div class="mb-3">
+          <%= f.label :date_range, "Show events for", class: "form-label small text-muted" %>
+          <%= f.select :date_range,
+                options_for_select([
+                  ["Any Date", ""],
+                  ["Today", "today"],
+                  ["Next 7 Days", "next_7_days"]
+                ], params[:date_range]),
+                {}, 
+                { class: "form-select form-select-sm" } %>
+        </div>
+
         <div class="d-flex gap-2 flex-wrap">
-          <%= f.submit "Search Location", class: "btn btn-primary btn-sm" %>
+          <%= f.submit "Search Events", class: "btn btn-primary btn-sm" %>
 
           <button type="button" 
                   class="btn btn-outline-secondary btn-sm"
@@ -41,7 +55,7 @@
             <i class="bi bi-crosshair"></i> Use My Location
           </button>
 
-          <% if params[:address].present? || params[:lat].present? %>
+          <% if params[:address].present? || params[:lat].present? || params[:date_range].present? %>
             <%= link_to "Show All Events", events_path, class: "btn btn-outline-danger btn-sm" %>
           <% end %>
         </div>
@@ -52,13 +66,25 @@
       <% end %>
 
       <!-- Search Results Info -->
-      <% if params[:address].present? || params[:lat].present? %>
+      <% if params[:address].present? || params[:lat].present? || params[:date_range].present? %>
         <div class="mt-3 pt-3 border-top">
           <small class="text-muted">
             <% if params[:address].present? %>
               Showing events within <%= params[:radius] || 5 %> miles of "<%= params[:address] %>"
-            <% else %>
+            <% elsif params[:lat].present? %>
               Showing events within <%= params[:radius] || 5 %> miles of your location
+            <% end %>
+
+            <% if params[:date_range].present? %>
+              <% if params[:address].present? || params[:lat].present? %>
+                • 
+              <% end %>
+              <% case params[:date_range] %>
+              <% when "today" %>
+                for today
+              <% when "next_7_days" %>
+                for the next 7 days
+              <% end %>
             <% end %>
 
             <% if @events.respond_to?(:count) %>
@@ -80,27 +106,27 @@
         <% artist = event.artist %>
 
         <div class="card border-0 shadow-lg mb-4 position-relative" style="border-radius: 24px; background-color: #ffffff;"
-          data-controller="event-card"
-          data-event-card-url-value="<%= event_path(event) %>"
-          data-action="click->event-card#goToEvent">
+             data-controller="event-card"
+             data-event-card-url-value="<%= event_path(event) %>"
+             data-action="click->event-card#goToEvent">
 
           <div class="card-body text-center">
             <!-- venue name at top -->
             <div class="mb-3">
               <p class="mb-0">
                 <%= link_to venue.name, venue_path(venue),
-                  class: "fw-bold fs-5 text-decoration-none text-primary",
-                  data: { turbo_frame: "_top" } %>
+                    class: "fw-bold fs-5 text-decoration-none text-primary",
+                    data: { turbo_frame: "_top" } %>
               </p>
 
               <!-- Show distance if available -->
               <% if params[:address].present? || params[:lat].present? %>
                 <% if params[:lat].present? && params[:lng].present? && venue.latitude && venue.longitude %>
                   <% distance = Geocoder::Calculations.distance_between(
-                   [params[:lat].to_f, params[:lng].to_f], 
-                   [venue.latitude, venue.longitude],
-                   units: :mi
-                 ).round(1) %>
+                       [params[:lat].to_f, params[:lng].to_f], 
+                       [venue.latitude, venue.longitude],
+                       units: :mi
+                     ).round(1) %>
                   <small class="text-muted">
                     <i class="bi bi-geo-alt"></i> <%= distance %> miles away
                   </small>
@@ -113,8 +139,8 @@
               <div class="mb-1">
                 <%= link_to artist_path(artist), data: { turbo_frame: "_top" } do %>
                   <%= image_tag url_for(artist.image.variant(resize_to_fill: [100, 100])),
-  class: "rounded-circle shadow",
-  style: "object-fit: cover;" %>
+                      class: "rounded-circle shadow",
+                      style: "object-fit: cover;" %>
                 <% end %>
               </div>
             <% end %>
@@ -122,8 +148,8 @@
             <!-- artist name -->
             <div class="mb-0">
               <%= link_to artist.username, artist_path(artist),
-                class: "text-decoration-none text-reset fw-semibold",
-                data: { turbo_frame: "_top" } %>
+                  class: "text-decoration-none text-reset fw-semibold",
+                  data: { turbo_frame: "_top" } %>
             </div>
 
             <!-- category -->
@@ -166,14 +192,13 @@
         </div>
       <% end %>
     <% else %>
-
       <!-- Empty State -->
       <div class="text-center py-5">
         <i class="bi bi-calendar-x" style="font-size: 3rem; color: #6c757d;"></i>
         <h5 class="mt-3 text-muted">No events found</h5>
-        <% if params[:address].present? || params[:lat].present? %>
+        <% if params[:address].present? || params[:lat].present? || params[:date_range].present? %>
           <p class="text-muted">
-            Try expanding your search radius or searching a different location.
+            Try expanding your search radius, different location, or date range.
           </p>
           <%= link_to "Show All Events", events_path, class: "btn btn-primary" %>
         <% else %>
