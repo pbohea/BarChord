@@ -106,9 +106,15 @@
         <%= f.hidden_field :lng, data: { "location-search-target": "lngInput" } %>
       <% end %>
 
-      <!-- Search Results Info -->
-      <% if params[:address].present? || params[:lat].present? || params[:date_range].present? %>
-        <div class="mt-3 pt-3 border-top">
+    </div>
+  </div>
+
+  <!-- Wrap events in a turbo frame for in-place updates -->
+  <%= turbo_frame_tag "events-container" do %>
+    <!-- Search Results Info -->
+    <% if params[:address].present? || params[:lat].present? || params[:date_range].present? %>
+      <div class="card mb-3 shadow-sm border-0">
+        <div class="card-body py-2">
           <small class="text-muted">
             <% if params[:address].present? %>
               Showing events within <%= params[:radius] || 5 %> miles of "<%= params[:address] %>"
@@ -137,12 +143,9 @@
             <% end %>
           </small>
         </div>
-      <% end %>
-    </div>
-  </div>
+      </div>
+    <% end %>
 
-  <!-- Wrap events in a turbo frame for in-place updates -->
-  <%= turbo_frame_tag "events-container" do %>
     <!-- Events List -->
     <% if @events&.any? %>
 
