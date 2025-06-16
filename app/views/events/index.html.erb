@@ -33,17 +33,29 @@
           </div>
         </div>
 
-        <!-- Date Range Row -->
-        <div class="mb-3">
-          <%= f.label :date_range, "Show events for", class: "form-label small text-muted" %>
-          <%= f.select :date_range,
-                options_for_select([
-                  ["Any Date", ""],
-                  ["Today", "today"],
-                  ["Next 7 Days", "next_7_days"]
-                ], params[:date_range]),
-                {}, 
-                { class: "form-select form-select-sm" } %>
+        <!-- Date Range and Sort Row -->
+        <div class="row g-2 mb-3">
+          <div class="col-6">
+            <%= f.label :date_range, "Show events for", class: "form-label small text-muted" %>
+            <%= f.select :date_range,
+                  options_for_select([
+                    ["Any Date", ""],
+                    ["Today", "today"],
+                    ["Next 7 Days", "next_7_days"]
+                  ], params[:date_range]),
+                  {}, 
+                  { class: "form-select form-select-sm" } %>
+          </div>
+          <div class="col-6">
+            <%= f.label :sort_by, "Sort by", class: "form-label small text-muted" %>
+            <%= f.select :sort_by,
+                  options_for_select([
+                    ["Soonest First", "date"],
+                    ["Closest First", "distance"]
+                  ], params[:sort_by] || "date"),
+                  {}, 
+                  { class: "form-select form-select-sm" } %>
+          </div>
         </div>
 
         <div class="d-flex gap-2 flex-wrap">
@@ -85,6 +97,10 @@
               <% when "next_7_days" %>
                 for the next 7 days
               <% end %>
+            <% end %>
+
+            <% if params[:sort_by].present? %>
+              • sorted by <%= params[:sort_by] == "distance" ? "closest first" : "soonest first" %>
             <% end %>
 
             <% if @events.respond_to?(:count) %>

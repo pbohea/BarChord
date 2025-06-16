@@ -238,23 +238,44 @@ class EventsController < ApplicationController
       events = events.where(venue_id: venue_ids)
       Rails.logger.info "🎭 Filtered to #{events.count} events"
 
-      # Sort by distance from search location
-      events = events.to_a.sort_by do |event|
-        if event.venue.latitude && event.venue.longitude
-          distance = Geocoder::Calculations.distance_between(
-            [lat, lng],
-            [event.venue.latitude, event.venue.longitude],
-            units: :mi,
-          )
-          Rails.logger.debug "📏 Event #{event.id} distance: #{distance.round(2)} miles"
-          distance
-        else
-          Rails.logger.warn "⚠️ Event #{event.id} has no venue coordinates"
-          Float::INFINITY # Put events without coordinates at the end
+      # Apply sorting based on user preference
+      sort_by = params[:sort_by] || "date"
+      Rails.logger.info "🔀 Sorting by: #{sort_by}"
+
+      if sort_by == "distance"
+        # Sort by distance from search location
+        events = events.to_a.sort_by do |event|
+          if event.venue.latitude && event.venue.longitude
+            distance = Geocoder::Calculations.distance_between(
+              [lat, lng],
+              [event.venue.latitude, event.venue.longitude],
+              units: :mi,
+            )
+            Rails.logger.debug "📏 Event #{event.id} distance: #{distance.round(2)} miles"
+            distance
+          else
+            Rails.logger.warn "⚠️ Event #{event.id} has no venue coordinates"
+            Float::INFINITY # Put events without coordinates at the end
+          end
         end
+      else
+        # Sort by date/time (default) - events are already ordered by date, start_time in the scope
+        # Convert to array to maintain consistent return type
+        events = events.to_a.sort_by { |event| [event.date, event.start_time] }
+        Rails.logger.info "📅 Sorted by date and time"
       end
     else
       Rails.logger.info "❌ No search coordinates provided"
+      # Even without location, apply date sorting if requested
+      sort_by = params[:sort_by] || "date"
+      if sort_by == "date"
+        events = events.to_a.sort_by { |event| [event.date, event.start_time] }
+        Rails.logger.info "📅 Sorted by date and time (no location)"
+      else
+        # Can't sort by distance without location, default to date
+        events = events.to_a.sort_by { |event| [event.date, event.start_time] }
+        Rails.logger.info "📅 Defaulted to date sorting (no location for distance sort)"
+      end
     end
 
     events
