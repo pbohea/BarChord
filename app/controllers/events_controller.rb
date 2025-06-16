@@ -18,6 +18,9 @@ class EventsController < ApplicationController
       @search_params = nil
     end
 
+    # Apply date range filter
+    @events = apply_date_range_filter(@events)
+
     respond_to do |format|
       format.html
       format.json { render json: @events } # Add JSON support for iOS
@@ -31,6 +34,9 @@ class EventsController < ApplicationController
 
     @events = find_nearby_events
     @search_params = extract_search_params
+
+    # Apply date range filter
+    @events = apply_date_range_filter(@events)
 
     Rails.logger.info "📊 Found #{@events.count} events after filtering"
     Rails.logger.info "🎯 Search params: #{@search_params}"
@@ -150,6 +156,9 @@ class EventsController < ApplicationController
       @events = Event.upcoming
                      .includes(:venue, :artist)
                      .where(venue_id: Venue.near([@center_lat, @center_lng], radius, units: :mi, order: false).pluck(:id))
+
+      # Apply date range filter
+      @events = apply_date_range_filter(@events)
     else
       @events = []
     end
@@ -162,11 +171,31 @@ class EventsController < ApplicationController
 
   def map_landing
     if params[:lat].present? && params[:lng].present?
-      redirect_to events_map_path(lat: params[:lat], lng: params[:lng], address: params[:address], radius: params[:radius])
+      redirect_to events_map_path(
+        lat: params[:lat],
+        lng: params[:lng],
+        address: params[:address],
+        radius: params[:radius],
+        date_range: params[:date_range],
+      )
     end
   end
 
   private
+
+  def apply_date_range_filter(events)
+    case params[:date_range]
+    when "today"
+      Rails.logger.info "📅 Applying 'today' date filter"
+      events.respond_to?(:today) ? events.today : events.to_a.select { |e| e.date == Date.today }
+    when "next_7_days"
+      Rails.logger.info "📅 Applying 'next 7 days' date filter"
+      events.respond_to?(:next_7_days) ? events.next_7_days : events.to_a.select { |e| e.date.between?(Date.today, Date.today + 7) }
+    else
+      Rails.logger.info "📅 No date filter applied"
+      events
+    end
+  end
 
   def find_nearby_events
     Rails.logger.info "🔍 Starting find_nearby_events"
@@ -286,11 +315,10 @@ class EventsController < ApplicationController
       lat: coords&.first,
       lng: coords&.last,
       radius: search_radius,
+      date_range: params[:date_range],
       has_location: coords.present?,
     }
   end
-
-  # Remove the radius_to_degrees helper since we're using geocoder's near method
 
   def set_event
     @event = Event.find(params[:id])

@@ -27,6 +27,8 @@ class Event < ApplicationRecord
 
   scope :upcoming, -> { where("date >= ?", Date.today).order(:date, :start_time) }
   scope :past, -> { where("date < ?", Date.today).order(date: :desc, start_time: :desc) }
+  scope :today, -> { where(date: Date.today) }
+  scope :next_7_days, -> { where(date: Date.today..(Date.today + 7)) }
 
   validate :artist_presence
 
