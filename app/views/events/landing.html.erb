@@ -6,7 +6,10 @@
       <h2 class="h5 text-center mb-4">Find live music events</h2>
 
       <%= form_with url: events_path, method: :get, local: true, 
-                    data: { controller: "location-search", turbo:false } do |f| %>
+                    data: { 
+                      controller: "location-search",
+                      action: "submit->location-search#validateLocation"
+                    } do |f| %>
 
         <!-- Address and Radius Row -->
         <div class="row g-2 mb-3">
@@ -14,6 +17,7 @@
             <%= f.text_field :address, 
                 placeholder: "Enter address or ZIP code", 
                 class: "form-control form-control-sm",
+                required: true,
                 data: { "location-search-target": "addressInput" } %>
           </div>
           <div class="col-4">
@@ -38,6 +42,11 @@
                 ]),
                 {}, 
                 { class: "form-select form-select-sm" } %>
+        </div>
+
+        <!-- Error message container -->
+        <div id="location-error" class="alert alert-danger d-none mb-3" role="alert">
+          Please enter an address or use your current location before searching.
         </div>
 
         <!-- Buttons -->

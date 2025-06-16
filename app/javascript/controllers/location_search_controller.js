@@ -200,4 +200,23 @@ export default class extends Controller {
     // Submit the form automatically when dropdowns change
     this.element.requestSubmit()
   }
+  // Add this method to your location-search controller
+  validateLocation(event) {
+    const addressInput = this.addressInputTarget.value.trim()
+    const latInput = this.latInputTarget.value
+    const lngInput = this.lngInputTarget.value
+    const errorDiv = document.getElementById('location-error')
+
+    // Check if either address OR coordinates are provided
+    if (!addressInput && (!latInput || !lngInput)) {
+      event.preventDefault() // Stop form submission
+      errorDiv.classList.remove('d-none')
+      this.addressInputTarget.focus()
+      return false
+    }
+
+    // Hide error if validation passes
+    errorDiv.classList.add('d-none')
+    return true
+  }
 }

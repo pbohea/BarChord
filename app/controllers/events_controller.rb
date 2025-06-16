@@ -9,20 +9,24 @@ class EventsController < ApplicationController
   # GET /events
   def index
     Rails.logger.info "🔍 EVENTS INDEX HIT - User-Agent: #{request.user_agent}"
-    Rails.logger.info "🔍 REQUEST FORMAT: #{request.format}"
     Rails.logger.info "🔍 REQUEST PARAMS: #{params.inspect}"
 
+    # Require location parameters for search
+    if params[:address].blank? && params[:lat].blank?
+      Rails.logger.info "❌ No location parameters provided, redirecting to landing"
+      redirect_to events_landing_path, alert: "Please enter a location to search for events."
+      return
+    end
+
+    # Your existing index logic...
     if params[:address].present? || params[:lat].present?
-      # User is searching by location - filter results
       @events = find_nearby_events
       @search_params = extract_search_params
     else
-      # Default - show all upcoming events, but apply date filter if present
-      @events = Event.upcoming.includes(:venue, :artist)
+      @events = []
       @search_params = nil
     end
 
-    # Apply date range filter regardless of location search
     @events = apply_date_range_filter(@events)
 
     respond_to do |format|
