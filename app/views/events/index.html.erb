@@ -44,7 +44,10 @@
                     ["Next 7 Days", "next_7_days"]
                   ], params[:date_range]),
                   {}, 
-                  { class: "form-select form-select-sm" } %>
+                  { class: "form-select form-select-sm",
+                    data: { 
+                      action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
+                    } } %>
           </div>
           <div class="col-6">
             <%= f.label :sort_by, "Sort by", class: "form-label small text-muted" %>
@@ -54,7 +57,10 @@
                     ["Closest First", "distance"]
                   ], params[:sort_by] || "date"),
                   {}, 
-                  { class: "form-select form-select-sm" } %>
+                  { class: "form-select form-select-sm",
+                    data: { 
+                      action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
+                    } } %>
           </div>
         </div>
 

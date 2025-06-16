@@ -196,4 +196,8 @@ export default class extends Controller {
       return null
     }
   }
+  autoSubmit() {
+    // Submit the form automatically when dropdowns change
+    this.element.requestSubmit()
+  }
 }
