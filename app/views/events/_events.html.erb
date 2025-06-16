@@ -1,0 +1,88 @@
+<% venue = events.venue %>
+<% artist = events.artist %>
+
+<div class="card border-0 shadow-lg mb-4 position-relative" style="border-radius: 24px; background-color: #ffffff;"
+     data-controller="event-card"
+     data-event-card-url-value="<%= event_path(events) %>"
+     data-action="click->event-card#goToEvent">
+
+  <div class="card-body text-center">
+    <!-- venue name at top -->
+    <div class="mb-3">
+      <p class="mb-0">
+        <%= link_to venue.name, venue_path(venue),
+                class: "fw-bold fs-5 text-decoration-none text-primary",
+                data: { turbo_frame: "_top" } %>
+      </p>
+
+      <!-- Show distance if available -->
+      <% if params[:address].present? || params[:lat].present? %>
+        <% if params[:lat].present? && params[:lng].present? && venue.latitude && venue.longitude %>
+          <% distance = Geocoder::Calculations.distance_between(
+                   [params[:lat].to_f, params[:lng].to_f], 
+                   [venue.latitude, venue.longitude],
+                   units: :mi
+                 ).round(1) %>
+          <small class="text-muted">
+            <i class="bi bi-geo-alt"></i> <%= distance %> miles away
+          </small>
+        <% end %>
+      <% end %>
+    </div>
+
+    <!-- artist image -->
+    <% if artist&.image&.attached? %>
+      <div class="mb-1">
+        <%= link_to artist_path(artist), data: { turbo_frame: "_top" } do %>
+          <%= image_tag url_for(artist.image.variant(resize_to_fill: [100, 100])),
+                  class: "rounded-circle shadow",
+                  style: "object-fit: cover;" %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <!-- artist name -->
+    <div class="mb-0">
+      <%= link_to artist.username, artist_path(artist),
+              class: "text-decoration-none text-reset fw-semibold",
+              data: { turbo_frame: "_top" } %>
+    </div>
+
+    <!-- category -->
+    <div class="mb-1 text-muted small">
+      <%= events.category %>
+    </div>
+
+    <!-- Date & Time Pill -->
+    <div class="mb-3">
+      <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold" style="font-size: 0.9rem;">
+        <i class="bi bi-clock me-1"></i>
+        <%= events.date.strftime("%A, %b %-d") %> • 
+        <%= events.start_time.strftime("%-I:%M %p") %> – 
+        <%= events.end_time.strftime("%-I:%M %p") %>
+      </div>
+    </div>
+
+    <!-- map button at bottom -->
+    <% if venue.latitude.present? && venue.longitude.present? %>
+      <div>
+        <!-- Mobile Native App Button -->
+        <div class="d-block d-md-none">
+          <%= link_to "Map",
+                  "/events/map?lat=#{venue.latitude}&lng=#{venue.longitude}&venue_id=#{venue.id}",
+                  class: "btn btn-sm btn-outline-primary",
+                  data: { turbo_frame: "_top" } %>
+        </div>
+
+        <!-- Web/Desktop Google Maps Button -->
+        <div class="d-none d-md-block">
+          <%= link_to "Map",
+                  "https://www.google.com/maps/search/#{CGI.escape(venue.name)}/@#{venue.latitude},#{venue.longitude},17z",
+                  class: "btn btn-sm btn-outline-primary",
+                  target: "_blank",
+                  rel: "noopener noreferrer" %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
