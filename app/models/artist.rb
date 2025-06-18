@@ -32,6 +32,8 @@
 class Artist < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  validate :password_complexity
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
@@ -52,5 +54,17 @@ class Artist < ApplicationRecord
 
   def past_events
     events.past
+  end
+
+  def password_complexity
+    return if password.blank?
+
+    unless password.length.between?(8, 20)
+      errors.add :password, "must be between 8 and 20 characters"
+    end
+
+    unless password.match?(/(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+      errors.add :password, "must include at least one lowercase letter, one uppercase letter, and one number"
+    end
   end
 end

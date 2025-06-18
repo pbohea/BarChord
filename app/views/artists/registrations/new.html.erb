@@ -1,6 +1,5 @@
 <% content_for :title, "Artist Sign Up" %>
 
-
 <div class="container my-5" style="max-width: 550px;">
   <div class="card shadow-sm border-0 rounded-4">
     <div class="card-header bg-gradient bg-info text-white text-center rounded-top-4">
@@ -91,6 +90,9 @@
         <div class="mb-3">
           <%= f.label :password, class: "form-label fw-medium" %>
           <%= f.password_field :password, class: "form-control form-control-lg", autocomplete: "new-password" %>
+          <div class="form-text">
+            Must be 8–20 characters, with at least one uppercase letter, one lowercase letter, and one number.
+          </div>
         </div>
 
         <div class="mb-4">

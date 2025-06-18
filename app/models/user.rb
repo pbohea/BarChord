@@ -22,13 +22,26 @@
 class User < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
+  validate :password_complexity
+
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
-         
+
   has_many :artist_follows, dependent: :destroy
   has_many :followed_artists, through: :artist_follows, source: :artist
   has_many :venue_follows, dependent: :destroy
   has_many :followed_venues, through: :venue_follows, source: :venue
   has_many :notification_tokens, as: :notifiable, dependent: :destroy
 
+  def password_complexity
+    return if password.blank?
+
+    unless password.length.between?(8, 20)
+      errors.add :password, "must be between 8 and 20 characters"
+    end
+
+    unless password.match?(/(?=.*[a-z])(?=.*[A-Z])/)
+      errors.add :password, "must include at least one lowercase and one uppercase letter"
+    end
+  end
 end

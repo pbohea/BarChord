@@ -36,6 +36,9 @@
         <div class="mb-3">
           <%= f.label :password, class: "form-label fw-medium" %>
           <%= f.password_field :password, class: "form-control form-control-lg", autocomplete: "new-password" %>
+          <div class="form-text">
+            Must be 8–20 characters, with at least one uppercase letter, one lowercase letter, and one number.
+          </div>
         </div>
 
         <div class="mb-4">
