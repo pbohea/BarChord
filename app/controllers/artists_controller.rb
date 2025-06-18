@@ -26,5 +26,6 @@ class ArtistsController < ApplicationController
 
   def promo_flyer
     @artist = Artist.find(params[:id])
+    render layout: 'print'
   end
 end
