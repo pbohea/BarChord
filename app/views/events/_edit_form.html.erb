@@ -6,18 +6,18 @@
 
     <!-- Display current artist and venue (non-editable) -->
     <div class="mb-3">
-      <label class="form-label">Artist</label>
-      <p class="form-control-plaintext"><%= event.artist.username %></p>
+      <label class="form-label fw-bold">Artist</label>
+      <p class="form-control-plaintext text-muted"><%= event.artist.username %></p>
     </div>
 
     <div class="mb-3">
-      <label class="form-label">Venue</label>
-      <p class="form-control-plaintext"><%= event.venue.name %></p>
+      <label class="form-label fw-bold">Venue</label>
+      <p class="form-control-plaintext text-muted"><%= event.venue.name %></p>
     </div>
 
     <!-- Category Dropdown -->
     <div class="mb-3">
-      <%= f.label :category, class: "form-label" %>
+      <%= f.label :category, class: "form-label fw-bold" %>
       <%= f.select :category, ["Guitar", "Piano", "Band", "DJ"], 
           {}, 
           { class: "form-select", required: true } %>
@@ -25,7 +25,7 @@
 
     <!-- Description -->
     <div class="mb-3">
-      <%= f.label :description, class: "form-label" %>
+      <%= f.label :description, class: "form-label fw-bold" %>
       <%= f.text_area :description, 
           class: "form-control", 
           placeholder: "Describe the event", 
@@ -34,19 +34,27 @@
 
     <!-- Date Dropdown (Next 14 Days) -->
     <div class="mb-3">
-      <%= f.label :date, class: "form-label" %>
+      <%= f.label :date, class: "form-label fw-bold" %>
       <%= f.select :date,
-        (0..13).map { |i|
-        date = Date.today + i.days
-        [date.strftime("%A, %B %-d"), date.to_s]
-        },
-        {},
+        begin
+          # Ensure we include the current event date in the range
+          start_date = [Date.today, event.date&.to_date || Date.today].min
+          end_date = [Date.today + 13.days, event.date&.to_date || Date.today].max
+          
+          # If the event date is too far in the future, limit the range
+          end_date = [end_date, Date.today + 30.days].min
+          
+          (start_date..end_date).map do |date|
+            [date.strftime("%A, %B %-d"), date.to_s]
+          end
+        end,
+        { selected: event.date&.to_s },
         { class: "form-select", required: true } %>
     </div>
 
     <!-- Start Time Dropdown -->
     <div class="mb-3">
-      <%= f.label :start_time, "Start Time", class: "form-label" %>
+      <%= f.label :start_time, "Start Time", class: "form-label fw-bold" %>
       <%= f.select :start_time, time_options, 
       { selected: event.start_time&.strftime("%H:%M") }, 
       { class: "form-select", required: true } %>
@@ -54,7 +62,7 @@
 
     <!-- End Time Dropdown -->
     <div class="mb-3">
-      <%= f.label :end_time, "End Time", class: "form-label" %>
+      <%= f.label :end_time, "End Time", class: "form-label fw-bold" %>
       <%= f.select :end_time, time_options, 
       { selected: event.end_time&.strftime("%H:%M") }, 
       { class: "form-select", required: true } %>
@@ -66,12 +74,12 @@
           class: "form-check-input", 
           id: "event_cover",
           onchange: "toggleCoverAmount()" %>
-      <%= f.label :cover, "Cover Charge?", class: "form-check-label" %>
+      <%= f.label :cover, "Cover Charge?", class: "form-check-label fw-bold" %>
     </div>
 
     <!-- Cover Amount Field (show/hide based on existing value) -->
     <div class="mb-3" id="cover-amount-field" style="display: <%= event.cover? ? 'block' : 'none' %>;">
-      <%= f.label :cover_amount, "Cover Amount ($)", class: "form-label" %>
+      <%= f.label :cover_amount, "Cover Amount ($)", class: "form-label fw-bold" %>
       <%= f.number_field :cover_amount, 
           class: "form-control", 
           placeholder: "Enter amount",
@@ -82,7 +90,7 @@
     <!-- Indoors Checkbox -->
     <div class="form-check mb-4">
       <%= f.check_box :indoors, class: "form-check-input" %>
-      <%= f.label :indoors, "Indoors?", class: "form-check-label" %>
+      <%= f.label :indoors, "Indoors?", class: "form-check-label fw-bold" %>
     </div>
 
     <div class="d-grid">

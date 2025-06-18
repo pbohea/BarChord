@@ -80,7 +80,7 @@
     <div class="card border-0 shadow-lg mb-4" style="border-radius: 24px; background-color: #ffffff;">
       <div class="card-body">
         <h5 class="text-center text-muted mb-3">Event Details</h5>
-        
+
         <!-- Indoor/Outdoor -->
         <div class="text-center p-3 rounded-3 mb-3" style="background-color: #f8f9fa;">
           <i class="bi bi-<%= @event.indoors? ? 'house-door' : 'sun' %> fs-3 mb-2 d-block" 
@@ -102,7 +102,7 @@
         <% if @event.venue.latitude.present? && @event.venue.longitude.present? %>
           <div class="text-center p-3 rounded-3" style="background-color: #f8f9fa;">
             <i class="bi bi-geo-alt fs-3 mb-2 d-block" style="color: #5352ed;"></i>
-            
+
             <!-- Mobile Native App Button -->
             <div class="d-block d-md-none">
               <%= link_to "/events/map?lat=#{@event.venue.latitude}&lng=#{@event.venue.longitude}&venue_id=#{@event.venue.id}",
@@ -133,21 +133,24 @@
       <div class="card border-0 shadow-lg mb-4" style="border-radius: 24px; background-color: #ffffff;">
         <div class="card-body">
           <h5 class="text-center text-muted mb-3">Event Management</h5>
-          <div class="d-flex gap-3 justify-content-center">
-            <%= link_to edit_event_path(@event), 
-                        class: "btn btn-warning rounded-pill px-4 py-2 fw-semibold flex-fill text-center",
-                        style: "box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);" do %>
-              <i class="bi bi-pencil me-2"></i>Edit Event
-            <% end %>
+          <div class="row g-3 justify-content-center">
+            <div class="col-auto">
+              <%= link_to edit_event_path(@event), 
+                      class: "btn btn-warning rounded-pill px-4 py-2 fw-semibold",
+                      style: "box-shadow: 0 4px 15px rgba(255, 193, 7, 0.4);" do %>
+                <i class="bi bi-pencil me-2"></i>Edit Event
+              <% end %>
+            </div>
 
-            <%= button_to event_path(@event), 
-                          method: :delete, 
-                          class: "btn btn-danger rounded-pill px-4 py-2 fw-semibold flex-fill",
-                          style: "box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);",
-                          data: { confirm: "Are you sure you want to cancel this event? This action cannot be undone." },
-                          form: { class: "flex-fill" } do %>
-              <i class="bi bi-trash me-2"></i>Cancel Event
-            <% end %>
+            <div class="col-auto">
+              <%= button_to event_path(@event), 
+                        method: :delete, 
+                        class: "btn btn-danger rounded-pill px-4 py-2 fw-semibold",
+                        style: "box-shadow: 0 4px 15px rgba(220, 53, 69, 0.4);",
+                        data: { confirm: "Are you sure you want to cancel this event? This action cannot be undone." } do %>
+                <i class="bi bi-trash me-2"></i>Cancel Event
+              <% end %>
+            </div>
           </div>
         </div>
       </div>
