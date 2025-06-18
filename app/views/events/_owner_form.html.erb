@@ -85,11 +85,11 @@
         <%= f.text_area :description, class: "form-control", placeholder: "Describe the event", rows: 3 %>
       </div>
 
-      <!-- Date Dropdown (Next 14 Days) -->
+      <!-- Date Dropdown (Next 30 Days) -->
       <div class="mb-3">
         <%= f.label :date, class: "form-label" %>
         <%= f.select :date,
-          (0..13).map { |i|
+          (0..30).map { |i|
           date = Date.today + i.days
           [date.strftime("%A, %B %-d"), date.to_s]
           },
