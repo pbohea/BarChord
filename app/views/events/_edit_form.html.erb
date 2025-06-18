@@ -1,5 +1,5 @@
 <!-- FORM 3: Edit Event Form -->
-<div class="container mt-5" style="max-width: 600px;">
+<div class="container pt-4" style="max-width: 600px;">
   <h2 class="mb-4 text-center">Edit Event</h2>
 
   <%= form_with model: event, local: true, class: "needs-validation" do |f| %>
@@ -99,35 +99,3 @@
 
   <% end %>
 </div>
-
-<!-- Your existing layout content -->
-
-<script>
-function toggleCoverAmount() {
-  const checkbox = document.getElementById('event_cover');
-  const coverAmountField = document.getElementById('cover-amount-field');
-  
-  if (checkbox && coverAmountField) {
-    const coverAmountInput = coverAmountField.querySelector('input[type="number"]');
-    
-    if (checkbox.checked) {
-      coverAmountField.style.display = 'block';
-      if (coverAmountInput) coverAmountInput.required = true;
-    } else {
-      coverAmountField.style.display = 'none';
-      if (coverAmountInput) {
-        coverAmountInput.required = false;
-        coverAmountInput.value = '';
-      }
-    }
-  }
-}
-
-// Run on page load to set initial state
-document.addEventListener('DOMContentLoaded', function() {
-  toggleCoverAmount();
-});
-</script>
-
-</body>
-</html>
