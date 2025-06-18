@@ -1,10 +1,10 @@
 module EventsHelper
   def time_options
     times = []
-    # Start at 6:00 AM instead of 12:00 PM
-    time = Time.zone.parse("6:00 AM")
-    # Go until 11:59 PM
-    while time < Time.zone.parse("11:59 PM")
+    # Start at 12:00 AM (midnight)
+    time = Time.zone.parse("12:00 AM")
+    # Go for a full 24 hours (96 intervals of 15 minutes each)
+    96.times do
       times << [time.strftime("%-I:%M %p"), time.strftime("%H:%M")]
       time += 15.minutes
     end
