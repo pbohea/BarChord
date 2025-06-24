@@ -27,7 +27,7 @@ task sample_data: :environment do
     owners << Owner.create!(
       firstname: name,
       email: "#{name.downcase}_owner@example.com",
-      password: "password",
+      password: "Password1",
     )
   end
 
@@ -36,7 +36,7 @@ task sample_data: :environment do
     name = Faker::Name.first_name
     User.create!(
       email: "#{name.downcase}_user@example.com",
-      password: "password",
+      password: "Password1",
       username: "#{name.downcase}_fan",
     )
   end
@@ -63,7 +63,7 @@ task sample_data: :environment do
     artist = Artist.create!(
       firstname: name,
       email: "#{name.downcase}_artist@example.com",
-      password: "password",
+      password: "Password1",
       username: "#{name.downcase} music",
       genre: allowed_genres.sample,
       category: allowed_categories.sample,
