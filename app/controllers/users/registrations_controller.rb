@@ -23,11 +23,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
   # end
 
   def after_sign_up_path_for(resource)
-    stored_path = stored_location_for(resource)
-    Rails.logger.info "=== STORED LOCATION: #{stored_path.inspect} ==="
-    Rails.logger.info "=== USING PATH: #{stored_path || user_dashboard_path(resource)} ==="
+    @stored_path ||= stored_location_for(resource)
+    Rails.logger.info "=== STORED LOCATION: #{@stored_path.inspect} ==="
+    Rails.logger.info "=== USING PATH: #{@stored_path || user_dashboard_path(resource)} ==="
 
-    stored_path || user_dashboard_path(resource)
+    @stored_path || user_dashboard_path(resource)
   end
 
   def after_update_path_for(resource)
