@@ -103,4 +103,9 @@ Rails.application.routes.draw do
   # get "manifest" => "rails/pwa#manifest", as: :pwa_manifest
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
+  #render rake tasks
+
+  get("/rake_tasks", { :controller => "rake_tasks", :action => "show" })
+  get("/run_task", { :controller => "rake_tasks", :action => "run_task" })
+
 end
