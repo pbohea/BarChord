@@ -24,6 +24,7 @@
 # end
 
 class ArtistFollowsController < ApplicationController
+  before_action :authenticate_user!
   before_action :set_artist_for_create, only: [:create]
   before_action :set_artist_for_destroy, only: [:destroy]
 
