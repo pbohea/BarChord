@@ -59,7 +59,11 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   # POST /users
   def create
-    super
+    super do |user|
+      if user.persisted?
+        track_user_session(user)
+      end
+    end
   end
 
   # PUT /users
@@ -79,5 +83,13 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def after_update_path_for(resource)
     stored_location_for(resource) || user_dashboard_path(resource)
+  end
+
+  private
+
+  def track_user_session(user)
+    # Only set session tracking AFTER Devise has successfully created the session
+    cookies.permanent.encrypted[:user_id] = user.id
+    Current.user = user if defined?(Current)
   end
 end
