@@ -22,7 +22,7 @@ task sample_data: :environment do
 
   #owners
   owners = []
-  10.times do
+  5.times do
     name = Faker::Name.first_name
     owners << Owner.create!(
       firstname: name,
@@ -32,7 +32,7 @@ task sample_data: :environment do
   end
 
   #users
-  10.times do
+  5.times do
     name = Faker::Name.first_name
     User.create!(
       email: "#{name.downcase}_user@example.com",
@@ -57,7 +57,7 @@ task sample_data: :environment do
   ]
   # artists
   artists = []
-  10.times do
+  5.times do
     name = Faker::Name.first_name
 
     artist = Artist.create!(
@@ -1492,7 +1492,7 @@ task sample_data: :environment do
     venues << venue
   end
 
-  120.times do
+  30.times do
     # Generate a random start time
     random_start = Faker::Time.between(from: DateTime.now, to: DateTime.now + 2.day)
 
