@@ -6,28 +6,8 @@ class ConfigurationsController < ApplicationController
         swipe_to_refresh_enabled: true,
         # Preload pages for faster navigation
         preload_enabled: true,
-        # Important: Enable shared cookie storage for authentication
-        shared_cookies_enabled: true,
-        # Force refresh authentication-sensitive pages
-        authentication_refresh_enabled: true,
       },
       rules: [
-        {
-          patterns: [
-            "^/users/sign_in",
-            "^/users/sign_up",
-            "^/artists/sign_in",
-            "^/artists/sign_up",
-            "^/owners/sign_in",
-            "^/owners/sign_up",
-            "^/menu$",
-          ],
-          properties: {
-            context: "default",
-            refresh: "always",
-            preload: false,
-          },
-        },
         {
           patterns: [
             "/new$",
