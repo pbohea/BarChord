@@ -22,16 +22,14 @@ task sample_data: :environment do
 
   #owners
   owners = []
-  5.times do
-    name = Faker::Name.first_name
-    owners << Owner.create!(
-      firstname: name,
-      email: "#{name.downcase}_owner@example.com",
-      password: "Password1",
-    )
-  end
+  #name = Faker::Name.first_name
+  owners << Owner.create!(
+    firstname: "Pat_Owner",
+    email: "owner@example.com",
+    password: "Password1",
+  )
 
-  #users
+  # users
   5.times do
     name = Faker::Name.first_name
     User.create!(
@@ -40,6 +38,13 @@ task sample_data: :environment do
       username: "#{name.downcase}_fan",
     )
   end
+
+  # specific user
+  User.create!(
+    email: "pbohea@gmail.com",
+    password: "Password1",
+    username: "pbohea_fan",
+  )
 
   allowed_categories = ["Guitar", "Band", "DJ", "Piano"]
   allowed_genres = ["Rock", "Country", "90s", "Alternative"]
@@ -531,7 +536,7 @@ task sample_data: :environment do
       zip_code: "23451",
       category: "Bar",
       website: "https://www.chicksoysterbar.com",
-      latitude: 36.9051014305217, 
+      latitude: 36.9051014305217,
       longitude: -76.08533268196011,
     },
     {
@@ -542,7 +547,7 @@ task sample_data: :environment do
       zip_code: "23451",
       category: "Bar",
       website: "https://thebackdeckvb.com",
-      latitude: 36.906561701248606, 
+      latitude: 36.906561701248606,
       longitude: -76.08728013696928,
     },
     {
@@ -553,7 +558,7 @@ task sample_data: :environment do
       zip_code: "23455",
       category: "Bar",
       website: "https://commonwealthbrewingcompany.com",
-      latitude: 36.91339629963791, 
+      latitude: 36.91339629963791,
       longitude: -76.13186828993565,
     },
     {
@@ -564,7 +569,7 @@ task sample_data: :environment do
       zip_code: "23455",
       category: "Bar",
       website: "https://www.hkonthebay.com",
-      latitude: 36.915746433951796, 
+      latitude: 36.915746433951796,
       longitude: -76.12759873660148,
     },
     {
@@ -575,7 +580,7 @@ task sample_data: :environment do
       zip_code: "23455",
       category: "Bar",
       website: "https://www.buoy44vb.com",
-      latitude: 36.91739870885306, 
+      latitude: 36.91739870885306,
       longitude: -76.12660951887025,
     },
     {
@@ -586,7 +591,7 @@ task sample_data: :environment do
       zip_code: "23451",
       category: "Bar",
       website: "https://jose-tequilas.com",
-      latitude: 36.907715284133495, 
+      latitude: 36.907715284133495,
       longitude: -76.0981830614175,
     },
     # Long Island venues
@@ -1476,7 +1481,7 @@ task sample_data: :environment do
       category: attrs[:category],
       website: attrs[:website],
       latitude: attrs[:latitude],
-      longitude: attrs[:longitude]
+      longitude: attrs[:longitude],
       #owner_id: owners.sample.id,
     )
 
