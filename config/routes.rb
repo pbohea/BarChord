@@ -61,6 +61,8 @@ Rails.application.routes.draw do
     get :receipt, on: :member
   end
 
+
+
   # admin-only
   namespace :admin do
     resources :venue_requests do
@@ -80,6 +82,7 @@ Rails.application.routes.draw do
 
   #misc routes
   get "/owners/:id/dashboard", to: "owners#dashboard", as: :owner_dashboard
+  get 'owners/:id/venue_requests', to: 'owners#venue_requests', as: 'owner_venue_requests'
   get "/users/:id/dashboard", to: "users#dashboard", as: :user_dashboard
   get "/artists/:id/dashboard", to: "artists#dashboard", as: :artist_dashboard
   get "/about", to: "pages#about"

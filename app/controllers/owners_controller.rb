@@ -6,6 +6,11 @@ class OwnersController < ApplicationController
     @venues = @owner.venues
   end
 
+  def venue_requests
+    @venue_requests = VenueRequest.where(requester_type: "owner", requester_id: @owner.id)
+                                  .order(created_at: :desc)
+  end
+
   private
 
   def set_owner

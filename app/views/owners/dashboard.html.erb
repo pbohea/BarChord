@@ -7,6 +7,8 @@
     <%= link_to "Add a Venue", new_venue_request_path, class: "btn btn-success" %>
     <%= link_to "Add an Event", new_event_path, class: "btn btn-primary" %>
     <%= link_to "Claim a Venue", claim_venue_requests_path, class: "btn btn-primary" %>
+    <%= link_to "My Requests", owner_venue_requests_path, class: "btn btn-outline-secondary" %>
+
   </div>
 
   <% if @venues.any? %>
