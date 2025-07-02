@@ -92,6 +92,12 @@ task sample_data: :environment do
     artists << artist
   end
 
+  Artist.create!(
+    email: "artist@example.com",
+    password: "Password1",
+    username: "pat_artist",
+  )
+
   #VENUES WITH NO GOOGLEMAPS API
   venues = []
 

@@ -85,6 +85,7 @@ Rails.application.routes.draw do
   get 'owners/:id/venue_requests', to: 'owners#venue_requests', as: 'owner_venue_requests'
   get "/users/:id/dashboard", to: "users#dashboard", as: :user_dashboard
   get "/artists/:id/dashboard", to: "artists#dashboard", as: :artist_dashboard
+  get 'artists/:id/venue_requests', to: 'artists#venue_requests', as: 'artist_venue_requests'
   get "/about", to: "pages#about"
   get "/owners_about", to: "pages#owners_about"
   get "/artists_about", to: "pages#artists_about"
