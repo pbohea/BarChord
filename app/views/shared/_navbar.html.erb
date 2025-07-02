@@ -1,3 +1,52 @@
+<!-- Add this JavaScript to handle the modal/offcanvas interaction -->
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    // Get references to the offcanvas and modals
+    const offcanvasEl = document.getElementById('accountMenu');
+    const signinModalEl = document.getElementById('signinModal');
+    const signupModalEl = document.getElementById('signupModal');
+
+    if (offcanvasEl && signinModalEl && signupModalEl) {
+      const offcanvas = new bootstrap.Offcanvas(offcanvasEl);
+
+      // Handle Sign In button click
+      const signinBtn = offcanvasEl.querySelector('[data-bs-target="#signinModal"]');
+      if (signinBtn) {
+        signinBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Hide offcanvas first
+          offcanvas.hide();
+          // Wait for offcanvas to fully close before showing modal
+          offcanvasEl.addEventListener('hidden.bs.offcanvas', function showModal() {
+            const modal = new bootstrap.Modal(signinModalEl);
+            modal.show();
+            // Remove this event listener after use
+            offcanvasEl.removeEventListener('hidden.bs.offcanvas', showModal);
+          }, { once: true });
+        });
+      }
+
+      // Handle Sign Up button click
+      const signupBtn = offcanvasEl.querySelector('[data-bs-target="#signupModal"]');
+      if (signupBtn) {
+        signupBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          // Hide offcanvas first
+          offcanvas.hide();
+          // Wait for offcanvas to fully close before showing modal
+          offcanvasEl.addEventListener('hidden.bs.offcanvas', function showModal() {
+            const modal = new bootstrap.Modal(signupModalEl);
+            modal.show();
+            // Remove this event listener after use
+            offcanvasEl.removeEventListener('hidden.bs.offcanvas', showModal);
+          }, { once: true });
+        });
+      }
+    }
+  });
+</script>
+
+<!-- Updated navbar.html.erb -->
 <nav class="navbar d-hotwire-native-none bg-body-tertiary">
   <div class="container-fluid">
     <a class="navbar-brand" href="/">BarChord</a>
@@ -61,8 +110,9 @@
         </div>
       <% else %>
         <div class="d-grid gap-2">
-          <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signinModal">Sign In</button>
-          <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+          <!-- Remove data-bs-toggle and data-bs-target, handle with JavaScript -->
+          <button class="btn btn-outline-primary" id="signinTrigger">Sign In</button>
+          <button class="btn btn-outline-secondary" id="signupTrigger">Sign Up</button>
         </div>
       <% end %>
     </div>
@@ -110,3 +160,37 @@
     </div>
   </div>
 <% end %>
+
+<!-- Alternative simpler fix using JavaScript -->
+<script>
+  // Simpler approach - update the buttons to use IDs
+  document.addEventListener('DOMContentLoaded', function() {
+    const signinTrigger = document.getElementById('signinTrigger');
+    const signupTrigger = document.getElementById('signupTrigger');
+    const offcanvasEl = document.getElementById('accountMenu');
+
+    if (signinTrigger && offcanvasEl) {
+      const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl) || new bootstrap.Offcanvas(offcanvasEl);
+
+      signinTrigger.addEventListener('click', function() {
+        offcanvas.hide();
+        setTimeout(() => {
+          const modal = new bootstrap.Modal(document.getElementById('signinModal'));
+          modal.show();
+        }, 300); // Wait for offcanvas animation to complete
+      });
+    }
+
+    if (signupTrigger && offcanvasEl) {
+      const offcanvas = bootstrap.Offcanvas.getInstance(offcanvasEl) || new bootstrap.Offcanvas(offcanvasEl);
+
+      signupTrigger.addEventListener('click', function() {
+        offcanvas.hide();
+        setTimeout(() => {
+          const modal = new bootstrap.Modal(document.getElementById('signupModal'));
+          modal.show();
+        }, 300); // Wait for offcanvas animation to complete
+      });
+    }
+  });
+</script>
