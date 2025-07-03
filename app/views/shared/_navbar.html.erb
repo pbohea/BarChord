@@ -27,9 +27,9 @@
             <%= link_to "Edit Profile", edit_owner_registration_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
             <div>
               <%= button_to "Sign Out", destroy_owner_session_path, 
-      method: :delete, 
-      class: "btn btn-outline-danger w-100",
-      data: { turbo: false } %>
+                  method: :delete, 
+                  class: "btn btn-outline-danger w-100",
+                  data: { turbo: false } %>
             </div>
 
           <% elsif artist_signed_in? %>
@@ -40,9 +40,9 @@
             <%= link_to "Edit Profile", edit_artist_registration_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
             <div>
               <%= button_to "Sign Out", destroy_artist_session_path, 
-      method: :delete, 
-      class: "btn btn-outline-danger w-100",
-      data: { turbo: false } %>
+                  method: :delete, 
+                  class: "btn btn-outline-danger w-100",
+                  data: { turbo: false } %>
             </div>
           <% elsif user_signed_in? %>
             <% if current_user.email == "pbohea@gmail.com" %>
@@ -52,17 +52,52 @@
             <%= link_to "Edit Profile", edit_user_registration_path, class: "btn btn-outline-secondary", data: { turbo: false } %>
             <div>
               <%= button_to "Sign Out", destroy_user_session_path, 
-      method: :delete, 
-      class: "btn btn-outline-danger w-100",
-      data: { turbo: false } %>
+                  method: :delete, 
+                  class: "btn btn-outline-danger w-100",
+                  data: { turbo: false } %>
             </div>
           <% end %>
 
         </div>
       <% else %>
-        <div class="d-grid gap-2">
-          <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#signinModal">Sign In</button>
-          <button class="btn btn-outline-secondary" data-bs-toggle="modal" data-bs-target="#signupModal">Sign Up</button>
+        <!-- Main view when not signed in -->
+        <div id="mainMenu" class="d-grid gap-2">
+          <button class="btn btn-outline-primary" onclick="showSignInOptions()">Sign In</button>
+          <button class="btn btn-outline-secondary" onclick="showSignUpOptions()">Sign Up</button>
+        </div>
+
+        <!-- Sign In options (hidden by default) -->
+        <div id="signInOptions" class="d-none">
+          <div class="d-flex align-items-center mb-3">
+            <button class="btn btn-sm btn-link p-0 me-2" onclick="showMainMenu()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+              </svg>
+            </button>
+            <h5 class="mb-0">Sign In As</h5>
+          </div>
+          <div class="d-grid gap-2">
+            <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary w-100", data: { turbo: false } %>
+            <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success w-100", data: { turbo: false } %>
+            <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info w-100", data: { turbo: false } %>
+          </div>
+        </div>
+
+        <!-- Sign Up options (hidden by default) -->
+        <div id="signUpOptions" class="d-none">
+          <div class="d-flex align-items-center mb-3">
+            <button class="btn btn-sm btn-link p-0 me-2" onclick="showMainMenu()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-left" viewBox="0 0 16 16">
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/>
+              </svg>
+            </button>
+            <h5 class="mb-0">Sign Up As</h5>
+          </div>
+          <div class="d-grid gap-2">
+            <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary w-100", data: { turbo: false } %>
+            <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success w-100", data: { turbo: false } %>
+            <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info w-100", data: { turbo: false } %>
+          </div>
         </div>
       <% end %>
     </div>
@@ -74,39 +109,32 @@
   </div>
 </div>
 
-<% unless hotwire_native_app? %>
-  <!-- Only include Bootstrap modals for web version -->
-  <!-- Sign In Modal -->
-  <div class="modal fade" id="signinModal" data-turbo="false" tabindex="-1" aria-labelledby="signinModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="signinModalLabel">Sign In As</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-grid gap-2">
-          <%= link_to "User", new_user_session_path, class: "btn btn-outline-primary w-100", data: { turbo: false } %>
-          <%= link_to "Owner", new_owner_session_path, class: "btn btn-outline-success w-100", data: { turbo: false } %>
-          <%= link_to "Artist", new_artist_session_path, class: "btn btn-outline-info w-100", data: { turbo: false } %>
-        </div>
-      </div>
-    </div>
-  </div>
+<script>
+  function showSignInOptions() {
+    document.getElementById('mainMenu').classList.add('d-none');
+    document.getElementById('signInOptions').classList.remove('d-none');
+    document.getElementById('signUpOptions').classList.add('d-none');
+  }
 
-  <!-- Sign Up Modal -->
-  <div class="modal fade" id="signupModal" data-turbo="false" tabindex="-1" aria-labelledby="signupModalLabel" aria-hidden="true">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="signupModalLabel">Sign Up As</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-        </div>
-        <div class="modal-body d-grid gap-2">
-          <%= link_to "User", new_user_registration_path, class: "btn btn-outline-primary w-100", data: { turbo: false } %>
-          <%= link_to "Owner", new_owner_registration_path, class: "btn btn-outline-success w-100", data: { turbo: false } %>
-          <%= link_to "Artist", new_artist_registration_path, class: "btn btn-outline-info w-100", data: { turbo: false } %>
-        </div>
-      </div>
-    </div>
-  </div>
-<% end %>
+  function showSignUpOptions() {
+    document.getElementById('mainMenu').classList.add('d-none');
+    document.getElementById('signUpOptions').classList.remove('d-none');
+    document.getElementById('signInOptions').classList.add('d-none');
+  }
+
+  function showMainMenu() {
+    document.getElementById('mainMenu').classList.remove('d-none');
+    document.getElementById('signInOptions').classList.add('d-none');
+    document.getElementById('signUpOptions').classList.add('d-none');
+  }
+
+  // Reset to main menu when offcanvas is hidden
+  document.addEventListener('DOMContentLoaded', function() {
+    const offcanvasEl = document.getElementById('accountMenu');
+    if (offcanvasEl) {
+      offcanvasEl.addEventListener('hidden.bs.offcanvas', function () {
+        showMainMenu();
+      });
+    }
+  });
+</script>
