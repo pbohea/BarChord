@@ -12,8 +12,8 @@ task sample_data: :environment do
     VenueRequest.destroy_all
     #Venue.destroy_all
     ArtistFollow.delete_all
-    Artist.destroy_all
-    User.destroy_all
+    #Artist.destroy_all
+    #User.destroy_all
     Owner.destroy_all
   end
 
@@ -59,75 +59,75 @@ task sample_data: :environment do
     "DJ specializing in dancefloor-filling mashups, throwbacks, and late-night energy sets. No skips.",
   ]
   # artists
-  artists = []
-  created_count = 0
-  attempts = 0
-  max_attempts = 2000  # Prevent infinite loops
+  # artists = []
+  # created_count = 0
+  # attempts = 0
+  # max_attempts = 2000  # Prevent infinite loops
   
-  while created_count < 2000 && attempts < max_attempts
-    attempts += 1
-    name = Faker::Name.first_name
-    email = "#{name.downcase}_artist@example.com"
-    username = "#{name.downcase} music"
+  # while created_count < 2000 && attempts < max_attempts
+  #   attempts += 1
+  #   name = Faker::Name.first_name
+  #   email = "#{name.downcase}_artist@example.com"
+  #   username = "#{name.downcase} music"
     
-    # Skip if email or username already exists
-    if Artist.exists?(email: email) || Artist.exists?(username: username)
-      next
-    end
+  #   # Skip if email or username already exists
+  #   if Artist.exists?(email: email) || Artist.exists?(username: username)
+  #     next
+  #   end
 
-    begin
-      artist = Artist.create!(
-        firstname: name,
-        email: email,
-        password: "Password1",
-        username: username,
-        genre: allowed_genres.sample,
-        category: allowed_categories.sample,
-        website: "https://example.com",
-        bio: bios.sample,
-        instagram_url: "https://www.google.com",
-        tiktok_url: "https://www.google.com",
-        youtube_url: "https://www.google.com",
-        spotify_url: "https://www.google.com",
-      )
+  #   begin
+  #     artist = Artist.create!(
+  #       firstname: name,
+  #       email: email,
+  #       password: "Password1",
+  #       username: username,
+  #       genre: allowed_genres.sample,
+  #       category: allowed_categories.sample,
+  #       website: "https://example.com",
+  #       bio: bios.sample,
+  #       instagram_url: "https://www.google.com",
+  #       tiktok_url: "https://www.google.com",
+  #       youtube_url: "https://www.google.com",
+  #       spotify_url: "https://www.google.com",
+  #     )
 
-      # Use local images from db/sample_images directory
-      image_files = Dir.glob(Rails.root.join('db', 'sample_images', '*.{jpg,jpeg,png,gif}'))
+  #     # Use local images from db/sample_images directory
+  #     image_files = Dir.glob(Rails.root.join('db', 'sample_images', '*.{jpg,jpeg,png,gif}'))
       
-      if image_files.any?
-        selected_image = image_files.sample
-        filename = File.basename(selected_image)
+  #     if image_files.any?
+  #       selected_image = image_files.sample
+  #       filename = File.basename(selected_image)
         
-        artist.image.attach(
-          io: File.open(selected_image),
-          filename: "#{name.downcase}_#{filename}",
-          content_type: "image/#{File.extname(selected_image)[1..-1]}"
-        )
-      else
-        # Fallback to online avatar if no local images found
-        avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
-        artist.image.attach(
-          io: URI.open(avatar_url),
-          filename: "#{name.downcase}.png",
-          content_type: "image/png",
-        )
-      end
+  #       artist.image.attach(
+  #         io: File.open(selected_image),
+  #         filename: "#{name.downcase}_#{filename}",
+  #         content_type: "image/#{File.extname(selected_image)[1..-1]}"
+  #       )
+  #     else
+  #       # Fallback to online avatar if no local images found
+  #       avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
+  #       artist.image.attach(
+  #         io: URI.open(avatar_url),
+  #         filename: "#{name.downcase}.png",
+  #         content_type: "image/png",
+  #       )
+  #     end
 
-      artists << artist
-      created_count += 1
-    rescue ActiveRecord::RecordInvalid => e
-      puts "Skipping duplicate artist: #{e.message}"
-      next
-    end
-  end
+  #     artists << artist
+  #     created_count += 1
+  #   rescue ActiveRecord::RecordInvalid => e
+  #     puts "Skipping duplicate artist: #{e.message}"
+  #     next
+  #   end
+  # end
   
-  puts "Created #{created_count} artists after #{attempts} attempts"
+  # puts "Created #{created_count} artists after #{attempts} attempts"
 
-  Artist.create!(
-    email: "artist@example.com",
-    password: "Password1",
-    username: "pat_artist",
-  )
+  # Artist.create!(
+  #   email: "artist@example.com",
+  #   password: "Password1",
+  #   username: "pat_artist",
+  # )
 
 
   cities = Venue.distinct.pluck(:city).compact
