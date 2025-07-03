@@ -1,7 +1,7 @@
 <% venue = events.venue %>
 <% artist = events.artist %>
 
-<div class="card border-0 shadow-lg mb-4 position-relative" style="border-radius: 24px; background-color: #ffffff;"
+<div class="card border-0 mb-4 position-relative" style="border-radius: 24px; background-color: #ffffff;"
      data-controller="event-card"
      data-event-card-url-value="<%= event_path(events) %>"
      data-action="click->event-card#goToEvent">
