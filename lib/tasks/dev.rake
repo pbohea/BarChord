@@ -17,8 +17,6 @@ task sample_data: :environment do
     Owner.destroy_all
   end
 
-  #safety switch for geocoding
-  #Venue.skip_callback(:save, :before, :geocode_address)
 
   #owners
   owners = []
