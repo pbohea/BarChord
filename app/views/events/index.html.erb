@@ -1,109 +1,116 @@
 <% content_for :title, "Upcoming Events Near You" %>
 
 <div class="container my-4" style="max-width: 540px;">
-  <!-- Location Search Section -->
+  <!-- Collapsible Location Search Section -->
   <div class="card mb-4 shadow-sm border-0">
-    <div class="card-body p-4">
+    <div class="card-header bg-white border-0 p-3">
+      <button class="btn btn-link text-decoration-none p-0 w-100 text-center d-flex justify-content-center align-items-center" 
+              type="button" 
+              onclick="toggleSearchForm()" 
+              id="searchToggleBtn">
+        <span class="fw-medium text-dark">
+          🔍 Search & Filter Events
+        </span>
+        <span class="text-muted position-absolute end-0" id="chevronIcon">▼</span>
+      </button>
+    </div>
     
-<div class="container my-4" style="max-width: 540px;">
-  <!-- Location Search Section -->
-  <div class="card mb-4 shadow-sm border-0">
-    <div class="card-body p-4">
+    <div class="collapse" id="searchForm" style="display: none;">
+      <div class="card-body p-4 pt-0">
+        <%= form_with url: events_path, method: :get, local: false, 
+                      data: { controller: "location-search", 
+                              "location-search-current-lat-value": params[:lat],
+                              "location-search-current-lng-value": params[:lng],
+                              "location-search-current-address-value": params[:address],
+                              "location-search-current-radius-value": params[:radius] || 5,
+                              turbo_frame: "events-container" } do |f| %>
 
-      <%= form_with url: events_path, method: :get, local: false, 
-                    data: { controller: "location-search", 
-                            "location-search-current-lat-value": params[:lat],
-                            "location-search-current-lng-value": params[:lng],
-                            "location-search-current-address-value": params[:address],
-                            "location-search-current-radius-value": params[:radius] || 5,
-                            turbo_frame: "events-container" } do |f| %>
-
-        <!-- Location Options -->
-        <div class="mb-3">
-          <label class="form-label small text-muted">Location</label>
-          
-          <div class="form-check mb-2">
-            <%= radio_button_tag :location_type, "address", true, 
-                class: "form-check-input", 
-                data: { "location-search-target": "addressRadio" } %>
-            <%= label_tag :location_type_address, "Enter address", class: "form-check-label" %>
+          <!-- Location Options -->
+          <div class="mb-3">
+            <label class="form-label small text-muted">Location</label>
+            
+            <div class="form-check mb-2">
+              <%= radio_button_tag :location_type, "address", true, 
+                  class: "form-check-input", 
+                  data: { "location-search-target": "addressRadio" } %>
+              <%= label_tag :location_type_address, "Enter address", class: "form-check-label" %>
+            </div>
+            
+            <%= f.text_field :address,
+                  placeholder: "Enter address or ZIP code",
+                  class: "form-control form-control-sm mb-2",
+                  value: params[:address],
+                  data: { "location-search-target": "addressInput" } %>
+            
+            <div class="form-check">
+              <%= radio_button_tag :location_type, "current", false, 
+                  class: "form-check-input", 
+                  data: { "location-search-target": "currentRadio", action: "change->location-search#getCurrentLocation" } %>
+              <%= label_tag :location_type_current, "Use my current location", class: "form-check-label" %>
+            </div>
           </div>
-          
-          <%= f.text_field :address,
-                placeholder: "Enter address or ZIP code",
-                class: "form-control form-control-sm mb-2",
-                value: params[:address],
-                data: { "location-search-target": "addressInput" } %>
-          
-          <div class="form-check">
-            <%= radio_button_tag :location_type, "current", false, 
-                class: "form-check-input", 
-                data: { "location-search-target": "currentRadio", action: "change->location-search#getCurrentLocation" } %>
-            <%= label_tag :location_type_current, "Use my current location", class: "form-check-label" %>
+
+          <!-- Search Radius -->
+          <div class="mb-3">
+            <%= f.label :radius, "Search Radius", class: "form-label small text-muted" %>
+            <%= f.select :radius,
+                  options_for_select([
+                    ['1 mi', 1], ['5 mi', 5], ['10 mi', 10],
+                    ['15 mi', 15], ['25 mi', 25], ['50 mi', 50]
+                  ], params[:radius] || 5),
+                  {}, 
+                  { class: "form-select form-select-sm",
+                    data: { 
+                      action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
+                    } } %>
           </div>
-        </div>
 
-        <!-- Search Radius -->
-        <div class="mb-3">
-          <%= f.label :radius, "Search Radius", class: "form-label small text-muted" %>
-          <%= f.select :radius,
-                options_for_select([
-                  ['1 mi', 1], ['5 mi', 5], ['10 mi', 10],
-                  ['15 mi', 15], ['25 mi', 25], ['50 mi', 50]
-                ], params[:radius] || 5),
-                {}, 
-                { class: "form-select form-select-sm",
-                  data: { 
-                    action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
-                  } } %>
-        </div>
+          <!-- Date Range -->
+          <div class="mb-3">
+            <%= f.label :date_range, "Show events for", class: "form-label small text-muted" %>
+            <%= f.select :date_range,
+                  options_for_select([
+                    ["Any Date", ""],
+                    ["Today", "today"],
+                    ["Next 7 Days", "next_7_days"]
+                  ], params[:date_range]),
+                  {}, 
+                  { class: "form-select form-select-sm",
+                    data: { 
+                      action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
+                    } } %>
+          </div>
 
-        <!-- Date Range -->
-        <div class="mb-3">
-          <%= f.label :date_range, "Show events for", class: "form-label small text-muted" %>
-          <%= f.select :date_range,
-                options_for_select([
-                  ["Any Date", ""],
-                  ["Today", "today"],
-                  ["Next 7 Days", "next_7_days"]
-                ], params[:date_range]),
-                {}, 
-                { class: "form-select form-select-sm",
-                  data: { 
-                    action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
-                  } } %>
-        </div>
+          <!-- Sort By -->
+          <div class="mb-3">
+            <%= f.label :sort_by, "Sort by", class: "form-label small text-muted" %>
+            <%= f.select :sort_by,
+                  options_for_select([
+                    ["Soonest First", "date"],
+                    ["Closest First", "distance"]
+                  ], params[:sort_by] || "date"),
+                  {}, 
+                  { class: "form-select form-select-sm",
+                    data: { 
+                      action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
+                    } } %>
+          </div>
 
-        <!-- Sort By -->
-        <div class="mb-3">
-          <%= f.label :sort_by, "Sort by", class: "form-label small text-muted" %>
-          <%= f.select :sort_by,
-                options_for_select([
-                  ["Soonest First", "date"],
-                  ["Closest First", "distance"]
-                ], params[:sort_by] || "date"),
-                {}, 
-                { class: "form-select form-select-sm",
-                  data: { 
-                    action: (params[:address].present? || params[:lat].present?) ? "change->location-search#autoSubmit" : ""
-                  } } %>
-        </div>
+          <!-- Error message container -->
+          <div id="location-error" class="alert alert-danger d-none mb-3" role="alert">
+            Please enter an address or use your current location before searching.
+          </div>
 
-        <!-- Error message container -->
-        <div id="location-error" class="alert alert-danger d-none mb-3" role="alert">
-          Please enter an address or use your current location before searching.
-        </div>
+          <!-- Submit Button -->
+          <div class="d-grid">
+            <%= f.submit "Search Events", class: "btn btn-primary btn-sm" %>
+          </div>
 
-        <!-- Submit Button -->
-        <div class="d-grid">
-          <%= f.submit "Search Events", class: "btn btn-primary btn-sm" %>
-        </div>
-
-        <!-- Hidden fields for coordinates -->
-        <%= f.hidden_field :lat, data: { "location-search-target": "latInput" } %>
-        <%= f.hidden_field :lng, data: { "location-search-target": "lngInput" } %>
-      <% end %>
-
+          <!-- Hidden fields for coordinates -->
+          <%= f.hidden_field :lat, data: { "location-search-target": "latInput" } %>
+          <%= f.hidden_field :lng, data: { "location-search-target": "lngInput" } %>
+        <% end %>
+      </div>
     </div>
   </div>
 
@@ -146,7 +153,6 @@
 
     <!-- Events List -->
     <% if @events&.any? %>
-
       <%= render partial: "events", collection: @events %>
     <% else %>
       <!-- Empty State -->
@@ -185,6 +191,20 @@
 </button>
 
 <script>
+  // Toggle search form function
+  function toggleSearchForm() {
+    const form = document.getElementById('searchForm');
+    const chevron = document.getElementById('chevronIcon');
+    
+    if (form.style.display === 'none' || form.style.display === '') {
+      form.style.display = 'block';
+      chevron.textContent = '▲';
+    } else {
+      form.style.display = 'none';
+      chevron.textContent = '▼';
+    }
+  }
+
   function scrollToTop() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   }
@@ -197,4 +217,27 @@
       btn.style.display = "none";
     }
   });
+
+  // Rotate chevron icon when collapse is toggled
+  document.addEventListener('DOMContentLoaded', function() {
+    const collapseElement = document.getElementById('searchForm');
+    const chevronIcon = document.querySelector('.bi-chevron-down');
+    
+    collapseElement.addEventListener('show.bs.collapse', function () {
+      chevronIcon.style.transform = 'rotate(180deg)';
+      chevronIcon.style.transition = 'transform 0.2s ease';
+    });
+    
+    collapseElement.addEventListener('hide.bs.collapse', function () {
+      chevronIcon.style.transform = 'rotate(0deg)';
+      chevronIcon.style.transition = 'transform 0.2s ease';
+    });
+  });
 </script>
+
+<style>
+  /* Remove focus outline on collapse button */
+  .btn-link:focus {
+    box-shadow: none;
+  }
+</style>
