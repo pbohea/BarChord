@@ -16,6 +16,11 @@
 #  created_at     :datetime         not null
 #  updated_at     :datetime         not null
 #  owner_id       :integer
+#  place_id       :string
+#
+# Indexes
+#
+#  index_venues_on_place_id  (place_id)
 #
 class Venue < ApplicationRecord
   belongs_to :owner, optional: true
@@ -32,6 +37,7 @@ class Venue < ApplicationRecord
 
   validates :name, :street_address, :city, :state, :zip_code, presence: true
   validates :website, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true
+  validates :place_id, uniqueness: true, allow_nil: true
 
   before_save :geocode_address, if: :address_changed?
 
