@@ -9,7 +9,7 @@
 
     <div class="card-body p-4">
       <%= form_with model: resource, as: resource_name, url: registration_path(resource_name), local: true, data: { turbo: false } do |f| %>
-        <%= devise_error_messages! %>
+        <%= render "devise/shared/error_messages", resource: resource %>
 
         <div class="row">
           <div class="col-md-6 mb-3">
@@ -80,6 +80,20 @@
               accept: "image/jpeg,image/png",
               class: "form-control form-control-lg",
               data: { image_preview_target: "input", action: "image-preview#previewImage" } %>
+        </div>
+
+        <div class="mb-3" data-controller="character-counter" data-character-counter-max-value="140">
+          <%= f.label :bio, "About Me", class: "form-label fw-medium" %>
+          <%= f.text_area :bio, 
+      class: "form-control form-control-lg", 
+      rows: 4,
+      maxlength: 140,
+      placeholder: "Tell fans about your music style, influences, and what makes your performances special...",
+      data: { action: "input->character-counter#input" } %>
+          <div class="form-text d-flex justify-content-between">
+            <span>Brief description of your music and style</span>
+            <span data-character-counter-target="count">0/140</span>
+          </div>
         </div>
 
         <div class="mb-3">

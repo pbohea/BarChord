@@ -5,12 +5,12 @@
   .required abbr {
     display: none;
   }
-  
+
   /* Hide all hints */
   .hint {
     display: none !important;
   }
-  
+
   /* Add red asterisk to the left of required field labels */
   .custom-required::before {
     content: "* ";
@@ -79,6 +79,26 @@
           </div>
 
           <%= f.file_field :image, accept: "image/jpeg,image/png", class: "form-control", data: { image_preview_target: "input", action: "image-preview#previewImage" } %>
+        </div>
+
+        <div class="mb-3" data-controller="character-counter" data-character-counter-max-value="140">
+          <%= f.input :bio, 
+      label: "About Me", 
+      as: :text,
+      input_html: { 
+        class: "form-control form-control-lg", 
+        rows: 4,
+        maxlength: 140,
+        placeholder: "Tell fans about your music style, influences, and what makes your performances special...",
+        data: { action: "input->character-counter#input" }
+      },
+      label_html: { class: "form-label fw-medium" },
+      wrapper: false,
+      hint: false %>
+          <div class="form-text d-flex justify-content-between">
+            <span>Brief description of your music and style</span>
+            <span data-character-counter-target="count">0/140</span>
+          </div>
         </div>
 
         <div class="mb-3">

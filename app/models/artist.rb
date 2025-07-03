@@ -33,6 +33,7 @@ class Artist < ApplicationRecord
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   validate :password_complexity
+  validates :bio, length: { maximum: 140, message: "must be 140 characters or less" }
 
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
@@ -45,8 +46,8 @@ class Artist < ApplicationRecord
 
   has_one_attached :image
 
-  GENRES = ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk"].freeze
-  PERFORMANCE_TYPES = ["Solo Guitar", "Solo Piano", "Band", "DJ"].freeze
+  GENRES = ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk", "Other"].freeze
+  PERFORMANCE_TYPES = ["Solo Guitar", "Solo Piano", "Band", "DJ", "Other"].freeze
 
   def upcoming_events
     events.upcoming
