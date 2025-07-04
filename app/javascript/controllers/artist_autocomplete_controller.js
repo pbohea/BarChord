@@ -1,7 +1,7 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "results", "hidden", "details", "username", "imageContainer", "bio", "verification", "submitButton"]
+  static targets = ["input", "results", "hidden", "details", "username", "imageContainer", "bio", "verification", "submitButton", "manualNameField"]
 
   connect() {
     console.log("Artist autocomplete controller connected")
@@ -13,6 +13,13 @@ export default class extends Controller {
         this.imageTarget.onerror = null // Prevent infinite loop
         this.imageTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23ddd%22/%3E%3Ctext x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2220%22 fill=%22%23999%22%3ENo Photo%3C/text%3E%3C/svg%3E'
       }
+    }
+    
+    // Add listener to manual name field
+    if (this.hasManualNameFieldTarget) {
+      this.manualNameFieldTarget.addEventListener('input', () => {
+        this.updateSubmitButton()
+      })
     }
   }
 
@@ -126,6 +133,14 @@ export default class extends Controller {
     if (this.hasVerificationTarget) {
       this.verificationTarget.checked = false
     }
+    
+    // Disable manual name field when artist is selected
+    if (this.hasManualNameFieldTarget) {
+      this.manualNameFieldTarget.disabled = true
+      this.manualNameFieldTarget.value = '' // Clear any existing value
+      this.manualNameFieldTarget.placeholder = 'Artist selected from database'
+    }
+    
     this.updateSubmitButton()
   }
 
@@ -142,6 +157,13 @@ export default class extends Controller {
     if (this.hasVerificationTarget) {
       this.verificationTarget.checked = false
     }
+    
+    // Re-enable manual name field when no artist is selected
+    if (this.hasManualNameFieldTarget) {
+      this.manualNameFieldTarget.disabled = false
+      this.manualNameFieldTarget.placeholder = 'Enter artist name'
+    }
+    
     this.updateSubmitButton()
   }
 
@@ -152,17 +174,38 @@ export default class extends Controller {
 
   updateSubmitButton() {
     console.log("updateSubmitButton called")
-    console.log("Has submit button target:", this.hasSubmitButtonTarget)
-    console.log("Has verification target:", this.hasVerificationTarget)
     
-    if (this.hasSubmitButtonTarget && this.hasVerificationTarget) {
-      const isChecked = this.verificationTarget.checked
-      console.log("Checkbox is checked:", isChecked)
-      console.log("Setting submit button disabled to:", !isChecked)
-      this.submitButtonTarget.disabled = !isChecked
-    } else {
-      console.log("Missing targets!")
+    if (!this.hasSubmitButtonTarget) {
+      console.log("No submit button target")
+      return
     }
+    
+    let canSubmit = false
+    
+    // Check if artist is selected from database and verified
+    if (this.hasVerificationTarget && this.hasHiddenTarget) {
+      const hasSelectedArtist = this.hiddenTarget.value !== ""
+      const isVerified = this.verificationTarget.checked
+      
+      if (hasSelectedArtist && isVerified) {
+        canSubmit = true
+        console.log("Can submit: Artist selected and verified")
+      }
+    }
+    
+    // Check if manual name is entered (only if no artist selected)
+    if (!canSubmit && this.hasManualNameFieldTarget && this.hasHiddenTarget) {
+      const hasSelectedArtist = this.hiddenTarget.value !== ""
+      const hasManualName = this.manualNameFieldTarget.value.trim().length > 0
+      
+      if (!hasSelectedArtist && hasManualName) {
+        canSubmit = true
+        console.log("Can submit: Manual name entered")
+      }
+    }
+    
+    console.log("Setting submit button disabled to:", !canSubmit)
+    this.submitButtonTarget.disabled = !canSubmit
   }
 
   // Legacy select method for backward compatibility
