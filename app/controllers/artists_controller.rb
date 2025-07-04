@@ -1,13 +1,31 @@
 class ArtistsController < ApplicationController
   before_action :set_artist, only: [:show, :dashboard, :venue_requests] # Add venue_requests here
 
+  # def search
+  #   query = params[:query].to_s.strip.downcase
+  #   artists = Artist.where("LOWER(username) LIKE ?", "%#{query}%")
+  #                   .select(:id, :username)
+  #                   .limit(5)
+
+  #   render json: artists
+  # end
+
   def search
     query = params[:query].to_s.strip.downcase
     artists = Artist.where("LOWER(username) LIKE ?", "%#{query}%")
-                    .select(:id, :username)
                     .limit(5)
 
-    render json: artists
+    # Build the response with proper image URLs
+    artists_json = artists.map do |artist|
+      {
+        id: artist.id,
+        username: artist.username,
+        bio: artist.bio || "",
+        image: artist.image.attached? ? url_for(artist.image) : nil,
+      }
+    end
+
+    render json: artists_json
   end
 
   def show

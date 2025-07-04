@@ -1,11 +1,19 @@
 import { Controller } from "@hotwired/stimulus"
 
 export default class extends Controller {
-  static targets = ["input", "results", "hidden", "details", "username", "image", "bio", "verification", "submitButton"]
+  static targets = ["input", "results", "hidden", "details", "username", "imageContainer", "bio", "verification", "submitButton"]
 
   connect() {
     console.log("Artist autocomplete controller connected")
     this.isSelecting = false
+    
+    // Set up a safe fallback for the image
+    if (this.hasImageTarget) {
+      this.imageTarget.onerror = () => {
+        this.imageTarget.onerror = null // Prevent infinite loop
+        this.imageTarget.src = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23ddd%22/%3E%3Ctext x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2220%22 fill=%22%23999%22%3ENo Photo%3C/text%3E%3C/svg%3E'
+      }
+    }
   }
 
   search() {
@@ -86,9 +94,22 @@ export default class extends Controller {
       console.log("Set username target")
     }
     
-    if (this.hasImageTarget) {
-      this.imageTarget.src = image || '/assets/default-avatar.png'
-      console.log("Set image target")
+    if (this.hasImageContainerTarget) {
+      // Create image element dynamically
+      const placeholderSVG = 'data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22%3E%3Ccircle cx=%2250%22 cy=%2250%22 r=%2240%22 fill=%22%23ddd%22/%3E%3Ctext x=%2250%22 y=%2255%22 text-anchor=%22middle%22 font-size=%2220%22 fill=%22%23999%22%3ENo Photo%3C/text%3E%3C/svg%3E'
+      
+      const img = document.createElement('img')
+      img.src = image || placeholderSVG
+      img.alt = 'Artist photo'
+      img.className = 'rounded-circle'
+      img.style.width = '80px'
+      img.style.height = '80px'
+      img.style.objectFit = 'cover'
+      
+      // Clear container and add new image
+      this.imageContainerTarget.innerHTML = ''
+      this.imageContainerTarget.appendChild(img)
+      console.log("Set image in container")
     }
     
     if (this.hasBioTarget) {
