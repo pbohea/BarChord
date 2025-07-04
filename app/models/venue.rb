@@ -41,8 +41,16 @@ class Venue < ApplicationRecord
 
   before_save :geocode_address, if: :address_changed?
 
-  CATEGORIES = ["Bar", "Jazz Club", "Nightclub", "Pub", "Cafe"].freeze
-
+ CATEGORIES = [
+    "Bar",
+    "Bar & Restaurant",
+    "Cafe",
+    "Jazz Club",
+    "Nightclub",
+    "Pub",
+    "Restaurant"
+  ].freeze
+  
   def full_address
     [street_address, city, state, zip_code].compact.join(", ")
   end

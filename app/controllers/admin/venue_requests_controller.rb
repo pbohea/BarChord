@@ -37,27 +37,50 @@ class Admin::VenueRequestsController < ApplicationController
   end
 
   def update_coordinates
-    venue = @venue_request.existing_venue || Venue.new(name: @venue_request.name)
+    # For existing venue claims, we need to update coordinates AND approve
+    if @venue_request.existing_venue_claim?
+      venue = @venue_request.existing_venue
 
-    venue.latitude = params[:latitude]
-    venue.longitude = params[:longitude]
+      # Update coordinates if provided
+      if params[:latitude].present? && params[:longitude].present?
+        venue.latitude = params[:latitude]
+        venue.longitude = params[:longitude]
+        venue.save!
+      end
 
-    if venue.new_record?
-      venue.assign_attributes(
+      # Use the model's approve method which handles ownership assignment
+      venue = @venue_request.approve_and_create_venue!
+
+      if venue
+        redirect_to admin_venue_requests_path, notice: "Coordinates updated and venue ownership assigned."
+      else
+        redirect_to admin_venue_requests_path, alert: "Failed to approve venue request."
+      end
+    else
+      # For new venue requests (your existing logic)
+      venue = Venue.new(
+        name: @venue_request.name,
         street_address: @venue_request.street_address,
         city: @venue_request.city,
         state: @venue_request.state,
         zip_code: @venue_request.zip_code,
         website: @venue_request.website,
         category: @venue_request.category,
+        latitude: params[:latitude],
+        longitude: params[:longitude],
       )
-    end
 
-    if venue.save
-      @venue_request.update(status: :approved, venue_id: venue.id)
-      redirect_to admin_venue_requests_path, notice: "Coordinates updated and venue approved."
-    else
-      redirect_to admin_venue_requests_path, alert: "Failed to save coordinates."
+      if venue.save
+        # Assign ownership if it's an ownership claim
+        if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
+          venue.update!(owner_id: @venue_request.requester_id)
+        end
+
+        @venue_request.update(status: :approved, venue_id: venue.id)
+        redirect_to admin_venue_requests_path, notice: "Coordinates updated and venue approved."
+      else
+        redirect_to admin_venue_requests_path, alert: "Failed to save coordinates."
+      end
     end
   end
 
