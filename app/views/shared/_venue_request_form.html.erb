@@ -56,7 +56,7 @@
 
       <div class="mb-3">
         <%= f.label :website, "Website (optional)", class: "form-label" %>
-        <%= f.url_field :website, class: "form-control", placeholder: "https://example.com" %>
+        <%= f.text_field :website, class: "form-control", placeholder: "https://example.com" %>
       </div>
 
       <% if owner_signed_in? %>
