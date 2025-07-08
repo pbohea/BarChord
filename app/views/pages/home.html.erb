@@ -1,30 +1,38 @@
 <% content_for :title, "Find Something" %>
 
-<div class="min-vh-100" style="background-color: #f8f9fa;">
-  <div class="px-3 py-5" style="max-width: 600px; margin: 0 auto;" data-controller="home-search">
-    <h1 class="text-center mb-4 display-6 fw-bold"
+<div class="min-vh-100 bg-light">
+  <div class="container py-5" style="max-width: 600px;" data-controller="home-search">
+    <h1 class="text-center mb-5 display-6 fw-bold"
         style="background: linear-gradient(90deg, #0d6efd, #4dabf7);
                -webkit-background-clip: text;
                -webkit-text-fill-color: transparent;">
       What are you looking for?
     </h1>
 
-    <!-- ===== VENUE ===== -->
+    <!-- ===== EVENTS LANDING ===== -->
+    <!-- ===== EVENTS LANDING ===== -->
+    <div class="mb-4 text-center">
+      <%= link_to "Find an Event →",
+              events_landing_path,
+              class: "btn btn-primary btn-lg w-100 rounded-pill shadow-sm" %>
+    </div>
+
+    <!-- ===== VENUE SEARCH ===== -->
     <div class="card border-0 shadow-lg mb-4 rounded-4 text-center" data-home-search-target="venueCard">
       <div class="card-body">
         <h5 class="fw-semibold mb-3">Search for a Venue</h5>
 
         <div data-controller="venue-autocomplete" class="position-relative">
           <input type="text"
-                 class="form-control mb-2 pe-5"
+                 class="form-control pe-5"
                  placeholder="Start typing…"
                  data-venue-autocomplete-target="input"
                  data-action="input->venue-autocomplete#search"
-                 data-home-search-target="venueInput" />
+          data-home-search-target="venueInput" />
 
           <!-- Clear button -->
           <button type="button"
-                  class="btn btn-sm position-absolute top-0 end-0 mt-1 me-2 text-muted"
+                  class="btn btn-sm position-absolute top-50 translate-middle-y end-0 me-2 text-muted"
                   style="z-index: 10;"
                   aria-label="Clear venue"
                   data-action="home-search#clearVenue">
@@ -36,7 +44,7 @@
                  data-home-search-target="venueHidden"
                  data-action="change->home-search#updateState">
 
-          <ul class="list-group small"
+          <ul class="list-group small mt-2"
               data-venue-autocomplete-target="results"
               style="border-radius: 0.5rem;"></ul>
         </div>
@@ -51,22 +59,22 @@
       </div>
     </div>
 
-    <!-- ===== ARTIST ===== -->
+    <!-- ===== ARTIST SEARCH ===== -->
     <div class="card border-0 shadow-lg mb-4 rounded-4 text-center" data-home-search-target="artistCard">
       <div class="card-body">
         <h5 class="fw-semibold mb-3">Search for an Artist</h5>
 
         <div data-controller="artist-autocomplete" class="position-relative">
           <input type="text"
-                 class="form-control mb-2 pe-5"
+                 class="form-control pe-5"
                  placeholder="Start typing…"
                  data-artist-autocomplete-target="input"
                  data-action="input->artist-autocomplete#search"
-                 data-home-search-target="artistInput" />
+          data-home-search-target="artistInput" />
 
           <!-- Clear button -->
           <button type="button"
-                  class="btn btn-sm position-absolute top-0 end-0 mt-1 me-2 text-muted"
+                  class="btn btn-sm position-absolute top-50 translate-middle-y end-0 me-2 text-muted"
                   style="z-index: 10;"
                   aria-label="Clear artist"
                   data-action="home-search#clearArtist">
@@ -78,7 +86,7 @@
                  data-home-search-target="artistHidden"
                  data-action="change->home-search#updateState">
 
-          <ul class="list-group small"
+          <ul class="list-group small mt-2"
               data-artist-autocomplete-target="results"
               style="border-radius: 0.5rem;"></ul>
         </div>
@@ -93,14 +101,5 @@
       </div>
     </div>
 
-    <!-- ===== EVENTS LANDING ===== -->
-    <div class="card border-0 shadow-lg text-center rounded-4">
-      <div class="card-body">
-        <h5 class="fw-semibold mb-3">Search for an Event</h5>
-        <%= link_to "Browse Events",
-                    events_landing_path,
-                    class: "btn btn-primary btn-lg w-100 rounded-pill" %>
-      </div>
-    </div>
   </div>
 </div>
