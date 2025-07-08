@@ -1,79 +1,88 @@
 <% content_for :title, "Find Something" %>
 
-<div class="container py-5" style="max-width: 600px;" data-controller="home-search">
-  <h1 class="mb-4 text-center">What are you looking for?</h1>
+<div class="min-vh-100" style="background-color: #f8f9fa;">
+  <div class="px-3 py-5" style="max-width: 600px; margin: 0 auto;" data-controller="home-search">
+    <h1 class="text-center mb-4 display-6 fw-bold"
+        style="background: linear-gradient(90deg, #0d6efd, #4dabf7);
+               -webkit-background-clip: text;
+               -webkit-text-fill-color: transparent;">
+      What are you looking for?
+    </h1>
 
-  <!-- ===== VENUE ===== -->
-  <div class="card shadow-sm mb-4" data-home-search-target="venueCard">
-    <div class="card-body">
-      <h5 class="card-title mb-3">Search for a Venue</h5>
+    <!-- ===== VENUE ===== -->
+    <div class="card border-0 shadow-lg mb-4 rounded-4 text-center" data-home-search-target="venueCard">
+      <div class="card-body">
+        <h5 class="fw-semibold mb-3">Search for a Venue</h5>
 
-      <div data-controller="venue-autocomplete">
-        <input type="text"
-               class="form-control mb-2"
-               placeholder="Start typing…"
-               data-venue-autocomplete-target="input"
-               data-action="input->venue-autocomplete#search"
-               data-home-search-target="venueInput" />
+        <div data-controller="venue-autocomplete">
+          <input type="text"
+                 class="form-control mb-2"
+                 placeholder="Start typing…"
+                 data-venue-autocomplete-target="input"
+                 data-action="input->venue-autocomplete#search"
+                 data-home-search-target="venueInput" />
 
-        <input type="hidden"
-               data-venue-autocomplete-target="hidden"
-               data-home-search-target="venueHidden"
-               data-action="change->home-search#updateState">
+          <input type="hidden"
+                 data-venue-autocomplete-target="hidden"
+                 data-home-search-target="venueHidden"
+                 data-action="change->home-search#updateState">
 
-        <ul class="list-group"
-            data-venue-autocomplete-target="results"></ul>
+          <ul class="list-group small"
+              data-venue-autocomplete-target="results"
+              style="border-radius: 0.5rem;"></ul>
+        </div>
+
+        <button type="button"
+                class="btn btn-primary w-100 mt-3 rounded-pill"
+                data-home-search-target="venueButton"
+                data-action="home-search#goToVenue"
+                disabled>
+          Go to Venue
+        </button>
       </div>
-
-      <button type="button"
-              class="btn btn-primary mt-3 w-100"
-              data-home-search-target="venueButton"
-              data-action="home-search#goToVenue"
-              disabled>
-        Go
-      </button>
     </div>
-  </div>
 
-  <!-- ===== ARTIST ===== -->
-  <div class="card shadow-sm mb-4" data-home-search-target="artistCard">
-    <div class="card-body">
-      <h5 class="card-title mb-3">Search for an Artist</h5>
+    <!-- ===== ARTIST ===== -->
+    <div class="card border-0 shadow-lg mb-4 rounded-4 text-center" data-home-search-target="artistCard">
+      <div class="card-body">
+        <h5 class="fw-semibold mb-3">Search for an Artist</h5>
 
-      <div data-controller="artist-autocomplete">
-        <input type="text"
-               class="form-control mb-2"
-               placeholder="Start typing…"
-               data-artist-autocomplete-target="input"
-               data-action="input->artist-autocomplete#search"
-               data-home-search-target="artistInput" />
+        <div data-controller="artist-autocomplete">
+          <input type="text"
+                 class="form-control mb-2"
+                 placeholder="Start typing…"
+                 data-artist-autocomplete-target="input"
+                 data-action="input->artist-autocomplete#search"
+                 data-home-search-target="artistInput" />
 
-        <input type="hidden"
-               data-artist-autocomplete-target="hidden"
-               data-home-search-target="artistHidden"
-               data-action="change->home-search#updateState">
+          <input type="hidden"
+                 data-artist-autocomplete-target="hidden"
+                 data-home-search-target="artistHidden"
+                 data-action="change->home-search#updateState">
 
-        <ul class="list-group"
-            data-artist-autocomplete-target="results"></ul>
+          <ul class="list-group small"
+              data-artist-autocomplete-target="results"
+              style="border-radius: 0.5rem;"></ul>
+        </div>
+
+        <button type="button"
+                class="btn btn-primary w-100 mt-3 rounded-pill"
+                data-home-search-target="artistButton"
+                data-action="home-search#goToArtist"
+                disabled>
+          Go to Artist
+        </button>
       </div>
-
-      <button type="button"
-              class="btn btn-primary mt-3 w-100"
-              data-home-search-target="artistButton"
-              data-action="home-search#goToArtist"
-              disabled>
-        Go
-      </button>
     </div>
-  </div>
 
-  <!-- ===== EVENTS LANDING ===== -->
-  <div class="card shadow-sm text-center">
-    <div class="card-body">
-      <h5 class="card-title mb-3">Search for an Event</h5>
-      <%= link_to "Browse Events",
-                  events_landing_path,
-                  class: "btn btn-primary btn-lg w-100" %>
+    <!-- ===== EVENTS LANDING ===== -->
+    <div class="card border-0 shadow-lg text-center rounded-4">
+      <div class="card-body">
+        <h5 class="fw-semibold mb-3">Search for an Event</h5>
+        <%= link_to "Browse Events",
+                    events_landing_path,
+                    class: "btn btn-primary btn-lg w-100 rounded-pill" %>
+      </div>
     </div>
   </div>
 </div>
