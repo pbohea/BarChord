@@ -23,7 +23,7 @@ Rails.application.routes.draw do
                          unlocks: "artists/unlocks",
                        }
 
-  root to: "events#landing"
+  root to: "pages#home"
 
   get "map", to: "events#map_landing"
   get "events/map", to: "events#map"

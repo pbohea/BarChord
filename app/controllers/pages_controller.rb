@@ -8,6 +8,9 @@ class PagesController < ApplicationController
   def owners_about
   end
 
+  def home
+  end
+
   def menu
     # Force no caching for the menu page - this is crucial for iOS
     response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate, private"
