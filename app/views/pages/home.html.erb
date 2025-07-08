@@ -14,13 +14,22 @@
       <div class="card-body">
         <h5 class="fw-semibold mb-3">Search for a Venue</h5>
 
-        <div data-controller="venue-autocomplete">
+        <div data-controller="venue-autocomplete" class="position-relative">
           <input type="text"
-                 class="form-control mb-2"
+                 class="form-control mb-2 pe-5"
                  placeholder="Start typing…"
                  data-venue-autocomplete-target="input"
                  data-action="input->venue-autocomplete#search"
                  data-home-search-target="venueInput" />
+
+          <!-- Clear button -->
+          <button type="button"
+                  class="btn btn-sm position-absolute top-0 end-0 mt-1 me-2 text-muted"
+                  style="z-index: 10;"
+                  aria-label="Clear venue"
+                  data-action="home-search#clearVenue">
+            &times;
+          </button>
 
           <input type="hidden"
                  data-venue-autocomplete-target="hidden"
@@ -47,13 +56,22 @@
       <div class="card-body">
         <h5 class="fw-semibold mb-3">Search for an Artist</h5>
 
-        <div data-controller="artist-autocomplete">
+        <div data-controller="artist-autocomplete" class="position-relative">
           <input type="text"
-                 class="form-control mb-2"
+                 class="form-control mb-2 pe-5"
                  placeholder="Start typing…"
                  data-artist-autocomplete-target="input"
                  data-action="input->artist-autocomplete#search"
                  data-home-search-target="artistInput" />
+
+          <!-- Clear button -->
+          <button type="button"
+                  class="btn btn-sm position-absolute top-0 end-0 mt-1 me-2 text-muted"
+                  style="z-index: 10;"
+                  aria-label="Clear artist"
+                  data-action="home-search#clearArtist">
+            &times;
+          </button>
 
           <input type="hidden"
                  data-artist-autocomplete-target="hidden"
