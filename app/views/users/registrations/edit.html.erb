@@ -38,6 +38,7 @@
 
         <div class="mb-3">
           <%= f.input :password,
+                      label: "New Password",
                       required: false,
                       hint: false,
                       input_html: { autocomplete: "new-password", class: "form-control" },
@@ -46,6 +47,7 @@
 
         <div class="mb-3">
           <%= f.input :password_confirmation,
+                      label: " Confirm New Password",
                       required: false,
                       hint: false,
                       input_html: { autocomplete: "new-password", class: "form-control" },
