@@ -1,13 +1,10 @@
 <% content_for :title, "My Venue Requests" %>
 
 <div class="container my-5" style="max-width: 720px;">
-  <div class="d-flex justify-content-between align-items-center mb-4">
-    <h1>My Venue Requests</h1>
-    <%= link_to "← Back to Dashboard", owner_dashboard_path(@owner), class: "btn btn-outline-secondary" %>
-  </div>
+
 
   <% if @venue_requests.any? %>
-    <div class="row row-cols-1 g-3">
+    <div class="row row-cols-1 g-3 pt-4">
       <% @venue_requests.each do |request| %>
         <div class="col">
           <div class="card shadow-sm">
