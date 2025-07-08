@@ -3,7 +3,7 @@
 <div class="container py-5" style="max-width: 600px;" data-controller="home-search">
   <h1 class="mb-4 text-center">What are you looking for?</h1>
 
-  <!-- ---------- VENUE SEARCH ---------- -->
+  <!-- ===== VENUE ===== -->
   <div class="card shadow-sm mb-4" data-home-search-target="venueCard">
     <div class="card-body">
       <h5 class="card-title mb-3">Search for a Venue</h5>
@@ -12,28 +12,30 @@
         <input type="text"
                class="form-control mb-2"
                placeholder="Start typing…"
-               data-action="input->venue-autocomplete#search"
                data-venue-autocomplete-target="input"
+               data-action="input->venue-autocomplete#search"
                data-home-search-target="venueInput" />
 
         <input type="hidden"
                data-venue-autocomplete-target="hidden"
-               data-home-search-target="venueHidden">
+               data-home-search-target="venueHidden"
+               data-action="change->home-search#updateState">
 
         <ul class="list-group"
             data-venue-autocomplete-target="results"></ul>
       </div>
 
-      <button class="btn btn-primary mt-3 w-100"
-              data-action="home-search#goToVenue"
+      <button type="button"
+              class="btn btn-primary mt-3 w-100"
               data-home-search-target="venueButton"
+              data-action="home-search#goToVenue"
               disabled>
         Go
       </button>
     </div>
   </div>
 
-  <!-- ---------- ARTIST SEARCH ---------- -->
+  <!-- ===== ARTIST ===== -->
   <div class="card shadow-sm mb-4" data-home-search-target="artistCard">
     <div class="card-body">
       <h5 class="card-title mb-3">Search for an Artist</h5>
@@ -42,32 +44,36 @@
         <input type="text"
                class="form-control mb-2"
                placeholder="Start typing…"
-               data-action="input->artist-autocomplete#search"
                data-artist-autocomplete-target="input"
+               data-action="input->artist-autocomplete#search"
                data-home-search-target="artistInput" />
 
         <input type="hidden"
                data-artist-autocomplete-target="hidden"
-               data-home-search-target="artistHidden">
+               data-home-search-target="artistHidden"
+               data-action="change->home-search#updateState">
 
         <ul class="list-group"
             data-artist-autocomplete-target="results"></ul>
       </div>
 
-      <button class="btn btn-primary mt-3 w-100"
-              data-action="home-search#goToArtist"
+      <button type="button"
+              class="btn btn-primary mt-3 w-100"
               data-home-search-target="artistButton"
+              data-action="home-search#goToArtist"
               disabled>
         Go
       </button>
     </div>
   </div>
 
-  <!-- ---------- EVENT LANDING ---------- -->
+  <!-- ===== EVENTS LANDING ===== -->
   <div class="card shadow-sm text-center">
     <div class="card-body">
       <h5 class="card-title mb-3">Search for an Event</h5>
-      <%= link_to "Browse Events", events_landing_path, class: "btn btn-primary btn-lg w-100" %>
+      <%= link_to "Browse Events",
+                  events_landing_path,
+                  class: "btn btn-primary btn-lg w-100" %>
     </div>
   </div>
 </div>
