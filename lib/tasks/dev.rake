@@ -13,7 +13,7 @@ task sample_data: :environment do
     #Venue.destroy_all
     ArtistFollow.delete_all
     #Artist.destroy_all
-    #User.destroy_all
+    User.destroy_all
     Owner.destroy_all
   end
 
@@ -58,7 +58,7 @@ task sample_data: :environment do
     "Soulful solo artist bringing smooth vocals and acoustic takes on R&B classics. Ideal for date nights and dim lighting.",
     "DJ specializing in dancefloor-filling mashups, throwbacks, and late-night energy sets. No skips.",
   ]
-  # artists
+  artists = Artist.all 
   # artists = []
   # created_count = 0
   # attempts = 0
