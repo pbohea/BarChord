@@ -5,7 +5,7 @@ task sample_data: :environment do
   require "uri"
   require "open-uri"
 
-  #if Rails.env.development?
+  if Rails.env.development?
     puts "Deleting existing records..."
     Event.destroy_all
     VenueFollow.delete_all
@@ -15,7 +15,7 @@ task sample_data: :environment do
     #Artist.destroy_all
     User.destroy_all
     Owner.destroy_all
-  #end
+  end
 
 
   #owners
