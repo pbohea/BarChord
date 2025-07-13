@@ -91,8 +91,8 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-        notify_followers(@event)
-        notify_artist(@event)
+        # notify_followers(@event)
+        # notify_artist(@event)
 
         # Redirect based on who created the event
         if artist_signed_in?
@@ -108,6 +108,7 @@ class EventsController < ApplicationController
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
+    NewEventNotifier.with(event: @event).deliver(@event.artist.followers)
   end
 
   # PATCH/PUT /events/1
@@ -390,19 +391,19 @@ class EventsController < ApplicationController
   end
 
   # notifications
-  def notify_followers(event)
-    artist = event.artist
-    return unless artist
+  # def notify_followers(event)
+  #   artist = event.artist
+  #   return unless artist
 
-    artist.followers.each do |user|
-      NewEventNotifier.with(event: event).deliver(user)
-    end
-  end
+  #   artist.followers.each do |user|
+  #     NewEventNotifier.with(event: event).deliver(user)
+  #   end
+  # end
 
-  def notify_artist(event)
-    artist = event.artist
-    return unless artist
+  # def notify_artist(event)
+  #   artist = event.artist
+  #   return unless artist
 
-    NewEventNotifier.with(event: event).deliver(artist)
-  end
+  #   NewEventNotifier.with(event: event).deliver(artist)
+  # end
 end

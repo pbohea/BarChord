@@ -15,7 +15,7 @@
 #  index_notification_tokens_on_notifiable  (notifiable_type,notifiable_id)
 #
 class NotificationToken < ApplicationRecord
-  belongs_to :notifiable, polymorphic:true
+  belongs_to :user
 
   validates :token, presence: true
   validates :platform, inclusion: {in: %w[iOS]}

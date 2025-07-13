@@ -31,7 +31,7 @@ class User < ApplicationRecord
   has_many :followed_artists, through: :artist_follows, source: :artist
   has_many :venue_follows, dependent: :destroy
   has_many :followed_venues, through: :venue_follows, source: :venue
-  has_many :notification_tokens, as: :notifiable, dependent: :destroy
+  has_many :notification_tokens
 
   def password_complexity
     return if password.blank?
