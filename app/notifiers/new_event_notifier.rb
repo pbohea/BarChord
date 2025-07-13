@@ -5,9 +5,10 @@ class NewEventNotifier < ApplicationNotifier
       recipient.notification_tokens.where(platform: :iOS).pluck(:token)
     }
     config.format = ->(apn) {
+      puts "🚨 Formatting APN payload"
       apn.alert = "New event uploaded!"
       apn.custom_payload = {
-        path: Rails.application.routes.url_helpers.event_path(params[:event]),
+        path: event_path(params[:event]),
       }
     }
     credentials = Rails.application.credentials.ios
