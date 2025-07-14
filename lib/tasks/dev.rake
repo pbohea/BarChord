@@ -13,6 +13,7 @@ task sample_data: :environment do
     #Venue.destroy_all
     ArtistFollow.delete_all
     #Artist.destroy_all
+    NotificationToken.delete_all
     User.destroy_all
     Owner.destroy_all
   end
