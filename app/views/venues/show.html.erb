@@ -2,6 +2,12 @@
 
 <%= turbo_stream_from "zebra"%> 
 
+<% if user_signed_in? %>
+  signed in
+<% else %>
+  not signed in
+<% end %>
+
 <div class="min-vh-100" style="background-color: #f8f9fa;">
   <div class="px-3 pt-4" style="max-width: 500px; margin: 0 auto;">
 
