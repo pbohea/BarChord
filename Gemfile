@@ -77,6 +77,7 @@ gem "validate_url"
 gem "carrierwave"
 gem "cloudinary"
 gem "kaminari"
+gem "foreman"
 
 group :development do
   gem "annotaterb"
