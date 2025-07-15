@@ -9,6 +9,8 @@ class ArtistFollowsController < ApplicationController
     respond_to do |format|
       format.turbo_stream  # renders create.turbo_stream.erb
       format.html { redirect_to @artist }
+      Turbo::StreamsChannel.broadcast_refresh_to "elephant"
+
     end
   end
 
