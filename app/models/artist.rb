@@ -4,7 +4,6 @@
 #
 #  id                     :bigint           not null, primary key
 #  bio                    :text
-#  category               :string
 #  email                  :string           default(""), not null
 #  encrypted_password     :string           default(""), not null
 #  firstname              :string
@@ -42,7 +41,6 @@ class Artist < ApplicationRecord
   has_many :venues, through: :events
   has_many :artist_follows
   has_many :followers, through: :artist_follows, source: :user
-  has_many :notification_tokens, as: :notifiable, dependent: :destroy
 
   has_one_attached :image
 
