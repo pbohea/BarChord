@@ -73,8 +73,8 @@ class Event < ApplicationRecord
   end
 
   def set_category_from_artist
-    if artist_id.present? && artist.present? && artist.category.present?
-      self.category = artist.category
+    if artist_id.present? && artist.present? && artist.performance_type.present?
+      self.category = artist.performance_type
     end
   end
 
