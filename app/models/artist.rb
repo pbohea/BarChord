@@ -1,3 +1,33 @@
+# == Schema Information
+#
+# Table name: artists
+#
+#  id                     :bigint           not null, primary key
+#  bio                    :text
+#  email                  :string           default(""), not null
+#  encrypted_password     :string           default(""), not null
+#  firstname              :string
+#  genre                  :string
+#  image                  :string
+#  instagram_url          :string
+#  lastname               :string
+#  performance_type       :string
+#  remember_created_at    :datetime
+#  reset_password_sent_at :datetime
+#  reset_password_token   :string
+#  spotify_url            :string
+#  tiktok_url             :string
+#  username               :string
+#  website                :string
+#  youtube_url            :string
+#  created_at             :datetime         not null
+#  updated_at             :datetime         not null
+#
+# Indexes
+#
+#  index_artists_on_email                 (email) UNIQUE
+#  index_artists_on_reset_password_token  (reset_password_token) UNIQUE
+#
 class Artist < ApplicationRecord
   require 'net/http'
   require 'uri'
