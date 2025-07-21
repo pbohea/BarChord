@@ -9,7 +9,6 @@ class VenuesController < ApplicationController
   def show
     @upcoming_events = @venue.events.upcoming
     @venue = Venue.find(params[:id])
-    Turbo::StreamsChannel.broadcast_refresh_to "zebra"
 
     respond_to do |format|
       format.html do

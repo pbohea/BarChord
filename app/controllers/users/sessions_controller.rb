@@ -4,7 +4,6 @@ class Users::SessionsController < Devise::SessionsController
   def create
     super do |user|
       track_user_session(user)
-      Turbo::StreamsChannel.broadcast_refresh_to "zebra"
     end
   end
 
