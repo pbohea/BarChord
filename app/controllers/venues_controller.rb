@@ -9,6 +9,8 @@ class VenuesController < ApplicationController
   def show
     @upcoming_events = @venue.events.upcoming
     @venue = Venue.find(params[:id])
+    @past_events = @venue.events.past.limit(10)
+
 
     respond_to do |format|
       format.html do

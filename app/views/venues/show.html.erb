@@ -12,7 +12,7 @@
                class="rounded-circle border border-white border-3 mb-3" 
                style="width: 120px; height: 120px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
         <% else %>
-<!--          <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center"
+          <!--          <div class="rounded-circle bg-secondary mb-3 d-flex align-items-center justify-content-center"
                style="width: 120px; height: 120px; color: white;">
             <i class="fas fa-music fa-2x"></i>
           </div>-->
@@ -66,7 +66,7 @@
             <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2"
                  style="font-size: 0.9rem;">
               <i class="bi bi-clock me-1"></i>
-              <%= event.date.strftime("%A, %b %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %>
+              <%= event.date.strftime("%A, %b %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %> - <%= event.end_time.strftime("%-I:%M %p") %>
             </div>
             <br>
             <small>
@@ -79,6 +79,36 @@
       <% end %>
     <% else %>
       <p class="text-muted text-center">No upcoming events.</p>
+    <% end %>
+
+    <!-- Past Events -->
+    <h5 class="text-center text-muted mb-3 mt-5">Past Events</h5>
+
+    <% if @past_events.any? %>
+      <% @past_events.each do |event| %>
+        <div class="card mb-3 shadow-sm border-0 rounded-4" style="background-color: #ffffff;">
+          <div class="card-body text-center p-3"
+           data-controller="event-card"
+           data-event-card-url-value="<%= event_path(event) %>"
+           data-action="click->event-card#goToEvent"
+            style="cursor: pointer;">
+
+            <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2"
+             style="font-size: 0.9rem;">
+              <i class="bi bi-clock me-1"></i>
+              <%= event.date.strftime("%A, %b %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %> - <%= event.end_time.strftime("%-I:%M %p") %>
+            </div>
+            <br>
+            <small>
+              <%= link_to event.artist.username, artist_path(event.artist),
+                      class: "text-decoration-none",
+                      onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+            </small>
+          </div>
+        </div>
+      <% end %>
+    <% else %>
+      <p class="text-muted text-center">No past events.</p>
     <% end %>
 
   </div>
