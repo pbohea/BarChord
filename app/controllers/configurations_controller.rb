@@ -12,6 +12,7 @@ class ConfigurationsController < ApplicationController
           patterns: [
             "/new$",
             "/edit$",
+            "/about$",
           ],
           properties: {
             context: "modal",
