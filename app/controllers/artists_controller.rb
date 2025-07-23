@@ -31,11 +31,13 @@ class ArtistsController < ApplicationController
   def show
     @artist = Artist.find(params[:id])
     @upcoming_events = @artist.events.upcoming
+    @past_events = @artist.events.past.limit(10)
   end
 
   def events
     @artist = Artist.find(params[:id])
     @upcoming_events = @artist.events.upcoming
+    @past_events = @artist.events.past.limit(10)
   end
 
   def dashboard

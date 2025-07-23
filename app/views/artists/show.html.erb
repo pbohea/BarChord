@@ -85,7 +85,7 @@
             <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2"
                  style="font-size: 0.9rem;">
               <i class="bi bi-clock me-1"></i>
-              <%= event.date.strftime("%A, %b %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %>
+              <%= event.date.strftime("%A, %b %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %> - <%= event.end_time.strftime("%-I:%M %p") %>
             </div>
             <br>
             <small>
@@ -98,6 +98,34 @@
       <% end %>
     <% else %>
       <p class="text-muted text-center">No upcoming events.</p>
+    <% end %>
+
+    <!-- Past Events -->
+    <% if @past_events.any? %>
+      <h5 class="text-center text-muted mb-3 mt-5">Past Events</h5>
+
+      <% @past_events.each do |event| %>
+        <div class="card mb-3 shadow-sm border-0 rounded-4" style="background-color: #ffffff;">
+          <div class="card-body text-center p-3"
+           data-controller="event-card"
+           data-event-card-url-value="<%= event_path(event) %>"
+           data-action="click->event-card#goToEvent"
+            style="cursor: pointer;">
+
+            <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2"
+             style="font-size: 0.9rem;">
+              <i class="bi bi-clock me-1"></i>
+              <%= event.date.strftime("%A, %b %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %>
+            </div>
+            <br>
+            <small>
+              at <%= link_to event.venue.name, venue_path(event.venue),
+                        class: "text-decoration-none",
+                        onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+            </small>
+          </div>
+        </div>
+      <% end %>
     <% end %>
 
   </div>
