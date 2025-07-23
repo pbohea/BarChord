@@ -32,6 +32,10 @@ class Event < ApplicationRecord
 
   validate :artist_presence
 
+  def past?
+    end_time.present? ? end_time < Time.current : date < Date.today
+  end
+
   private
 
   def adjust_end_time_for_overnight_events
@@ -77,7 +81,6 @@ class Event < ApplicationRecord
       self.category = artist.performance_type
     end
   end
-
 
   def artist_presence
     if artist_id.blank? && artist_name.blank?

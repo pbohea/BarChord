@@ -23,6 +23,14 @@
       <% end %>
 
       <div class="card-body text-center">
+
+        <% if @event.past? %>
+          <div class="mb-3 fw-semibold text-danger" style="font-size: 0.9rem;">
+            <i class="bi bi-exclamation-circle me-1"></i>
+            This event has ended
+          </div>
+        <% end %>
+
         <!-- Artist Image -->
         <div class="d-inline-block mb-4">
           <% if @event.artist&.image&.attached? %>

@@ -82,9 +82,10 @@
     <% end %>
 
     <!-- Past Events -->
-    <h5 class="text-center text-muted mb-3 mt-5">Past Events</h5>
 
     <% if @past_events.any? %>
+    <h5 class="text-center text-muted mb-3 mt-5">Past Events</h5>
+
       <% @past_events.each do |event| %>
         <div class="card mb-3 shadow-sm border-0 rounded-4" style="background-color: #ffffff;">
           <div class="card-body text-center p-3"
@@ -108,7 +109,6 @@
         </div>
       <% end %>
     <% else %>
-      <p class="text-muted text-center">No past events.</p>
     <% end %>
 
   </div>
