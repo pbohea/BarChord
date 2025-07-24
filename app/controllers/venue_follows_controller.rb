@@ -8,7 +8,7 @@ class VenueFollowsController < ApplicationController
     respond_to do |format|
       format.turbo_stream  # renders create.turbo_stream.erb
       format.html { redirect_to @venue }
-      Turbo::StreamsChannel.broadcast_refresh_to "giraffe"
+      # Turbo::StreamsChannel.broadcast_refresh_to "giraffe"
 
     end
   end
