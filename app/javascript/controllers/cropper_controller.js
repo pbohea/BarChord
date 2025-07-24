@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import Cropper from "cropperjs"
 
 export default class extends Controller {
-  static targets = ["input", "preview", "cropButton"]
+  static targets = ["input", "preview", "saveButton"]
 
   connect() {
     this.cropper = null
@@ -39,8 +39,8 @@ export default class extends Controller {
           zoomable: false,
         })
 
-        // Show crop button after cropper is ready
-        this.cropButtonTarget.classList.remove("d-none")
+        // Show "Save" button once cropper is initialized
+        this.saveButtonTarget.classList.remove("d-none")
       }
 
       if (this.previewTarget.complete && this.previewTarget.naturalWidth !== 0) {
@@ -54,36 +54,38 @@ export default class extends Controller {
   }
 
   cropAndReplace() {
-    if (!this.cropper || typeof this.cropper.getCroppedCanvas !== "function") {
-      alert("Please wait for the image to load before cropping.")
+  if (!this.cropper || typeof this.cropper.getCroppedCanvas !== "function") {
+    alert("Please wait for the image to load before saving.")
+    return
+  }
+
+  const canvas = this.cropper.getCroppedCanvas({
+    width: 160,
+    height: 160,
+    imageSmoothingEnabled: true,
+    imageSmoothingQuality: "high"
+  })
+
+  canvas.toBlob(blob => {
+    if (!blob) {
+      alert("Failed to crop image.")
       return
     }
 
-    const canvas = this.cropper.getCroppedCanvas({
-      width: 120,
-      height: 120,
-      imageSmoothingEnabled: true,
-      imageSmoothingQuality: "high"
-    })
+    const uniqueFilename = `artist_${Date.now()}.jpg`
+    const file = new File([blob], uniqueFilename, { type: "image/jpeg" })
 
-    canvas.toBlob(blob => {
-      if (!blob) {
-        alert("Failed to crop image.")
-        return
-      }
+    const dataTransfer = new DataTransfer()
+    dataTransfer.items.add(file)
+    this.inputTarget.files = dataTransfer.files
 
-      const uniqueFilename = `artist_${Date.now()}.jpg`
-      const file = new File([blob], uniqueFilename, { type: "image/jpeg" })
-
-      const dataTransfer = new DataTransfer()
-      dataTransfer.items.add(file)
-      this.inputTarget.files = dataTransfer.files
-
-      const previewEl = document.getElementById("cropper-preview-result")
-      if (previewEl) {
-        previewEl.src = URL.createObjectURL(blob)
-        previewEl.classList.remove("d-none")
-      }
-    }, "image/jpeg")
-  }
+    const previewEl = document.getElementById("cropper-preview-result")
+    const labelEl = document.getElementById("cropped-preview-label")
+    if (previewEl && labelEl) {
+      previewEl.src = URL.createObjectURL(blob)
+      previewEl.classList.remove("d-none")
+      labelEl.classList.remove("d-none")
+    }
+  }, "image/jpeg")
+}
 }

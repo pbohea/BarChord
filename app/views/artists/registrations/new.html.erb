@@ -63,25 +63,9 @@
           <%= f.text_field :spotify_url, class: "form-control form-control-lg" %>
         </div>
 
-       <!-- Profile Photo Cropper -->
+<!-- Profile Photo Cropper -->
 <div class="mb-4" data-controller="cropper">
   <%= f.label :image, "Profile Photo", class: "form-label fw-medium" %>
-
-  <!-- Wrap preview + button in a relatively positioned container -->
-  <div class="position-relative d-inline-block mb-2" style="max-width: 300px;">
-    <img data-cropper-target="preview" class="img-thumbnail d-none" style="max-width: 300px;" />
-
-    <!-- Hidden crop button, absolutely positioned in top-right -->
-    <button
-      type="button"
-      data-action="click->cropper#cropAndReplace"
-      data-cropper-target="cropButton"
-      class="btn btn-sm btn-outline-secondary position-absolute d-none"
-      style="top: 5px; right: 5px; z-index: 10;"
-    >
-      Crop Image
-    </button>
-  </div>
 
   <!-- File input -->
   <%= f.file_field :image,
@@ -89,23 +73,42 @@
       class: "form-control form-control-lg",
       data: { "cropper-target": "input", action: "change->cropper#previewImage" } %>
 
-  <% if f.object.persisted? && f.object.image.attached? %>
-    <div class="mt-3">
-      <%= image_tag f.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
-    </div>
-  <% end %>
+  <!-- Cropping interface -->
+  <div class="mt-3 d-flex justify-content-center">
+    <img data-cropper-target="preview"
+         class="img-thumbnail d-none"
+         style="max-width: 300px; border-radius: 50%;" />
+  </div>
 
-  <!-- Final preview matching artist profile -->
-  <div class="mt-3 text-center">
+  <!-- Final cropped preview label -->
+  <div class="text-center mt-4 d-none" id="cropped-preview-label">
+    <p class="fw-semibold mb-1">How your image will show on your profile</p>
+  </div>
+
+  <!-- Final cropped preview -->
+  <div class="text-center">
     <img
       id="cropper-preview-result"
       src=""
       class="d-none rounded-circle border border-white"
-      style="width: 120px; height: 120px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);"
+      style="width: 160px; height: 160px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);"
       alt="Cropped preview"
     />
   </div>
+
+  <!-- Save button -->
+  <div class="text-center mt-3 d-none" data-cropper-target="saveButton">
+    <button type="button"
+            class="btn btn-sm btn-outline-primary"
+            data-action="click->cropper#cropAndReplace">
+      Save
+    </button>
+  </div>
 </div>
+
+
+
+
 
         <div class="mb-3" data-controller="character-counter" data-character-counter-max-value="140">
           <%= f.label :bio, "About Me", class: "form-label fw-medium" %>
