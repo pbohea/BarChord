@@ -63,33 +63,49 @@
           <%= f.text_field :spotify_url, class: "form-control form-control-lg" %>
         </div>
 
-        <div class="mb-4" data-controller="image-preview">
+        <!-- Profile Photo Cropper -->
+        <div class="mb-4" data-controller="cropper">
           <%= f.label :image, "Profile Photo", class: "form-label fw-medium" %>
 
-          <div data-image-preview-target="container" class="mb-2 d-none">
-            <img data-image-preview-target="preview" class="img-thumbnail" style="max-width: 300px;" />
+          <div class="mb-2">
+            <img data-cropper-target="preview" class="img-thumbnail d-none" style="max-width: 300px;" />
           </div>
-
-          <% if f.object.persisted? && f.object.image.attached? %>
-            <div class="mb-2">
-              <%= image_tag f.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
-            </div>
-          <% end %>
 
           <%= f.file_field :image,
               accept: "image/jpeg,image/png",
               class: "form-control form-control-lg",
-              data: { image_preview_target: "input", action: "image-preview#previewImage" } %>
+              data: { "cropper-target": "input", action: "change->cropper#previewImage" } %>
+
+          <button type="button" class="btn btn-sm btn-outline-secondary mt-2" data-action="click->cropper#cropAndReplace">
+            Crop Image
+          </button>
+
+          <% if f.object.persisted? && f.object.image.attached? %>
+            <div class="mt-3">
+              <%= image_tag f.object.image.variant(resize_to_limit: [300, 300]), class: "img-thumbnail" %>
+            </div>
+          <% end %>
+
+          <!-- Final preview matching artist profile -->
+          <div class="mt-3 text-center">
+            <img
+              id="cropper-preview-result"
+              src=""
+              class="d-none rounded-circle border border-white"
+              style="width: 120px; height: 120px; object-fit: cover; box-shadow: 0 20px 40px rgba(0,0,0,0.3);"
+              alt="Cropped preview"
+            />
+          </div>
         </div>
 
         <div class="mb-3" data-controller="character-counter" data-character-counter-max-value="140">
           <%= f.label :bio, "About Me", class: "form-label fw-medium" %>
           <%= f.text_area :bio, 
-      class: "form-control form-control-lg", 
-      rows: 4,
-      maxlength: 140,
-      placeholder: "Tell fans about your music style, influences, and what makes your performances special...",
-      data: { action: "input->character-counter#input" } %>
+              class: "form-control form-control-lg", 
+              rows: 4,
+              maxlength: 140,
+              placeholder: "Tell fans about your music style, influences, and what makes your performances special...",
+              data: { action: "input->character-counter#input" } %>
           <div class="form-text d-flex justify-content-between">
             <span>Brief description of your music and style</span>
             <span data-character-counter-target="count">0/140</span>
