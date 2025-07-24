@@ -2,7 +2,7 @@ import { Controller } from "@hotwired/stimulus"
 import Cropper from "cropperjs"
 
 export default class extends Controller {
-  static targets = ["input", "preview"]
+  static targets = ["input", "preview", "cropButton"]
 
   connect() {
     this.cropper = null
@@ -24,20 +24,23 @@ export default class extends Controller {
         }
 
         this.cropper = new Cropper(this.previewTarget, {
-          aspectRatio: 1,                // maintain square crop
+          aspectRatio: 1,
           viewMode: 1,
           autoCropArea: 1,
           responsive: true,
-          background: false,             // cleaner look
-          modal: true,                   // darken outside
+          background: false,
+          modal: true,
           guides: false,
           highlight: false,
           cropBoxResizable: true,
           cropBoxMovable: true,
-          dragMode: 'move',
+          dragMode: "move",
           scalable: false,
           zoomable: false,
         })
+
+        // Show crop button after cropper is ready
+        this.cropButtonTarget.classList.remove("d-none")
       }
 
       if (this.previewTarget.complete && this.previewTarget.naturalWidth !== 0) {
@@ -69,17 +72,16 @@ export default class extends Controller {
         return
       }
 
-      // Replace file input with cropped blob
-      const file = new File([blob], "cropped.jpg", { type: "image/jpeg" })
+      const uniqueFilename = `artist_${Date.now()}.jpg`
+      const file = new File([blob], uniqueFilename, { type: "image/jpeg" })
+
       const dataTransfer = new DataTransfer()
       dataTransfer.items.add(file)
       this.inputTarget.files = dataTransfer.files
 
-      // Show the cropped circular preview
-      const url = URL.createObjectURL(blob)
       const previewEl = document.getElementById("cropper-preview-result")
       if (previewEl) {
-        previewEl.src = url
+        previewEl.src = URL.createObjectURL(blob)
         previewEl.classList.remove("d-none")
       }
     }, "image/jpeg")
