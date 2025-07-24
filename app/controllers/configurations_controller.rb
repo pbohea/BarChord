@@ -11,7 +11,7 @@ class ConfigurationsController < ApplicationController
         {
           patterns: [
             "/new$",
-            "/edit$",
+           # "/edit$",
             "/about$",
           ],
           properties: {
