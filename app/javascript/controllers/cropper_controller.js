@@ -37,6 +37,7 @@ export default class extends Controller {
           dragMode: "move",
           scalable: false,
           zoomable: false,
+          crop: () => this.updateLivePreview() // ← 👈 Add this
         })
 
         // Show "Save" button once cropper is initialized
@@ -54,38 +55,63 @@ export default class extends Controller {
   }
 
   cropAndReplace() {
-  if (!this.cropper || typeof this.cropper.getCroppedCanvas !== "function") {
-    alert("Please wait for the image to load before saving.")
-    return
-  }
-
-  const canvas = this.cropper.getCroppedCanvas({
-    width: 160,
-    height: 160,
-    imageSmoothingEnabled: true,
-    imageSmoothingQuality: "high"
-  })
-
-  canvas.toBlob(blob => {
-    if (!blob) {
-      alert("Failed to crop image.")
+    if (!this.cropper || typeof this.cropper.getCroppedCanvas !== "function") {
+      alert("Please wait for the image to load before saving.")
       return
     }
 
-    const uniqueFilename = `artist_${Date.now()}.jpg`
-    const file = new File([blob], uniqueFilename, { type: "image/jpeg" })
+    const canvas = this.cropper.getCroppedCanvas({
+      width: 160,
+      height: 160,
+      imageSmoothingEnabled: true,
+      imageSmoothingQuality: "high"
+    })
 
-    const dataTransfer = new DataTransfer()
-    dataTransfer.items.add(file)
-    this.inputTarget.files = dataTransfer.files
+    canvas.toBlob(blob => {
+      if (!blob) {
+        alert("Failed to crop image.")
+        return
+      }
+
+      const uniqueFilename = `artist_${Date.now()}.jpg`
+      const file = new File([blob], uniqueFilename, { type: "image/jpeg" })
+
+      const dataTransfer = new DataTransfer()
+      dataTransfer.items.add(file)
+      this.inputTarget.files = dataTransfer.files
+
+      const previewEl = document.getElementById("cropper-preview-result")
+      const labelEl = document.getElementById("cropped-preview-label")
+      if (previewEl && labelEl) {
+        previewEl.src = URL.createObjectURL(blob)
+        previewEl.classList.remove("d-none")
+        labelEl.classList.remove("d-none")
+      }
+    }, "image/jpeg")
+  }
+
+  updateLivePreview() {
+    if (!this.cropper || typeof this.cropper.getCroppedCanvas !== "function") return
+
+    const canvas = this.cropper.getCroppedCanvas({
+      width: 120,
+      height: 120,
+      imageSmoothingEnabled: true,
+      imageSmoothingQuality: "high"
+    })
 
     const previewEl = document.getElementById("cropper-preview-result")
     const labelEl = document.getElementById("cropped-preview-label")
-    if (previewEl && labelEl) {
-      previewEl.src = URL.createObjectURL(blob)
-      previewEl.classList.remove("d-none")
-      labelEl.classList.remove("d-none")
+
+    if (canvas && previewEl && labelEl) {
+      canvas.toBlob(blob => {
+        if (!blob) return
+
+        const url = URL.createObjectURL(blob)
+        previewEl.src = url
+        previewEl.classList.remove("d-none")
+        labelEl.classList.remove("d-none")
+      }, "image/jpeg")
     }
-  }, "image/jpeg")
-}
+  }
 }
