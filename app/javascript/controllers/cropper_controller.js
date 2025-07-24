@@ -12,6 +12,8 @@ export default class extends Controller {
     const file = event.target.files[0]
     if (!file || !file.type.startsWith("image/")) return
 
+    this.resetSaveButton()
+
     const reader = new FileReader()
 
     reader.onload = () => {
@@ -37,10 +39,12 @@ export default class extends Controller {
           dragMode: "move",
           scalable: false,
           zoomable: false,
-          crop: () => this.updateLivePreview() // ← 👈 Add this
+          crop: () => {
+            this.updateLivePreview()
+            this.resetSaveButton()
+          }
         })
 
-        // Show "Save" button once cropper is initialized
         this.saveButtonTarget.classList.remove("d-none")
       }
 
@@ -82,11 +86,14 @@ export default class extends Controller {
 
       const previewEl = document.getElementById("cropper-preview-result")
       const labelEl = document.getElementById("cropped-preview-label")
+
       if (previewEl && labelEl) {
         previewEl.src = URL.createObjectURL(blob)
         previewEl.classList.remove("d-none")
         labelEl.classList.remove("d-none")
       }
+
+      this.markAsSaved()
     }, "image/jpeg")
   }
 
@@ -113,5 +120,17 @@ export default class extends Controller {
         labelEl.classList.remove("d-none")
       }, "image/jpeg")
     }
+  }
+
+  markAsSaved() {
+    this.saveButtonTarget.textContent = "Saved!"
+    this.saveButtonTarget.classList.remove("btn-outline-primary")
+    this.saveButtonTarget.classList.add("btn-success")
+  }
+
+  resetSaveButton() {
+    this.saveButtonTarget.textContent = "Save"
+    this.saveButtonTarget.classList.remove("btn-success")
+    this.saveButtonTarget.classList.add("btn-outline-primary")
   }
 }
