@@ -17,7 +17,7 @@ export default class extends Controller {
     const query = this.inputTarget.value.trim()
     console.log("Search called with:", query)
 
-    if (query.length < 4) {
+    if (query.length < 2) {
       this.resultsTarget.innerHTML = ""
       return
     }
