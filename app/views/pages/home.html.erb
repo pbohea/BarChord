@@ -16,36 +16,35 @@
 
         <div data-controller="venue-autocomplete" class="position-relative">
           <input type="text"
-                 class="form-control pe-5"
-                 placeholder="Start typing…"
-                 data-venue-autocomplete-target="input"
-                 data-action="input->venue-autocomplete#search"
+             class="form-control pe-5"
+             placeholder="Start typing…"
+             data-venue-autocomplete-target="input"
+             data-action="input->venue-autocomplete#search"
           data-home-search-target="venueInput" />
 
           <!-- Clear button -->
           <button type="button"
-                  class="btn btn-sm position-absolute top-50 translate-middle-y end-0 me-2 text-muted"
-                  style="z-index: 10;"
-                  aria-label="Clear venue"
-                  data-action="home-search#clearVenue">
+              class="btn btn-sm position-absolute top-50 translate-middle-y end-0 me-2 text-muted"
+              style="z-index: 10;"
+              aria-label="Clear venue"
+              data-action="home-search#clearVenue">
             &times;
           </button>
 
           <input type="hidden"
-                 data-venue-autocomplete-target="hidden"
-                 data-home-search-target="venueHidden"
-                 data-action="change->home-search#updateState">
+             data-venue-autocomplete-target="hidden"
+             data-home-search-target="venueHidden"
+             data-action="change->home-search#updateState">
 
           <ul class="list-group small mt-2"
-              data-venue-autocomplete-target="results"
-              style="border-radius: 0.5rem;"></ul>
+          data-venue-autocomplete-target="results"
+          style="border-radius: 0.5rem;"></ul>
         </div>
 
         <button type="button"
-                class="btn btn-primary w-100 mt-3 rounded-pill"
-                data-home-search-target="venueButton"
-                data-action="home-search#goToVenue"
-                disabled>
+            class="btn btn-primary w-100 mt-3 rounded-pill d-none"
+            data-home-search-target="venueButton"
+            data-action="home-search#goToVenue">
           Go to Venue
         </button>
       </div>
@@ -54,40 +53,39 @@
     <!-- ===== ARTIST SEARCH ===== -->
     <div class="card border-0 shadow-lg mb-4 rounded-4 text-center" data-home-search-target="artistCard">
       <div class="card-body">
-        <h5 class="fw-semibold mb-3">Search for an Artist</h5>
+        <h5 class="fw-semibold mb-3">Find an Artist</h5>
 
         <div data-controller="artist-autocomplete" class="position-relative">
           <input type="text"
-                 class="form-control pe-5"
-                 placeholder="Start typing…"
-                 data-artist-autocomplete-target="input"
-                 data-action="input->artist-autocomplete#search"
+             class="form-control pe-5"
+             placeholder="Start typing…"
+             data-artist-autocomplete-target="input"
+             data-action="input->artist-autocomplete#search"
           data-home-search-target="artistInput" />
 
           <!-- Clear button -->
           <button type="button"
-                  class="btn btn-sm position-absolute top-50 translate-middle-y end-0 me-2 text-muted"
-                  style="z-index: 10;"
-                  aria-label="Clear artist"
-                  data-action="home-search#clearArtist">
+              class="btn btn-sm position-absolute top-50 translate-middle-y end-0 me-2 text-muted"
+              style="z-index: 10;"
+              aria-label="Clear artist"
+              data-action="home-search#clearArtist">
             &times;
           </button>
 
           <input type="hidden"
-                 data-artist-autocomplete-target="hidden"
-                 data-home-search-target="artistHidden"
-                 data-action="change->home-search#updateState">
+             data-artist-autocomplete-target="hidden"
+             data-home-search-target="artistHidden"
+             data-action="change->home-search#updateState">
 
           <ul class="list-group small mt-2"
-              data-artist-autocomplete-target="results"
-              style="border-radius: 0.5rem;"></ul>
+          data-artist-autocomplete-target="results"
+          style="border-radius: 0.5rem;"></ul>
         </div>
 
         <button type="button"
-                class="btn btn-primary w-100 mt-3 rounded-pill"
-                data-home-search-target="artistButton"
-                data-action="home-search#goToArtist"
-                disabled>
+            class="btn btn-primary w-100 mt-3 rounded-pill d-none"
+            data-home-search-target="artistButton"
+            data-action="home-search#goToArtist">
           Go to Artist
         </button>
       </div>

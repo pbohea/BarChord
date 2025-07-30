@@ -18,7 +18,10 @@ export default class extends Controller {
     // Add listener to manual name field
     if (this.hasManualNameFieldTarget) {
       this.manualNameFieldTarget.addEventListener('input', () => {
-        this.updateSubmitButton()
+        // Only call updateSubmitButton if it exists (for forms with submit buttons)
+        if (typeof this.updateSubmitButton === 'function') {
+          this.updateSubmitButton()
+        }
       })
     }
   }
@@ -87,6 +90,9 @@ export default class extends Controller {
     // Show details
     this.showDetails(username, image, bio)
     
+    // Trigger change event on hidden input to notify home-search controller
+    this.hiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
+    
     // Use setTimeout to ensure the input event has finished processing
     setTimeout(() => {
       this.isSelecting = false
@@ -141,7 +147,10 @@ export default class extends Controller {
       this.manualNameFieldTarget.placeholder = 'Artist selected from database'
     }
     
-    this.updateSubmitButton()
+    // Only call updateSubmitButton if it exists (for forms with submit buttons)
+    if (typeof this.updateSubmitButton === 'function') {
+      this.updateSubmitButton()
+    }
   }
 
   hideDetails() {
@@ -152,6 +161,8 @@ export default class extends Controller {
     }
     if (this.hasHiddenTarget) {
       this.hiddenTarget.value = ""
+      // Trigger change event to notify home-search controller
+      this.hiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
     }
     // Reset verification and disable submit when hiding
     if (this.hasVerificationTarget) {
@@ -164,48 +175,10 @@ export default class extends Controller {
       this.manualNameFieldTarget.placeholder = 'Enter artist name'
     }
     
-    this.updateSubmitButton()
-  }
-
-  toggleSubmit() {
-    console.log("toggleSubmit called")
-    this.updateSubmitButton()
-  }
-
-  updateSubmitButton() {
-    console.log("updateSubmitButton called")
-    
-    if (!this.hasSubmitButtonTarget) {
-      console.log("No submit button target")
-      return
+    // Only call updateSubmitButton if it exists (for forms with submit buttons)
+    if (typeof this.updateSubmitButton === 'function') {
+      this.updateSubmitButton()
     }
-    
-    let canSubmit = false
-    
-    // Check if artist is selected from database and verified
-    if (this.hasVerificationTarget && this.hasHiddenTarget) {
-      const hasSelectedArtist = this.hiddenTarget.value !== ""
-      const isVerified = this.verificationTarget.checked
-      
-      if (hasSelectedArtist && isVerified) {
-        canSubmit = true
-        console.log("Can submit: Artist selected and verified")
-      }
-    }
-    
-    // Check if manual name is entered (only if no artist selected)
-    if (!canSubmit && this.hasManualNameFieldTarget && this.hasHiddenTarget) {
-      const hasSelectedArtist = this.hiddenTarget.value !== ""
-      const hasManualName = this.manualNameFieldTarget.value.trim().length > 0
-      
-      if (!hasSelectedArtist && hasManualName) {
-        canSubmit = true
-        console.log("Can submit: Manual name entered")
-      }
-    }
-    
-    console.log("Setting submit button disabled to:", !canSubmit)
-    this.submitButtonTarget.disabled = !canSubmit
   }
 
   // Legacy select method for backward compatibility

@@ -28,9 +28,9 @@ export default class extends Controller {
     const venueSelected  = this.venueHiddenTarget.value !== ""
     const artistSelected = this.artistHiddenTarget.value !== ""
 
-    // Enable / disable buttons
-    this.venueButtonTarget.disabled  = !venueSelected
-    this.artistButtonTarget.disabled = !artistSelected
+    // Show / hide buttons based on selection
+    this.venueButtonTarget.classList.toggle("d-none", !venueSelected)
+    this.artistButtonTarget.classList.toggle("d-none", !artistSelected)
 
     // Show / hide clear icons (if present)
     if (this.hasVenueClearTarget)  this.venueClearTarget.classList.toggle("d-none", !this.venueInputTarget.value)
@@ -52,18 +52,35 @@ export default class extends Controller {
   /* ------------------------------------------------- */
   /*  Actions                                          */
   /* ------------------------------------------------- */
-  goToVenue()  { window.location.href = `/venues/${this.venueHiddenTarget.value}` }
-  goToArtist() { window.location.href = `/artists/${this.artistHiddenTarget.value}` }
+  goToVenue() { 
+    if (this.venueHiddenTarget.value) {
+      window.location.href = `/venues/${this.venueHiddenTarget.value}`
+    }
+  }
+  
+  goToArtist() { 
+    if (this.artistHiddenTarget.value) {
+      window.location.href = `/artists/${this.artistHiddenTarget.value}`
+    }
+  }
 
   clearVenue() {
     this.venueInputTarget.value  = ""
     this.venueHiddenTarget.value = ""
+    
+    // Trigger input event to clear autocomplete results and hide details
+    this.venueInputTarget.dispatchEvent(new Event('input', { bubbles: true }))
+    
     this.updateState()
   }
 
   clearArtist() {
     this.artistInputTarget.value  = ""
     this.artistHiddenTarget.value = ""
+    
+    // Trigger input event to clear autocomplete results and hide details
+    this.artistInputTarget.dispatchEvent(new Event('input', { bubbles: true }))
+    
     this.updateState()
   }
 

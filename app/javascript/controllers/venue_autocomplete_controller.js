@@ -70,6 +70,9 @@ export default class extends Controller {
     // Show details
     this.showDetails(name, address)
     
+    // Trigger change event on hidden input to notify home-search controller
+    this.hiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
+    
     // Use setTimeout to ensure the input event has finished processing
     setTimeout(() => {
       this.isSelecting = false
@@ -98,7 +101,11 @@ export default class extends Controller {
     if (this.hasVerificationTarget) {
       this.verificationTarget.checked = false
     }
-    this.updateSubmitButton()
+    
+    // Only call updateSubmitButton if it exists (for forms with submit buttons)
+    if (typeof this.updateSubmitButton === 'function') {
+      this.updateSubmitButton()
+    }
   }
 
   hideDetails() {
@@ -109,31 +116,17 @@ export default class extends Controller {
     }
     if (this.hasHiddenTarget) {
       this.hiddenTarget.value = ""
+      // Trigger change event to notify home-search controller
+      this.hiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
     }
     // Reset verification and disable submit when hiding
     if (this.hasVerificationTarget) {
       this.verificationTarget.checked = false
     }
-    this.updateSubmitButton()
-  }
-
-  toggleSubmit() {
-    console.log("toggleSubmit called")
-    this.updateSubmitButton()
-  }
-
-  updateSubmitButton() {
-    console.log("updateSubmitButton called")
-    console.log("Has submit button target:", this.hasSubmitButtonTarget)
-    console.log("Has verification target:", this.hasVerificationTarget)
     
-    if (this.hasSubmitButtonTarget && this.hasVerificationTarget) {
-      const isChecked = this.verificationTarget.checked
-      console.log("Checkbox is checked:", isChecked)
-      console.log("Setting submit button disabled to:", !isChecked)
-      this.submitButtonTarget.disabled = !isChecked
-    } else {
-      console.log("Missing targets!")
+    // Only call updateSubmitButton if it exists (for forms with submit buttons)
+    if (typeof this.updateSubmitButton === 'function') {
+      this.updateSubmitButton()
     }
   }
 
