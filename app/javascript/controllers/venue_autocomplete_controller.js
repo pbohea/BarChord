@@ -134,4 +134,12 @@ export default class extends Controller {
     const parts = [venue.street_address, venue.city, venue.state, venue.zip_code].filter(Boolean)
     return parts.join(", ")
   }
+  toggleSubmit() {
+  // Only update submit button if it exists (for forms that have one)
+  if (this.hasSubmitButtonTarget && this.hasVerificationTarget && this.hasHiddenTarget) {
+    const venueSelected = this.hiddenTarget.value !== ""
+    const verified = this.verificationTarget.checked
+    this.submitButtonTarget.disabled = !(venueSelected && verified)
+  }
+}
 }
