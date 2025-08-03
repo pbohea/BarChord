@@ -11,7 +11,6 @@ class VenuesController < ApplicationController
     @venue = Venue.find(params[:id])
     @past_events = @venue.events.past.limit(10)
 
-
     respond_to do |format|
       format.html do
         if turbo_frame_request?
@@ -85,6 +84,13 @@ class VenuesController < ApplicationController
     render partial: "venues/upcoming_events", locals: { venue: @venue, events: @events }, layout: false
   end
 
+  def check_ownership
+    @venue = Venue.find(params[:id])
+    render json: {
+             has_owner: @venue.owner_id.present?,
+             venue_id: @venue.id,
+           }
+  end
 
   private
 
