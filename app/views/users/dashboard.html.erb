@@ -1,7 +1,9 @@
 <!--<div class="container mt-4">
   <h2 class="text-center fw-bold mb-5"><%#= @user.username %></h2>-->
 <% content_for :title, @user.username %>
-
+    <% if user_signed_in? || artist_signed_in? %>
+      <meta data-controller="bridge--notification-token">
+    <% end %>
   <!-- Favorite Artists -->
   <div class="mt-3 mb-5">
     <h5 class="text-primary text-center mb-4">

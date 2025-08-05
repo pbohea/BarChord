@@ -5,9 +5,9 @@
     <% if hotwire_native_app? %>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <% end %>
-    <% if user_signed_in? || artist_signed_in? %>
-      <meta data-controller="bridge--notification-token">
-    <% end %>
+    <%# if user_signed_in? || artist_signed_in? %>
+<!--      <meta data-controller="bridge--notification-token">-->
+    <%# end %>
     <title><%= content_for(:title) || "BarChord" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
