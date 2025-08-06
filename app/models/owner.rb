@@ -29,6 +29,8 @@ class Owner < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :venues
+  has_many :notification_tokens
+
 
   def password_complexity
     return if password.blank?

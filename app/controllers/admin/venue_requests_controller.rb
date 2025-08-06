@@ -20,6 +20,12 @@ class Admin::VenueRequestsController < ApplicationController
     venue = @venue_request.approve_and_create_venue!
 
     if venue
+      # Send notification to owner if it's an ownership claim
+      if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
+        owner = Owner.find_by(id: @venue_request.requester_id)
+        VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
+      end
+
       redirect_to admin_venue_requests_path, notice: "Venue request approved and venue created successfully!"
     else
       redirect_to admin_venue_requests_path, alert: "Failed to approve venue request. Please try again."
@@ -52,6 +58,12 @@ class Admin::VenueRequestsController < ApplicationController
       venue = @venue_request.approve_and_create_venue!
 
       if venue
+        # Send notification to owner if it's an ownership claim
+        if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
+          owner = Owner.find_by(id: @venue_request.requester_id)
+          VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
+        end
+
         redirect_to admin_venue_requests_path, notice: "Coordinates updated and venue ownership assigned."
       else
         redirect_to admin_venue_requests_path, alert: "Failed to approve venue request."
@@ -77,6 +89,13 @@ class Admin::VenueRequestsController < ApplicationController
         end
 
         @venue_request.update(status: :approved, venue_id: venue.id)
+
+        # Send notification to owner if it's an ownership claim
+        if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
+          owner = Owner.find_by(id: @venue_request.requester_id)
+          VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
+        end
+
         redirect_to admin_venue_requests_path, notice: "Coordinates updated and venue approved."
       else
         redirect_to admin_venue_requests_path, alert: "Failed to save coordinates."

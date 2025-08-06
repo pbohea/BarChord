@@ -1,7 +1,8 @@
 <% content_for :title, "My Venue Requests" %>
-
+<% if owner_signed_in? %>
+  <meta data-controller="bridge--notification-token">
+<% end %>
 <div class="container my-5" style="max-width: 720px;">
-
 
   <% if @venue_requests.any? %>
     <div class="row row-cols-1 g-3 pt-4">
@@ -15,13 +16,13 @@
                   <%= request.status.humanize %>
                 </span>
               </div>
-              
+
               <p class="card-text text-muted mb-2">
                 <%= request.full_address %>
               </p>
-              
+
               <div class="small text-muted mb-2">
-                <strong>Type:</strong> 
+                <strong>Type:</strong>
                 <%= request.request_type == 'new_venue' ? 'New Venue' : 'Venue Claim' %>
                 <br>
                 <strong>Category:</strong> <%= request.category.humanize %>
