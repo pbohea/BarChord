@@ -1,0 +1,124 @@
+<% content_for :title, "Welcome to the App!" %>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-8">
+      <!-- Welcome Header -->
+      <div class="text-center mb-5">
+        <h1 class="display-4 fw-bold text-primary mb-3">Welcome to the Community!</h1>
+        <p class="lead text-muted">Discover amazing events and connect with your favorite artists</p>
+      </div>
+
+      <!-- How It Works Section -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body p-5">
+          <h2 class="h3 mb-4 text-center">How It Works</h2>
+          
+          <div class="row g-4">
+            <div class="col-md-4 text-center">
+              <div class="mb-3">
+                <i class="fas fa-users fa-3x text-primary"></i>
+              </div>
+              <h4 class="h5">Follow Artists</h4>
+              <p class="text-muted">Discover and follow your favorite artists to stay updated on their latest events and performances.</p>
+            </div>
+            
+            <div class="col-md-4 text-center">
+              <div class="mb-3">
+                <i class="fas fa-calendar-alt fa-3x text-success"></i>
+              </div>
+              <h4 class="h5">Find Events</h4>
+              <p class="text-muted">Browse upcoming events, discover new venues, and never miss out on the shows you love.</p>
+            </div>
+            
+            <div class="col-md-4 text-center">
+              <div class="mb-3">
+                <i class="fas fa-bell fa-3x text-warning"></i>
+              </div>
+              <h4 class="h5">Get Notified</h4>
+              <p class="text-muted">Receive push notifications when artists you follow announce new events or when venues you love host shows.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Features Section -->
+      <div class="card shadow-sm mb-4">
+        <div class="card-body p-5">
+          <h3 class="h4 mb-4">What You Can Do</h3>
+          
+          <div class="row g-3">
+            <div class="col-12">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                <div>
+                  <h5 class="mb-1">Discover Local Events</h5>
+                  <p class="text-muted mb-0">Find concerts, shows, and performances happening near you at your favorite venues.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                <div>
+                  <h5 class="mb-1">Follow Your Favorite Artists</h5>
+                  <p class="text-muted mb-0">Stay connected with the artists you love and get notified when they announce new shows.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                <div>
+                  <h5 class="mb-1">Explore Venues</h5>
+                  <p class="text-muted mb-0">Discover new venues in your area and follow the ones where your favorite events happen.</p>
+                </div>
+              </div>
+            </div>
+            
+            <div class="col-12">
+              <div class="d-flex align-items-start">
+                <i class="fas fa-check-circle text-success me-3 mt-1"></i>
+                <div>
+                  <h5 class="mb-1">Never Miss an Event</h5>
+                  <p class="text-muted mb-0">Get push notifications on your phone when new events are announced by artists you follow.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Getting Started -->
+      <div class="card shadow-sm mb-5">
+        <div class="card-body p-5 text-center">
+          <h3 class="h4 mb-3">Ready to Get Started?</h3>
+          <p class="text-muted mb-4">Head to your dashboard to start following artists, discovering events, and connecting with the local music scene.</p>
+          
+          <%= link_to user_dashboard_path(current_user), class: "btn btn-primary btn-lg px-5" do %>
+            <i class="fas fa-arrow-right me-2"></i>
+            Go to My Dashboard
+          <% end %>
+        </div>
+      </div>
+
+      <!-- Quick Tips -->
+      <div class="card bg-light border-0 mb-4">
+        <div class="card-body p-4">
+          <h4 class="h5 mb-3">
+            <i class="fas fa-lightbulb text-warning me-2"></i>
+            Quick Tips
+          </h4>
+          <ul class="mb-0 text-muted">
+            <li class="mb-2">Enable push notifications to stay updated on new events</li>
+            <li class="mb-2">Use the search feature to find specific artists or venues</li>
+            <li class="mb-2">Check the map view to discover events happening near you</li>
+            <li>Follow multiple artists to build your personalized event feed</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
