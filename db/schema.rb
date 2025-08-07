@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_06_230214) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_07_154944) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -301,7 +301,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_06_230214) do
     t.string "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.string "username"
     t.integer "favorite_artists_count"
     t.integer "favorite_venues_count"
     t.datetime "created_at", null: false
