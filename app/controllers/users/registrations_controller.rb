@@ -28,8 +28,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
     # Rails.logger.info "=== USING PATH: #{@stored_path || user_dashboard_path(resource)} ==="
 
     # @stored_path || user_dashboard_path(resource)
-    @stored_path || user_landing_path(resource)
-
+    user_landing_path(resource)
   end
 
   def after_update_path_for(resource)

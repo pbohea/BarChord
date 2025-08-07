@@ -1,5 +1,9 @@
 <% content_for :title, "Dashboard" %>
 
+<% if artist_signed_in? %>
+  <meta data-controller="bridge--notification-token">
+<% end %>
+
 <div class="container mb-3 pt-3" style="max-width: 500px;">
 <div class="text-center mb-4">
   <div class="row g-2">

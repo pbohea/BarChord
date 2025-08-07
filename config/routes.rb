@@ -90,7 +90,8 @@ Rails.application.routes.draw do
   get "/artists_about", to: "pages#artists_about"
   get "/menu", to: "pages#menu", as: :menu
   get "/users/:id/landing", to: "users#landing", as: :user_landing
-
+  get "/artists/:id/landing", to: "artists#landing", as: :artist_landing
+  get "/owners/:id/landing", to: "owners#landing", as: :owner_landing
   # Admin routes
   get "/admin", to: "admin#dashboard", as: "admin_dashboard"
   #get "/admin/venue_requests", to: "admin#venue_requests", as: "admin_venue_requests"

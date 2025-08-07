@@ -11,6 +11,12 @@ class OwnersController < ApplicationController
                                   .order(created_at: :desc)
   end
 
+  def landing
+    @owner = Owner.find(params[:id])
+    # Add any authorization check if needed
+    redirect_to root_path unless @owner == current_owner
+  end
+
   private
 
   def set_owner

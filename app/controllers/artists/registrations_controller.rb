@@ -19,7 +19,7 @@ class Artists::RegistrationsController < Devise::RegistrationsController
   protected
 
   def after_sign_up_path_for(resource)
-    artist_dashboard_path(resource)
+    artist_landing_path(resource)
   end
 
   def after_update_path_for(resource)

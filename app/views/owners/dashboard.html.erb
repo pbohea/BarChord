@@ -1,5 +1,8 @@
 <%  content_for :title,  "Dashboard"%>
   
+<% if owner_signed_in? %>
+  <meta data-controller="bridge--notification-token">
+<% end %>
 
 <div class="container my-5" style="max-width: 720px;">
   <h1 class="text-center mb-4 mt-3">Welcome, <%= @owner.firstname || @owner.email %></h1>

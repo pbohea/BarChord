@@ -1,7 +1,5 @@
 <% content_for :title, "My Venue Requests" %>
-<% if owner_signed_in? %>
-  <meta data-controller="bridge--notification-token">
-<% end %>
+
 <div class="container my-5" style="max-width: 720px;">
 
   <% if @venue_requests.any? %>

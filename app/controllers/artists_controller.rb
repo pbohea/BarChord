@@ -56,6 +56,12 @@ class ArtistsController < ApplicationController
                                   .order(created_at: :desc)
   end
 
+  def landing
+    @artist = Artist.find(params[:id])
+    # Add any authorization check if needed
+    redirect_to root_path unless @artist == current_artist
+  end
+
   private
 
   def set_artist
