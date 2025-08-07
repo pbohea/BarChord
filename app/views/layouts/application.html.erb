@@ -5,9 +5,8 @@
     <% if hotwire_native_app? %>
       <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <% end %>
-    <%# if user_signed_in? || artist_signed_in? %>
-<!--      <meta data-controller="bridge--notification-token">-->
-    <%# end %>
+ 
+ 
     <title><%= content_for(:title) || "BarChord" %></title>
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -26,7 +25,7 @@
     <%= yield :head %>
   </head>
 
-  <body class="bg-light">
+  <body class="bg-light min-vh-100 d-flex flex-column">
     <%= render "shared/navbar" %>
     <%= render "shared/foot_assets" %>
 
@@ -43,10 +42,10 @@
       <% end %>
     </div>
 
-    <div class="container mt-3">
+    <main class="flex-grow-1 d-flex flex-column">
       <%= yield %>
     </div>
-    <!-- ✅ This was missing -->
+  </main>
 
-  </body>
+</body>
 </html>
