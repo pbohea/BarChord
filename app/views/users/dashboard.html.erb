@@ -1,6 +1,5 @@
-<!--<div class="container mt-4">
-  <h2 class="text-center fw-bold mb-5"><%#= @user.username %></h2>-->
-<% content_for :title, @user.username %>
+
+<% content_for :title, "Dashboard" %>
     <% if user_signed_in? || artist_signed_in? %>
       <meta data-controller="bridge--notification-token">
     <% end %>
