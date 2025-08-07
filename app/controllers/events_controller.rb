@@ -106,23 +106,19 @@ class EventsController < ApplicationController
         format.json { render json: @event.errors, status: :unprocessable_entity }
       end
     end
-    # After the respond_to block
-    Rails.logger.info "🔍 About to check venue owner notification..."
-    Rails.logger.info "🔍 artist_signed_in?: #{artist_signed_in?}"
-    Rails.logger.info "🔍 @event.venue: #{@event.venue.inspect}"
-    Rails.logger.info "🔍 @event.venue&.owner_id: #{@event.venue&.owner_id}"
 
     NewEventNotifier.with(event: @event).deliver(@event.artist.followers)
 
+    # Notify venue owner if venue has an owner and artist created the event
     if artist_signed_in? && @event.venue&.owner_id.present?
-      Rails.logger.info "🚨 VENUE OWNER NOTIFICATION CONDITION MET"
       venue_owner = Owner.find_by(id: @event.venue.owner_id)
-      Rails.logger.info "🚨 Found venue owner: #{venue_owner.inspect}"
       EventAtVenueNotifier.with(event: @event).deliver(venue_owner) if venue_owner
-    else
-      Rails.logger.info "❌ Venue owner notification condition NOT met"
-      Rails.logger.info "❌ artist_signed_in?: #{artist_signed_in?}"
-      Rails.logger.info "❌ @event.venue&.owner_id.present?: #{@event.venue&.owner_id.present?}"
+    end
+
+    # Notify artist if owner created the event
+    if owner_signed_in? && @event.artist.present?
+      artist = @event.artist
+      OwnerAddedEventNotifier.with(event: @event).deliver(artist) if artist
     end
   end
 
