@@ -26,6 +26,11 @@ class Admin::VenueRequestsController < ApplicationController
         VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
       end
 
+      if @venue_request.requester_type == "artist"
+        artist = Artist.find_by(id: @venue_request.requester_id)
+        VenueRequestApprovedNotifier.with(venue_request: @venue_request).deliver(artist) if artist
+      end
+
       redirect_to admin_venue_requests_path, notice: "Venue request approved and venue created successfully!"
     else
       redirect_to admin_venue_requests_path, alert: "Failed to approve venue request. Please try again."
@@ -64,6 +69,11 @@ class Admin::VenueRequestsController < ApplicationController
           VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
         end
 
+        if @venue_request.requester_type == "artist"
+          artist = Artist.find_by(id: @venue_request.requester_id)
+          VenueRequestApprovedNotifier.with(venue_request: @venue_request).deliver(artist) if artist
+        end
+
         redirect_to admin_venue_requests_path, notice: "Coordinates updated and venue ownership assigned."
       else
         redirect_to admin_venue_requests_path, alert: "Failed to approve venue request."
@@ -94,6 +104,11 @@ class Admin::VenueRequestsController < ApplicationController
         if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
           owner = Owner.find_by(id: @venue_request.requester_id)
           VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
+        end
+
+        if @venue_request.requester_type == "artist"
+          artist = Artist.find_by(id: @venue_request.requester_id)
+          VenueRequestApprovedNotifier.with(venue_request: @venue_request).deliver(artist) if artist
         end
 
         redirect_to admin_venue_requests_path, notice: "Coordinates updated and venue approved."
