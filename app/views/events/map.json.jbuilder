@@ -32,9 +32,12 @@ json.events @events do |event|
     json.website event.venue.website
   end
 
-  json.artist do
+json.artist do
+  if event.artist.present?
+    # Database artist - include full details
     json.id event.artist.id
     json.username event.artist.username
+    json.is_database_artist true
     
     # Handle image URL properly
     if event.artist.image.attached?
@@ -50,7 +53,15 @@ json.events @events do |event|
       Rails.logger.warn "Failed to generate artist URL for artist #{event.artist.id}: #{e.message}"
       json.profile_url nil
     end
+  else
+    # Manual artist - limited details
+    json.id nil
+    json.username event.artist_name
+    json.is_database_artist false
+    json.image_url nil
+    json.profile_url nil
   end
+end
 end
 
 # Add optional centering data if provided via params
