@@ -31,16 +31,14 @@ task sample_data: :environment do
     name = Faker::Name.first_name
     User.create!(
       email: "#{name.downcase}_user@example.com",
-      password: "Password1",
-      username: "#{name.downcase}_fan",
+      password: "Password1"
     )
   end
 
   # specific user
   User.create!(
     email: "pbohea@gmail.com",
-    password: "Password1",
-    username: "pbohea_fan",
+    password: "Password1"
   )
 
   #artists

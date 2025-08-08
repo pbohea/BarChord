@@ -42,7 +42,7 @@
           <% else %>
             <div class="rounded-circle bg-secondary d-flex align-items-center justify-content-center border border-white border-3" 
                  style="width: 120px; height: 120px; color: white; box-shadow: 0 20px 40px rgba(0,0,0,0.3);">
-              <i class="fas fa-microphone fa-2x"></i>
+              <i class="fas fa-microphone-alt fa-3x"></i>
             </div>
           <% end %>
         </div>
@@ -61,9 +61,13 @@
         <!-- Artist Name -->
         <h5 class="fw-bold mb-2"
             style="background: linear-gradient(90deg, #0d6efd, #4dabf7); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">
-          <%= link_to @event.artist.username.titleize, artist_path(@event.artist),
-                      class: "text-decoration-none",
-                      data: { turbo_frame: "_top" } %>
+          <% if @event.artist.present? %>
+            <%= link_to @event.artist.username.titleize, artist_path(@event.artist),
+              class: "text-decoration-none",
+              data: { turbo_frame: "_top" } %>
+          <% else %>
+            <span class="text-muted"><%= @event.artist_name.titleize %></span>
+          <% end %>
         </h5>
 
         <!-- Venue Name -->

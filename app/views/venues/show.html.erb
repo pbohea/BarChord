@@ -70,9 +70,13 @@
             </div>
             <br>
             <small>
-              <%= link_to event.artist.username, artist_path(event.artist),
-                          class: "text-decoration-none",
-                          onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+              <% if event.artist.present? %>
+                <%= link_to event.artist.username, artist_path(event.artist),
+              class: "text-decoration-none",
+              onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+              <% else %>
+                <span class="text-muted"><%= event.artist_name %></span>
+              <% end %>
             </small>
           </div>
         </div>
@@ -84,7 +88,7 @@
     <!-- Past Events -->
 
     <% if @past_events.any? %>
-    <h5 class="text-center text-muted mb-3 mt-5">Past Events</h5>
+      <h5 class="text-center text-muted mb-3 mt-5">Past Events</h5>
 
       <% @past_events.each do |event| %>
         <div class="card mb-3 shadow-sm border-0 rounded-4" style="background-color: #ffffff;">

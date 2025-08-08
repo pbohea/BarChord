@@ -43,9 +43,13 @@
 
     <!-- artist name -->
     <div class="mb-0">
-      <%= link_to artist.username, artist_path(artist),
+      <% if artist.present? %>
+        <%= link_to artist.username, artist_path(artist),
               class: "text-decoration-none text-reset fw-semibold",
               data: { turbo_frame: "_top" } %>
+      <% else %>
+        <span class="text-muted fw-semibold"><%= events.artist_name %></span>
+      <% end %>
     </div>
 
     <!-- category -->

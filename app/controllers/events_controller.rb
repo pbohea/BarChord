@@ -73,16 +73,24 @@ class EventsController < ApplicationController
   def create
     # Check for venue verification if an artist is creating the event
     if artist_signed_in? && params[:venue_verification] != "1"
-      @event = Event.new(event_params) # Rebuild the event object to preserve form data
+      @event = Event.new(event_params)
       flash.now[:alert] = "Please verify that the venue information is correct before creating the event."
       render :new, status: :unprocessable_entity
       return
     end
 
-    # Check for artist verification if an owner is creating the event
-    if owner_signed_in? && params[:artist_verification] != "1"
-      @event = Event.new(event_params) # Rebuild the event object to preserve form data
+    # Check for artist verification ONLY if an owner is creating the event AND an artist_id is provided
+    if owner_signed_in? && params[:event][:artist_id].present? && params[:artist_verification] != "1"
+      @event = Event.new(event_params)
       flash.now[:alert] = "Please verify that the artist information is correct before creating the event."
+      render :new, status: :unprocessable_entity
+      return
+    end
+
+    # Check for manual artist confirmation ONLY if owner is creating event with manual artist_name
+    if owner_signed_in? && params[:event][:artist_name].present? && params[:event][:artist_id].blank? && params[:manual_artist_confirmation] != "1"
+      @event = Event.new(event_params)
+      flash.now[:alert] = "Please confirm that you searched for the artist and they're not in our database."
       render :new, status: :unprocessable_entity
       return
     end
@@ -91,7 +99,6 @@ class EventsController < ApplicationController
 
     respond_to do |format|
       if @event.save
-
         # Redirect based on who created the event
         if artist_signed_in?
           format.html { redirect_to artist_dashboard_path(current_artist), notice: "Event was successfully created." }
@@ -107,19 +114,8 @@ class EventsController < ApplicationController
       end
     end
 
-    NewEventNotifier.with(event: @event).deliver(@event.artist.followers)
-
-    # Notify venue owner if venue has an owner and artist created the event
-    if artist_signed_in? && @event.venue&.owner_id.present?
-      venue_owner = Owner.find_by(id: @event.venue.owner_id)
-      EventAtVenueNotifier.with(event: @event).deliver(venue_owner) if venue_owner
-    end
-
-    # Notify artist if owner created the event
-    if owner_signed_in? && @event.artist.present?
-      artist = @event.artist
-      OwnerAddedEventNotifier.with(event: @event).deliver(artist) if artist
-    end
+# Send notifications after successful save
+send_event_notifications(@event)
   end
 
   # PATCH/PUT /events/1
@@ -202,6 +198,26 @@ class EventsController < ApplicationController
   end
 
   private
+
+  def send_event_notifications(event)
+  # Only send notifications if the event has a database artist (not manual artist_name)
+  return unless event.artist.present?
+
+  # Notify artist's followers
+  NewEventNotifier.with(event: event).deliver(event.artist.followers)
+
+  # Notify venue owner if venue has an owner and artist created the event
+  if artist_signed_in? && event.venue&.owner_id.present?
+    venue_owner = Owner.find_by(id: event.venue.owner_id)
+    EventAtVenueNotifier.with(event: event).deliver(venue_owner) if venue_owner
+  end
+
+  # Notify artist if owner created the event
+  if owner_signed_in? && event.artist.present?
+    artist = event.artist
+    OwnerAddedEventNotifier.with(event: event).deliver(artist) if artist
+  end
+end
 
   def apply_date_range_filter(events)
     case params[:date_range]
