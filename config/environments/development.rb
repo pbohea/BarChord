@@ -45,7 +45,28 @@ Rails.application.configure do
   config.action_mailer.raise_delivery_errors = false
 
   # Add this line somewhere in your Rails.application.configure block
-  config.action_mailer.delivery_method = :test
+  #config.action_mailer.delivery_method = :test
+config.action_mailer.raise_delivery_errors = true
+config.action_mailer.perform_deliveries = true
+config.action_mailer.delivery_method = :smtp
+
+config.action_mailer.smtp_settings = {
+  address:              ENV.fetch("SES_SMTP_HOST"),
+  port:                 587,
+  user_name:            ENV.fetch("SES_SMTP_USERNAME"),
+  password:             ENV.fetch("SES_SMTP_PASSWORD"),
+  authentication:       :login,
+  enable_starttls_auto: true
+}
+
+config.action_mailer.default_url_options = {
+  host: "potential-sniffle-r46p4jq7rg5xhxw56-3000.app.github.dev" # your Codespaces host
+}
+
+
+
+
+
 
   # Make template changes take effect immediately.
   config.action_mailer.perform_caching = false

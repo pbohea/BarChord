@@ -96,6 +96,8 @@ Rails.application.routes.draw do
   get "/admin", to: "admin#dashboard", as: "admin_dashboard"
   #get "/admin/venue_requests", to: "admin#venue_requests", as: "admin_venue_requests"
 
+  get "/test_email", to: "test_email#send_ping"
+
   #for autocomplete search
   get "/artists/search", to: "artists#search"
 
