@@ -8,51 +8,50 @@
       <div class="mb-3">
         <i class="fas fa-guitar fa-4x text-primary mb-2"></i>
       </div>
-      <h1 class="h3 fw-bold mb-2">Find Live Music Tonight</h1>
-      <p class="text-muted mb-4">Discover concerts, open mics, and performances near you</p>
+      <h1 class="h3 fw-bold mb-2">Welcome to BarChord</h1>
+      <p class="text-muted mb-4">Find small time live music at a bar or restaurant near you</p>
     </div>
 
     <!-- Quick Actions -->
-    <div class="row g-3 mb-4">
+    <div class="row g-3 mb-4 justify-content-center">
       <div class="col-6">
         <%= link_to events_landing_path, class: "btn btn-primary btn-lg w-100 rounded-3 shadow-sm d-flex flex-column align-items-center p-3" do %>
           <i class="fas fa-calendar-alt fa-2x mb-2"></i>
           <span class="small fw-medium">Find Events</span>
         <% end %>
       </div>
-      <div class="col-6">
-        <%= link_to map_path, class: "btn btn-outline-primary btn-lg w-100 rounded-3 d-flex flex-column align-items-center p-3" do %>
-          <i class="fas fa-map-marked-alt fa-2x mb-2"></i>
+<!--      <div class="col-6">-->
+        <%#= link_to map_path, class: "btn btn-outline-primary btn-lg w-100 rounded-3 d-flex flex-column align-items-center p-3" do %>
+<!--          <i class="fas fa-map-marked-alt fa-2x mb-2"></i>
           <span class="small fw-medium">View Map</span>
-        <% end %>
-      </div>
+        <%# end %>-->
+<!--      </div>-->
     </div>
 
     <!-- Today's Highlights (if you have location) -->
-    <% if params[:lat].present? && params[:lng].present? %>
-      <div class="card border-0 shadow-sm mb-4 rounded-3">
+    <%# if params[:lat].present? && params[:lng].present? %>
+<!--      <div class="card border-0 shadow-sm mb-4 rounded-3">
         <div class="card-body p-3">
           <h6 class="fw-semibold mb-3 d-flex align-items-center">
             <i class="fas fa-star me-2 text-warning"></i>
             Today Near You
           </h6>
-          <!-- Add logic to show today's events near user -->
-          <div class="text-center py-3">
+          
+<!--          <div class="text-center py-3">
             <i class="fas fa-music text-muted fa-2x mb-2"></i>
             <p class="text-muted small mb-0">No events today in your area</p>
           </div>
         </div>
       </div>
-    <% end %>
+    <%# end %>-->
 
     <!-- Featured Artists or Recent Activity -->
-    <div class="card border-0 shadow-sm mb-4 rounded-3">
+    <!--<div class="card border-0 shadow-sm mb-4 rounded-3">
       <div class="card-body p-3">
         <h6 class="fw-semibold mb-3 d-flex align-items-center">
           <i class="fas fa-fire me-2 text-danger"></i>
           Trending Artists
         </h6>
-        <!-- You could add logic to show popular artists -->
         <div class="row g-2">
           <div class="col-4 text-center">
             <div class="bg-light rounded-3 p-2">
@@ -74,7 +73,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- Quick Search Section -->
     <div class="card border-0 shadow-sm mb-4 rounded-3">
@@ -159,15 +158,15 @@
     </div>
 
     <!-- Popular Venues -->
-    <div class="card border-0 shadow-sm mb-4 rounded-3">
+    <!--<div class="card border-0 shadow-sm mb-4 rounded-3">
       <div class="card-body p-3">
         <h6 class="fw-semibold mb-3 d-flex align-items-center">
           <i class="fas fa-cocktail me-2 text-success"></i>
           Popular Venues
         </h6>
-        <div class="d-flex gap-2 overflow-auto">
+        <div class="d-flex gap-2 overflow-auto">-->
           <!-- You could populate these with actual popular venues -->
-          <div class="flex-shrink-0">
+          <!--<div class="flex-shrink-0">
             <div class="bg-light rounded-3 p-3 text-center" style="min-width: 120px;">
               <i class="fas fa-music text-muted fa-2x mb-2"></i>
               <p class="small text-muted mb-0">The Blue Note</p>
@@ -187,45 +186,45 @@
           </div>
         </div>
       </div>
-    </div>
+    </div>-->
 
     <!-- For signed-in users - personalized content -->
-    <% if user_signed_in? || artist_signed_in? || owner_signed_in? %>
-      <div class="card border-0 shadow-sm rounded-3">
+    <%# if user_signed_in? || artist_signed_in? || owner_signed_in? %>
+<!--      <div class="card border-0 shadow-sm rounded-3">
         <div class="card-body p-3">
           <h6 class="fw-semibold mb-3 d-flex align-items-center">
             <i class="fas fa-heart me-2 text-danger"></i>
             Your Activity
           </h6>
           <div class="row g-2">
-            <% if user_signed_in? %>
-              <div class="col-6">
-                <%= link_to user_dashboard_path(current_user), class: "btn btn-outline-primary btn-sm w-100" do %>
-                  <i class="fas fa-user me-1"></i> Dashboard
-                <% end %>
-              </div>
-            <% elsif artist_signed_in? %>
-              <div class="col-6">
-                <%= link_to artist_dashboard_path(current_artist), class: "btn btn-outline-primary btn-sm w-100" do %>
-                  <i class="fas fa-music me-1"></i> Dashboard
-                <% end %>
-              </div>
-            <% elsif owner_signed_in? %>
-              <div class="col-6">
-                <%= link_to owner_dashboard_path(current_owner), class: "btn btn-outline-primary btn-sm w-100" do %>
-                  <i class="fas fa-building me-1"></i> Dashboard
-                <% end %>
-              </div>
-            <% end %>
-            <div class="col-6">
-              <%= link_to "#", class: "btn btn-outline-secondary btn-sm w-100" do %>
-                <i class="fas fa-cog me-1"></i> Settings
-              <% end %>
-            </div>
+            <%# if user_signed_in? %>-->
+<!--              <div class="col-6">-->
+                <%#= link_to user_dashboard_path(current_user), class: "btn btn-outline-primary btn-sm w-100" do %>
+<!--                  <i class="fas fa-user me-1"></i> Dashboard-->
+                <%# end %>
+<!--              </div>-->
+            <%# elsif artist_signed_in? %>
+<!--              <div class="col-6">-->
+                <%#= link_to artist_dashboard_path(current_artist), class: "btn btn-outline-primary btn-sm w-100" do %>
+<!--                  <i class="fas fa-music me-1"></i> Dashboard-->
+                <%# end %>
+<!--              </div>-->
+            <%# elsif owner_signed_in? %>
+<!--              <div class="col-6">-->
+                <%#= link_to owner_dashboard_path(current_owner), class: "btn btn-outline-primary btn-sm w-100" do %>
+<!--                  <i class="fas fa-building me-1"></i> Dashboard-->
+                <%# end %>
+<!--              </div>-->
+            <%# end %>
+<!--            <div class="col-6">-->
+              <%#= link_to "#", class: "btn btn-outline-secondary btn-sm w-100" do %>
+<!--                <i class="fas fa-cog me-1"></i> Settings-->
+              <%# end %>
+<!--            </div>
           </div>
         </div>
       </div>
-    <% end %>
-
-  </div>
+    <%# end %>-->
+<!--
+  </div>-->
 </div>
