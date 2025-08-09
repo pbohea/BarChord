@@ -105,9 +105,13 @@
             </div>
             <br>
             <small>
-              <%= link_to event.artist.username, artist_path(event.artist),
-                      class: "text-decoration-none",
-                      onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+              <% if event.artist.present? %>
+                <%= link_to event.artist.username, artist_path(event.artist),
+              class: "text-decoration-none",
+              onclick: "event.stopPropagation(); event.stopImmediatePropagation();" %>
+              <% else %>
+                <span class="text-muted"><%= event.artist_name %></span>
+              <% end %>
             </small>
           </div>
         </div>
