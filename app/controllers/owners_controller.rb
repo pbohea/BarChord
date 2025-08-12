@@ -4,6 +4,8 @@ class OwnersController < ApplicationController
 
   def dashboard
     @venues = @owner.venues
+    @favorite_artists = @owner.followed_artists
+    @favorite_venues = @owner.followed_venues
   end
 
   def venue_requests

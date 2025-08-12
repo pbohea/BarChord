@@ -40,9 +40,13 @@ class Artist < ApplicationRecord
   has_many :events, foreign_key: "artist_id"
   has_many :venues, through: :events
   has_many :artist_follows
-  has_many :followers, through: :artist_follows, source: :user
+  has_many :followers, through: :artist_follows, source: :follower
   has_one_attached :image
   has_many :notification_tokens
+  has_many :artist_follows, as: :follower, dependent: :destroy
+  has_many :followed_artists, through: :artist_follows, source: :artist
+  has_many :venue_follows, as: :follower, dependent: :destroy
+  has_many :followed_venues, through: :venue_follows, source: :venue
 
 
   # Constants

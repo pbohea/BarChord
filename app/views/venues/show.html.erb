@@ -42,11 +42,11 @@
           <%= @venue.category %>
         </p>
 
-        <% unless owner_signed_in? %>
+
           <turbo-frame id="follow_button_<%= @venue.id %>">
             <%= render partial: "venues/follow_button", locals: { venue: @venue } %>
           </turbo-frame>
-        <% end %>
+
 
       </div>
     </div>

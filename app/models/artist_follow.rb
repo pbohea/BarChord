@@ -2,25 +2,25 @@
 #
 # Table name: artist_follows
 #
-#  id         :bigint           not null, primary key
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  artist_id  :bigint           not null
-#  user_id    :bigint           not null
+#  id            :bigint           not null, primary key
+#  follower_type :string
+#  created_at    :datetime         not null
+#  updated_at    :datetime         not null
+#  artist_id     :bigint           not null
+#  follower_id   :bigint
 #
 # Indexes
 #
-#  index_artist_follows_on_artist_id  (artist_id)
-#  index_artist_follows_on_user_id    (user_id)
+#  index_artist_follows_on_artist_id                      (artist_id)
+#  index_artist_follows_on_follower_type_and_follower_id  (follower_type,follower_id)
 #
 # Foreign Keys
 #
 #  fk_rails_...  (artist_id => artists.id)
-#  fk_rails_...  (user_id => users.id)
 #
 class ArtistFollow < ApplicationRecord
-  belongs_to :user
+  belongs_to :follower, polymorphic: true
   belongs_to :artist
 
-  validates :user_id, uniqueness: { scope: :artist_id }
+  validates :follower_id, uniqueness: { scope: [:artist_id, :follower_type] }
 end

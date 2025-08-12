@@ -25,8 +25,8 @@
 class Venue < ApplicationRecord
   belongs_to :owner, optional: true
   has_many :events
-  has_many :venue_follows
-  has_many :followers, through: :venue_follows, source: :user
+  has_many :venue_follows, dependent: :destroy
+  has_many :followers, through: :venue_follows, source: :follower
 
   has_one_attached :image
 

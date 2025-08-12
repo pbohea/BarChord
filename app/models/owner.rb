@@ -29,6 +29,10 @@ class Owner < ApplicationRecord
 
   has_many :venues
   has_many :notification_tokens
+  has_many :artist_follows, as: :follower, dependent: :destroy
+  has_many :followed_artists, through: :artist_follows, source: :artist
+  has_many :venue_follows, as: :follower, dependent: :destroy
+  has_many :followed_venues, through: :venue_follows, source: :venue
 
 
   def password_complexity

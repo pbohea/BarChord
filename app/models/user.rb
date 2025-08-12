@@ -26,9 +26,9 @@ class User < ApplicationRecord
   devise :database_authenticatable, :registerable,
          :recoverable, :rememberable, :validatable
 
-  has_many :artist_follows, dependent: :destroy
+  has_many :artist_follows, as: :follower, dependent: :destroy
   has_many :followed_artists, through: :artist_follows, source: :artist
-  has_many :venue_follows, dependent: :destroy
+  has_many :venue_follows, as: :follower, dependent: :destroy
   has_many :followed_venues, through: :venue_follows, source: :venue
   has_many :notification_tokens
 

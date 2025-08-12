@@ -1,11 +1,9 @@
-<%#= turbo_stream_from "elephant"%> 
-
-
 <turbo-frame id="follow_button_<%= artist.id %>">
   <div class="d-flex justify-content-center">
     <div class="text-center">
-      <% if user_signed_in? %>
-        <% follow = current_user.artist_follows.find_by(artist_id: artist.id) %>
+      <% if user_signed_in? || owner_signed_in? || artist_signed_in? %>
+        <% current_follower = current_user || current_owner || current_artist %>
+        <% follow = current_follower.artist_follows.find_by(artist_id: artist.id) %>
 
         <% if follow %>
           <%= button_to "Unfollow", artist_follow_path(follow),

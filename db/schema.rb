@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_08_203244) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_12_231246) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -43,12 +43,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_203244) do
   end
 
   create_table "artist_follows", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.bigint "artist_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "follower_type"
+    t.bigint "follower_id"
     t.index ["artist_id"], name: "index_artist_follows_on_artist_id"
-    t.index ["user_id"], name: "index_artist_follows_on_user_id"
+    t.index ["follower_type", "follower_id"], name: "index_artist_follows_on_follower_type_and_follower_id"
   end
 
   create_table "artists", force: :cascade do |t|
@@ -309,11 +310,12 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_203244) do
   end
 
   create_table "venue_follows", force: :cascade do |t|
-    t.bigint "user_id", null: false
     t.bigint "venue_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["user_id"], name: "index_venue_follows_on_user_id"
+    t.string "follower_type"
+    t.bigint "follower_id"
+    t.index ["follower_type", "follower_id"], name: "index_venue_follows_on_follower_type_and_follower_id"
     t.index ["venue_id"], name: "index_venue_follows_on_venue_id"
   end
 
@@ -363,7 +365,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_203244) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "artist_follows", "artists"
-  add_foreign_key "artist_follows", "users"
   add_foreign_key "follows", "artists"
   add_foreign_key "follows", "users"
   add_foreign_key "notification_tokens", "artists"
@@ -375,6 +376,5 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_08_203244) do
   add_foreign_key "solid_queue_ready_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_recurring_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
   add_foreign_key "solid_queue_scheduled_executions", "solid_queue_jobs", column: "job_id", on_delete: :cascade
-  add_foreign_key "venue_follows", "users"
   add_foreign_key "venue_follows", "venues"
 end

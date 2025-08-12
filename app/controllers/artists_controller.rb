@@ -44,6 +44,8 @@ class ArtistsController < ApplicationController
     @artist = current_artist
     @upcoming_events = @artist.upcoming_events
     @past_events = @artist.past_events
+    @favorite_artists = @artist.followed_artists
+    @favorite_venues = @artist.followed_venues
   end
 
   def promo_flyer

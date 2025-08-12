@@ -1,10 +1,10 @@
-<%#= turbo_stream_from "giraffe"%> 
-<!---->
+
 <turbo-frame id="follow_button_<%= venue.id %>">
   <div class="d-flex justify-content-center">
     <div class="text-center">
-      <% if user_signed_in? %>
-        <% follow = current_user.venue_follows.find_by(venue_id: venue.id) %>
+      <% if user_signed_in? || owner_signed_in? || artist_signed_in? %>
+        <% current_follower = current_user || current_owner || current_artist %>
+        <% follow = current_follower.venue_follows.find_by(venue_id: venue.id) %>
 
         <% if follow %>
           <%= button_to "Remove Favorite", venue_follow_path(follow),

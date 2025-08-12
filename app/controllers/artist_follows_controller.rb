@@ -1,21 +1,19 @@
 class ArtistFollowsController < ApplicationController
-  before_action :authenticate_user!
+  before_action :authenticate_any_user!
   before_action :set_artist_for_create, only: [:create]
   before_action :set_artist_for_destroy, only: [:destroy]
 
   def create
-    current_user.artist_follows.create!(artist: @artist)
+    current_follower.artist_follows.create!(artist: @artist)
 
     respond_to do |format|
       format.turbo_stream  # renders create.turbo_stream.erb
       format.html { redirect_to @artist }
-      #Turbo::StreamsChannel.broadcast_refresh_to "elephant"
-
     end
   end
 
   def destroy
-    current_user.artist_follows.find_by(artist: @artist)&.destroy
+    current_follower.artist_follows.find_by(artist: @artist)&.destroy
 
     respond_to do |format|
       format.turbo_stream  # renders destroy.turbo_stream.erb
@@ -24,6 +22,16 @@ class ArtistFollowsController < ApplicationController
   end
 
   private
+
+  def authenticate_any_user!
+    unless user_signed_in? || owner_signed_in? || artist_signed_in?
+      redirect_to new_user_session_path
+    end
+  end
+
+  def current_follower
+    current_user || current_owner || current_artist
+  end
 
   def set_artist_for_create
     @artist = Artist.find(params[:artist_id])
