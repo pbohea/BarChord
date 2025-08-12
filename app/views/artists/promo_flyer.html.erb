@@ -1,8 +1,3 @@
-<% require 'rqrcode' %>
-<% require 'rqrcode_svg' %>
-
-<% qr = RQRCode::QRCode.new("https://apps.apple.com/us/app/your-app-placeholder/id123456789") %>
-
 <style>
   @media print {
     .no-print {
@@ -28,6 +23,20 @@
     }
   }
 
+  .logo-text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .tiny-logo {
+    height: 32px;
+    width: auto;
+    vertical-align: middle;
+  }
+
   .qr-wrapper {
     display: flex;
     justify-content: center;
@@ -36,36 +45,69 @@
 
   .qr-wrapper svg {
     width: 80vw;
-    max-width: 600px;
+    max-width: 400px;
     height: auto;
   }
 
-  .tiny-logo {
-  height: 64px;
-  width: auto;
+  /* Mobile-specific adjustments */
+  @media (max-width: 768px) {
+    .tiny-logo {
+      height: 24px;
+    }
+    
+    h1 {
+      font-size: 1.5rem;
+    }
+    
+    h2 {
+      font-size: 1.25rem;
+    }
+
+    .qr-wrapper svg {
+      width: 90vw;
+      max-width: 300px;
+    }
   }
 </style>
 
 <div class="container py-4 text-center">
-  <div class="no-print mb-3">
-    <button onclick="window.print()" class="btn btn-primary">
-      Print Flyer
-    </button>
+  
+    <div class="no-print mb-3">
+    <% if defined?(turbo_native_app?) && turbo_native_app? %>
+      <!-- Hide print button in app -->
+    <% else %>
+      <button onclick="window.print()" class="btn btn-primary">
+        Print Flyer
+      </button>
+    <% end %>
   </div>
 
-  <h1 class="fw-bold mb-3 text-primary"><%= @artist.username %> </h1>
-  <div class="logo-text mb-3">
+  <% if @artist %>
+    <h1 class="fw-bold mb-3 text-primary"><%= @artist.username %></h1>
+    
     <h2 class="fw-bold mb-3 logo-text">
       Find Me on BarChord
       <img src="/logoplain.png" alt="BarChord" class="tiny-logo">
     </h2>
-  </div>
 
-  <p class="lead mb-4">Scan the QR code to download the app</p>
+    <p class="lead mb-4">Scan the QR code to download the app</p>
 
-  <div class="d-flex justify-content-center">
-    <div class="text-center">
-      <%= raw qr.as_svg(module_size: 10, standalone: true) %>
+    <div class="qr-wrapper">
+      <div class="text-center">
+        <% if @qr_code %>
+          <%= raw @qr_code.as_svg(module_size: 8, standalone: true) %>
+        <% else %>
+          <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            QR Code could not be generated
+          </div>
+        <% end %>
+      </div>
     </div>
-  </div>
+  <% else %>
+    <div class="alert alert-danger">
+      <h2>Error</h2>
+      <p>Artist not found</p>
+    </div>
+  <% end %>
 </div>

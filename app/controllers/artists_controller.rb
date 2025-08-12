@@ -46,8 +46,18 @@ class ArtistsController < ApplicationController
     @past_events = @artist.past_events
   end
 
+
   def promo_flyer
-    @artist = Artist.find(params[:id])
+    require "rqrcode"
+
+    @artist = Artist.find(params[:id])  
+    @qr_code = RQRCode::QRCode.new("https://apps.apple.com/us/app/your-app-placeholder/id123456789")
+  rescue ActiveRecord::RecordNotFound
+    @artist = nil
+    @qr_code = nil
+  rescue StandardError => e
+    Rails.logger.error "QR Code generation error: #{e.message}"
+    @qr_code = nil
     render layout: "print"
   end
 
