@@ -5,8 +5,18 @@ class Owners::RegistrationsController < Devise::RegistrationsController
   end
 
   # POST /owners
+  # def create
+  #   super do |owner|
+  #     track_owner_session(owner)
+  #   end
+  # end
+
   def create
     super do |owner|
+      if owner.persisted?
+        owner.remember_me = true
+        owner.save
+      end
       track_owner_session(owner)
     end
   end

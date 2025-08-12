@@ -5,8 +5,18 @@ class Artists::RegistrationsController < Devise::RegistrationsController
   end
 
   # POST /artists
+  # def create
+  #   super do |artist|
+  #     track_artist_session(artist)
+  #   end
+  # end
+
   def create
     super do |artist|
+      if artist.persisted?
+        artist.remember_me = true
+        artist.save
+      end
       track_artist_session(artist)
     end
   end

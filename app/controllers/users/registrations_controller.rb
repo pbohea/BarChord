@@ -5,11 +5,15 @@ class Users::RegistrationsController < Devise::RegistrationsController
   end
 
   # POST /users
-  def create
-    super do |user|
-      track_user_session(user)
+def create
+  super do |user|
+    if user.persisted?
+      user.remember_me = true
+      user.save
     end
+    track_user_session(user)
   end
+end
 
   # PUT /users
   def update
