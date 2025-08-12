@@ -11,7 +11,7 @@ task sample_data: :environment do
     VenueFollow.delete_all
     VenueRequest.destroy_all
     ArtistFollow.delete_all
-    #Artist.destroy_all
+    Artist.destroy_all
     NotificationToken.delete_all
     User.destroy_all
     Owner.destroy_all
@@ -31,105 +31,105 @@ task sample_data: :environment do
     name = Faker::Name.first_name
     User.create!(
       email: "#{name.downcase}_user@example.com",
-      password: "Password1"
+      password: "Password1",
     )
   end
 
   # specific user
   User.create!(
     email: "pbohea@gmail.com",
-    password: "Password1"
+    password: "Password1",
   )
 
   #artists
 
-  #   Artist.skip_callback(:validate, :website_https_supported)
+  # Artist.skip_callback(:validate, :website_https_supported)
 
-  #   allowed_performance_types = ["Solo Guitar", "Solo Piano", "Band", "DJ", "Other"]
-  #   allowed_genres = ["Country", "Rock", "Alternative", "Jazz", "Electronic"]
+  # allowed_performance_types = ["Guitar", "Piano", "Band", "DJ", "Other"]
+  # allowed_genres = ["Country", "Rock", "Alternative", "Jazz", "Electronic"]
 
-  #   bios = [
-  #     "Acoustic guitarist playing heartfelt covers from artists like John Mayer and The Lumineers. Always down for a crowd singalong.",
-  #     "Indie-folk duo blending originals and soulful renditions of classic hits. Known for chill patio vibes and tight harmonies.",
-  #     "High-energy cover band playing everything from '90s alt rock to early 2000s pop-punk. Bring your voice — we'll bring the volume.",
-  #     "Vinyl-loving DJ spinning funky house, retro pop, and deep cuts that keep the crowd moving all night.",
-  #     "Piano bar regular mixing Broadway favorites with classic rock singalongs. Requests welcome!",
-  #     "Country guitarist with a modern edge. Think Morgan Wallen meets Eric Church — plus a few surprises.",
-  #     "Loop pedal wizard layering vocals, guitar, and rhythm live. Covers, mashups, and a bit of improv.",
-  #     "Brooklyn-based 3-piece band playing nostalgic '90s covers and alternative deep cuts. Intimate shows, loud memories.",
-  #     "Soulful solo artist bringing smooth vocals and acoustic takes on R&B classics. Ideal for date nights and dim lighting.",
-  #     "DJ specializing in dancefloor-filling mashups, throwbacks, and late-night energy sets. No skips.",
-  #   ]
-     artists = Artist.all
-  #   artists = []
-  #   created_count = 0
-  #   attempts = 0
-  #   max_attempts = 2000  # Prevent infinite loops
+  # bios = [
+  #   "Acoustic guitarist playing heartfelt covers from artists like John Mayer and The Lumineers. Always down for a crowd singalong.",
+  #   "Indie-folk duo blending originals and soulful renditions of classic hits. Known for chill patio vibes and tight harmonies.",
+  #   "High-energy cover band playing everything from '90s alt rock to early 2000s pop-punk. Bring your voice — we'll bring the volume.",
+  #   "Vinyl-loving DJ spinning funky house, retro pop, and deep cuts that keep the crowd moving all night.",
+  #   "Piano bar regular mixing Broadway favorites with classic rock singalongs. Requests welcome!",
+  #   "Country guitarist with a modern edge. Think Morgan Wallen meets Eric Church — plus a few surprises.",
+  #   "Loop pedal wizard layering vocals, guitar, and rhythm live. Covers, mashups, and a bit of improv.",
+  #   "Brooklyn-based 3-piece band playing nostalgic '90s covers and alternative deep cuts. Intimate shows, loud memories.",
+  #   "Soulful solo artist bringing smooth vocals and acoustic takes on R&B classics. Ideal for date nights and dim lighting.",
+  #   "DJ specializing in dancefloor-filling mashups, throwbacks, and late-night energy sets. No skips.",
+  # ]
+  artists = Artist.all
+  # artists = []
+  # created_count = 0
+  # attempts = 0
+  # max_attempts = 2000  # Prevent infinite loops
 
-  #   while created_count < 2000 && attempts < max_attempts
-  #     attempts += 1
-  #     name = Faker::Name.first_name
-  #     email = "#{name.downcase}_artist@example.com"
-  #     username = "#{name.downcase} music"
+  # while created_count < 2000 && attempts < max_attempts
+  #   attempts += 1
+  #   name = Faker::Name.first_name
+  #   email = "#{name.downcase}_artist@example.com"
+  #   username = "#{name.downcase} music"
 
-  #     # Skip if email or username already exists
-  #     if Artist.exists?(email: email) || Artist.exists?(username: username)
-  #       next
-  #     end
-
-  #     begin
-  #       artist = Artist.create!(
-  #         firstname: name,
-  #         email: email,
-  #         password: "Password1",
-  #         username: username,
-  #         genre: allowed_genres.sample,
-  #         performance_type: allowed_performance_types.sample,
-  #         website: "https://www.google.com",
-  #         bio: bios.sample,
-  #         instagram_url: "https://www.google.com",
-  #         tiktok_url: "https://www.google.com",
-  #         youtube_url: "https://www.google.com",
-  #         spotify_url: "https://www.google.com",
-  #       )
-
-  #       # Use local images from db/sample_images directory
-  #       image_files = Dir.glob(Rails.root.join('db', 'sample_images', '*.{jpg,jpeg,png,gif}'))
-
-  #       if image_files.any?
-  #         selected_image = image_files.sample
-  #         filename = File.basename(selected_image)
-
-  #         artist.image.attach(
-  #           io: File.open(selected_image),
-  #           filename: "#{name.downcase}_#{filename}",
-  #           content_type: "image/#{File.extname(selected_image)[1..-1]}"
-  #         )
-  #       else
-  #         # Fallback to online avatar if no local images found
-  #         avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
-  #         artist.image.attach(
-  #           io: URI.open(avatar_url),
-  #           filename: "#{name.downcase}.png",
-  #           content_type: "image/png",
-  #         )
-  #       end
-
-  #       artists << artist
-  #       created_count += 1
-  #     rescue ActiveRecord::RecordInvalid => e
-  #       puts "Skipping duplicate artist: #{e.message}"
-  #       next
-  #     end
+  #   #     # Skip if email or username already exists
+  #   if Artist.exists?(email: email) || Artist.exists?(username: username)
+  #     next
   #   end
 
-  #   puts "Created #{created_count} artists after #{attempts} attempts"
+  #   begin
+  #     artist = Artist.create!(
+  #       firstname: name,
+  #       email: email,
+  #       password: "Password1",
+  #       username: username,
+  #       genre: allowed_genres.sample,
+  #       performance_type: allowed_performance_types.sample,
+  #       website: "https://www.google.com",
+  #       bio: bios.sample,
+  #       instagram_url: "https://www.google.com",
+  #       tiktok_url: "https://www.google.com",
+  #       youtube_url: "https://www.google.com",
+  #       spotify_url: "https://www.google.com",
+  #     )
 
-  #   Artist.create!(
-  #     email: "artist@example.com",
-  #     password: "Password1",
-  #     username: "pat_artist",
-  #   )
+  #     # Use local images from db/sample_images directory
+  #     image_files = Dir.glob(Rails.root.join("db", "sample_images", "*.{jpg,jpeg,png,gif}"))
+
+  #     if image_files.any?
+  #       selected_image = image_files.sample
+  #       filename = File.basename(selected_image)
+
+  #       artist.image.attach(
+  #         io: File.open(selected_image),
+  #         filename: "#{name.downcase}_#{filename}",
+  #         content_type: "image/#{File.extname(selected_image)[1..-1]}",
+  #       )
+  #     else
+  #       # Fallback to online avatar if no local images found
+  #       avatar_url = "https://i.pravatar.cc/300?u=#{SecureRandom.uuid}"
+  #       artist.image.attach(
+  #         io: URI.open(avatar_url),
+  #         filename: "#{name.downcase}.png",
+  #         content_type: "image/png",
+  #       )
+  #     end
+
+  #     artists << artist
+  #     created_count += 1
+  #   rescue ActiveRecord::RecordInvalid => e
+  #     puts "Skipping duplicate artist: #{e.message}"
+  #     next
+  #   end
+  # end
+
+  # puts "Created #{created_count} artists after #{attempts} attempts"
+
+  # Artist.create!(
+  #   email: "artist@example.com",
+  #   password: "Password1",
+  #   username: "pat_artist",
+  # )
 
   # Artist.set_callback(:validate, :website_https_supported)
 

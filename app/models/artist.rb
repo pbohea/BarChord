@@ -47,7 +47,7 @@ class Artist < ApplicationRecord
 
   # Constants
   GENRES = ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk", "Other"].freeze
-  PERFORMANCE_TYPES = ["Solo Guitar", "Solo Piano", "Band", "DJ", "Other"].freeze
+  PERFORMANCE_TYPES = ["Guitar", "Piano", "Band", "DJ", "Other"].freeze
 
   # Validations
   validate :password_complexity
