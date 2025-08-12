@@ -27,7 +27,12 @@ class EventsController < ApplicationController
       @search_params = nil
     end
 
-    @events = apply_date_range_filter(@events)
+    # Handle error cases - don't apply date filter if there's an error
+    if @error_message || @no_results_message
+      @events = []
+    else
+      @events = apply_date_range_filter(@events)
+    end
 
     respond_to do |format|
       format.html
@@ -114,8 +119,8 @@ class EventsController < ApplicationController
       end
     end
 
-# Send notifications after successful save
-send_event_notifications(@event)
+    # Send notifications after successful save
+    send_event_notifications(@event)
   end
 
   # PATCH/PUT /events/1
@@ -200,24 +205,24 @@ send_event_notifications(@event)
   private
 
   def send_event_notifications(event)
-  # Only send notifications if the event has a database artist (not manual artist_name)
-  return unless event.artist.present?
+    # Only send notifications if the event has a database artist (not manual artist_name)
+    return unless event.artist.present?
 
-  # Notify artist's followers
-  NewEventNotifier.with(event: event).deliver(event.artist.followers)
+    # Notify artist's followers
+    NewEventNotifier.with(event: event).deliver(event.artist.followers)
 
-  # Notify venue owner if venue has an owner and artist created the event
-  if artist_signed_in? && event.venue&.owner_id.present?
-    venue_owner = Owner.find_by(id: event.venue.owner_id)
-    EventAtVenueNotifier.with(event: event).deliver(venue_owner) if venue_owner
+    # Notify venue owner if venue has an owner and artist created the event
+    if artist_signed_in? && event.venue&.owner_id.present?
+      venue_owner = Owner.find_by(id: event.venue.owner_id)
+      EventAtVenueNotifier.with(event: event).deliver(venue_owner) if venue_owner
+    end
+
+    # Notify artist if owner created the event
+    if owner_signed_in? && event.artist.present?
+      artist = event.artist
+      OwnerAddedEventNotifier.with(event: event).deliver(artist) if artist
+    end
   end
-
-  # Notify artist if owner created the event
-  if owner_signed_in? && event.artist.present?
-    artist = event.artist
-    OwnerAddedEventNotifier.with(event: event).deliver(artist) if artist
-  end
-end
 
   def apply_date_range_filter(events)
     case params[:date_range]
@@ -240,11 +245,19 @@ end
     events = Event.upcoming.includes(:venue, :artist)
     Rails.logger.info "📅 Found #{events.count} upcoming events total"
 
-    # If we have location coordinates, filter by distance
-    if search_coordinates.present?
-      lat, lng = search_coordinates
-      radius = search_radius
+    # Check if we have valid location coordinates
+    coordinates = search_coordinates
+    if coordinates.present?
+      lat, lng = coordinates
 
+      # Validate coordinates are reasonable
+      if lat.nil? || lng.nil? || lat < -90 || lat > 90 || lng < -180 || lng > 180
+        Rails.logger.error "❌ Invalid coordinates: [#{lat}, #{lng}]"
+        @error_message = "Invalid location coordinates. Please try a different address."
+        return []
+      end
+
+      radius = search_radius
       Rails.logger.info "📍 Searching near [#{lat}, #{lng}] within #{radius} miles"
 
       # Use geocoder's near method without ordering to avoid distance column issue
@@ -252,6 +265,13 @@ end
         nearby_venues = Venue.near([lat, lng], radius, units: :mi, order: false)
         venue_ids = nearby_venues.pluck(:id)
         Rails.logger.info "🏢 Found #{venue_ids.count} venues within radius: #{venue_ids}"
+
+        # If no venues found, return empty array
+        if venue_ids.empty?
+          Rails.logger.info "❌ No venues found within #{radius} miles"
+          @no_results_message = "No venues found within #{radius} miles of your location. Try increasing the search radius."
+          return []
+        end
       rescue => e
         Rails.logger.warn "⚠️ Geocoder near method failed: #{e.message}, falling back to manual calculation"
         # Fallback: manually filter venues by distance
@@ -265,6 +285,13 @@ end
           distance <= radius
         end.map(&:id)
         Rails.logger.info "🏢 Manual calculation found #{venue_ids.count} venues within radius"
+
+        # Same check for manual calculation
+        if venue_ids.empty?
+          Rails.logger.info "❌ No venues found within #{radius} miles (manual calculation)"
+          @no_results_message = "No venues found within #{radius} miles of your location. Try increasing the search radius."
+          return []
+        end
       end
 
       events = events.where(venue_id: venue_ids)
@@ -291,23 +318,14 @@ end
           end
         end
       else
-        # Sort by date/time (default) - events are already ordered by date, start_time in the scope
-        # Convert to array to maintain consistent return type
+        # Sort by date/time (default)
         events = events.to_a.sort_by { |event| [event.date, event.start_time] }
         Rails.logger.info "📅 Sorted by date and time"
       end
     else
-      Rails.logger.info "❌ No search coordinates provided"
-      # Even without location, apply date sorting if requested
-      sort_by = params[:sort_by] || "date"
-      if sort_by == "date"
-        events = events.to_a.sort_by { |event| [event.date, event.start_time] }
-        Rails.logger.info "📅 Sorted by date and time (no location)"
-      else
-        # Can't sort by distance without location, default to date
-        events = events.to_a.sort_by { |event| [event.date, event.start_time] }
-        Rails.logger.info "📅 Defaulted to date sorting (no location for distance sort)"
-      end
+      Rails.logger.info "❌ No search coordinates provided or geocoding failed"
+      @error_message = "Please provide a valid location to search for events"
+      return []
     end
 
     events
@@ -318,10 +336,26 @@ end
         if params[:lat].present? && params[:lng].present? &&
            params[:lat] != "" && params[:lng] != ""
           # Use coordinates if they're provided (from iOS geolocation)
-          [params[:lat].to_f, params[:lng].to_f]
+          lat, lng = params[:lat].to_f, params[:lng].to_f
+
+          # Validate coordinates are reasonable
+          if lat.between?(-90, 90) && lng.between?(-180, 180)
+            [lat, lng]
+          else
+            Rails.logger.error "❌ Invalid coordinates from params: [#{lat}, #{lng}]"
+            nil
+          end
         elsif params[:address].present?
           # Fallback to geocoding the address
-          geocode_address(params[:address])
+          address = params[:address].strip
+
+          # Basic validation
+          if address.length < 3
+            Rails.logger.error "❌ Address too short: '#{address}'"
+            nil
+          else
+            geocode_address(address)
+          end
         else
           nil
         end
