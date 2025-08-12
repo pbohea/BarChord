@@ -32,21 +32,28 @@
   }
 
   .tiny-logo {
-    height: 32px;
+    height: 85px;
     width: auto;
     vertical-align: middle;
   }
 
   .qr-wrapper {
-    display: flex;
-    justify-content: center;
     width: 100%;
+    text-align: center;
+    margin: 0 auto;
   }
 
   .qr-wrapper svg {
-    width: 80vw;
-    max-width: 400px;
-    height: auto;
+    width: 300px !important;
+    height: 300px !important;
+    margin: 0 auto !important;
+    display: inline-block !important;
+    vertical-align: middle !important;
+  }
+
+  /* Force center everything inside the SVG */
+  .qr-wrapper svg * {
+    transform-origin: center !important;
   }
 
   /* Mobile-specific adjustments */
@@ -54,11 +61,11 @@
     .tiny-logo {
       height: 24px;
     }
-    
+
     h1 {
       font-size: 1.5rem;
     }
-    
+
     h2 {
       font-size: 1.25rem;
     }
@@ -71,8 +78,9 @@
 </style>
 
 <div class="container py-4 text-center">
-      <div class="no-print mb-3">
-    <% if defined?(turbo_native_app?) && turbo_native_app? %>
+
+  <div class="no-print mb-3">
+    <% if turbo_native_app? %>
       <button onclick="shareFlyer()" class="btn btn-primary">
         <i class="fas fa-share me-1"></i>
         Share Flyer
@@ -87,11 +95,10 @@
   <script>
     function shareFlyer() {
       // Create a smart link that opens the app if installed, otherwise goes to App Store
-      // PLACEHOLDER LINK FOR APP STORE LINK
       const appStoreUrl = 'https://apps.apple.com/us/app/your-app-id/id123456789';
       const webUrl = window.location.href;
       const shareText = 'Check out <%= @artist&.username %> on BarChord! Download the app: ' + appStoreUrl + ' or view online: ' + webUrl;
-      
+
       if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeApp) {
         // Send message to iOS app for native sharing
         window.webkit.messageHandlers.nativeApp.postMessage({
@@ -117,7 +124,7 @@
 
   <% if @artist %>
     <h1 class="fw-bold mb-3 text-primary"><%= @artist.username %></h1>
-    
+
     <h2 class="fw-bold mb-3 logo-text">
       Find Me on BarChord
       <img src="/logoplain.png" alt="BarChord" class="tiny-logo">
@@ -126,16 +133,14 @@
     <p class="lead mb-4">Scan the QR code to download the app</p>
 
     <div class="qr-wrapper">
-      <div class="text-center">
-        <% if @qr_code %>
-          <%= raw @qr_code.as_svg(module_size: 8, standalone: true) %>
-        <% else %>
-          <div class="alert alert-warning">
-            <i class="fas fa-exclamation-triangle me-2"></i>
-            QR Code could not be generated
-          </div>
-        <% end %>
-      </div>
+      <% if @qr_code %>
+        <%= raw @qr_code.as_svg(module_size: 8, standalone: true) %>
+      <% else %>
+        <div class="alert alert-warning">
+          <i class="fas fa-exclamation-triangle me-2"></i>
+          QR Code could not be generated
+        </div>
+      <% end %>
     </div>
   <% else %>
     <div class="alert alert-danger">
