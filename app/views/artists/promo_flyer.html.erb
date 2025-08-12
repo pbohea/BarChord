@@ -8,20 +8,20 @@
     .no-print {
       display: none !important;
     }
-    
+
     /* Hide browser headers and footers */
     @page {
       margin: 0;
       size: auto;
     }
-    
+
     body {
       margin: 0;
       padding: 20px;
       -webkit-print-color-adjust: exact;
       color-adjust: exact;
     }
-    
+
     /* Hide any potential browser UI elements */
     html, body {
       background: white !important;
@@ -39,6 +39,11 @@
     max-width: 600px;
     height: auto;
   }
+
+  .tiny-logo {
+  height: 64px;
+  width: auto;
+  }
 </style>
 
 <div class="container py-4 text-center">
@@ -49,9 +54,15 @@
   </div>
 
   <h1 class="fw-bold mb-3 text-primary"><%= @artist.username %> </h1>
-  <h2 class="fw-bold mb-3">Find Me on BarChord!</h2>
+  <div class="logo-text mb-3">
+    <h2 class="fw-bold mb-3 logo-text">
+      Find Me on BarChord
+      <img src="/logoplain.png" alt="BarChord" class="tiny-logo">
+    </h2>
+  </div>
+
   <p class="lead mb-4">Scan the QR code to download the app</p>
-  
+
   <div class="d-flex justify-content-center">
     <div class="text-center">
       <%= raw qr.as_svg(module_size: 10, standalone: true) %>
