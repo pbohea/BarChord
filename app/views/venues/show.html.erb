@@ -63,11 +63,13 @@
                data-action="click->event-card#goToEvent"
             style="cursor: pointer;">
 
-            <div class="d-inline-block px-3 py-1 rounded-pill bg-light text-dark fw-semibold mb-2"
-                 style="font-size: 0.9rem;">
-              <i class="bi bi-clock me-1"></i>
-              <%= event.date.strftime("%A, %b %-d") %> • <%= event.start_time.strftime("%-I:%M %p") %> - <%= event.end_time.strftime("%-I:%M %p") %>
-            </div>
+              <div class="d-inline-block px-3 py-1 rounded-pill bg-primary text-white fw-semibold mb-2"
+               style="font-size: 0.9rem; background: linear-gradient(90deg, #0d6efd, #4dabf7) !important;">
+                <i class="bi bi-clock me-1"></i>
+                <%= event.date.strftime("%A, %b %-d") %> • 
+                <%= event.start_time.strftime("%-I:%M %p") %> - 
+                <%= event.end_time.strftime("%-I:%M %p") %>
+              </div>
             <br>
             <small>
               <% if event.artist.present? %>
