@@ -46,11 +46,10 @@ class ArtistsController < ApplicationController
     @past_events = @artist.past_events
   end
 
-
   def promo_flyer
     require "rqrcode"
 
-    @artist = Artist.find(params[:id])  
+    @artist = Artist.find(params[:id])
     @qr_code = RQRCode::QRCode.new("https://apps.apple.com/us/app/your-app-placeholder/id123456789")
   rescue ActiveRecord::RecordNotFound
     @artist = nil
@@ -59,6 +58,20 @@ class ArtistsController < ApplicationController
     Rails.logger.error "QR Code generation error: #{e.message}"
     @qr_code = nil
     render layout: "print"
+  end
+
+  def promo_flyer_print
+    require "rqrcode"
+
+    @artist = Artist.find(params[:id])
+    @qr_code = RQRCode::QRCode.new("https://apps.apple.com/us/app/your-app-placeholder/id123456789")
+    render layout: "print"
+  rescue ActiveRecord::RecordNotFound
+    @artist = nil
+    @qr_code = nil
+  rescue StandardError => e
+    Rails.logger.error "QR Code generation error: #{e.message}"
+    @qr_code = nil
   end
 
   def venue_requests

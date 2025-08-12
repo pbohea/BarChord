@@ -79,49 +79,6 @@
 
 <div class="container py-4 text-center">
 
-  <div class="no-print mb-3">
-    <% if turbo_native_app? %>
-      <button onclick="shareFlyer()" class="btn btn-primary">
-        <i class="fas fa-share me-1"></i>
-        Share Flyer
-      </button>
-    <% else %>
-      <a href="<%= promo_flyer_print_artist_path(@artist) %>" target="_blank" class="btn btn-primary">
-        Print Flyer
-      </a>
-    <% end %>
-  </div>
-
-  <script>
-    function shareFlyer() {
-      // Create a smart link that opens the app if installed, otherwise goes to App Store
-      const appStoreUrl = 'https://apps.apple.com/us/app/your-app-id/id123456789';
-      const webUrl = window.location.href;
-      const shareText = 'Check out <%= @artist&.username %> on BarChord! Download the app: ' + appStoreUrl + ' or view online: ' + webUrl;
-
-      if (window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.nativeApp) {
-        // Send message to iOS app for native sharing
-        window.webkit.messageHandlers.nativeApp.postMessage({
-          action: 'share',
-          url: appStoreUrl,
-          title: 'Check out <%= @artist&.username %> on BarChord!',
-          text: shareText
-        });
-      } else if (navigator.share) {
-        // Fallback to Web Share API
-        navigator.share({
-          title: 'Check out <%= @artist&.username %> on BarChord!',
-          text: shareText,
-          url: appStoreUrl
-        });
-      } else {
-        // Final fallback - copy to clipboard
-        navigator.clipboard.writeText(shareText);
-        alert('Link copied to clipboard!');
-      }
-    }
-  </script>
-
   <% if @artist %>
     <h1 class="fw-bold mb-3 text-primary"><%= @artist.username %></h1>
 
