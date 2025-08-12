@@ -29,8 +29,8 @@
 #  index_artists_on_reset_password_token  (reset_password_token) UNIQUE
 #
 class Artist < ApplicationRecord
-  require 'net/http'
-  require 'uri'
+  require "net/http"
+  require "uri"
 
   # Devise
   devise :database_authenticatable, :registerable,
@@ -39,15 +39,13 @@ class Artist < ApplicationRecord
   # Associations
   has_many :events, foreign_key: "artist_id"
   has_many :venues, through: :events
-  has_many :artist_follows
-  has_many :followers, through: :artist_follows, source: :follower
+  has_many :artist_follows, dependent: :destroy
   has_one_attached :image
   has_many :notification_tokens
   has_many :artist_follows, as: :follower, dependent: :destroy
   has_many :followed_artists, through: :artist_follows, source: :artist
   has_many :venue_follows, as: :follower, dependent: :destroy
   has_many :followed_venues, through: :venue_follows, source: :venue
-
 
   # Constants
   GENRES = ["Country", "Rock", "Alternative", "Jazz", "Electronic", "Hip-Hop", "Pop", "Folk", "Other"].freeze
@@ -68,6 +66,10 @@ class Artist < ApplicationRecord
 
   def past_events
     events.past
+  end
+
+  def followers
+    ArtistFollow.where(artist: self).includes(:follower).map(&:follower)
   end
 
   private

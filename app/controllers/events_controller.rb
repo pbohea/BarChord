@@ -208,8 +208,9 @@ class EventsController < ApplicationController
     # Only send notifications if the event has a database artist (not manual artist_name)
     return unless event.artist.present?
 
-    # Notify artist's followers
-    NewEventNotifier.with(event: event).deliver(event.artist.followers)
+    # Notify artist's followers (now includes Users, Owners, and Artists)
+    followers = event.artist.followers
+    NewEventNotifier.with(event: event).deliver(followers) if followers.any?
 
     # Notify venue owner if venue has an owner and artist created the event
     if artist_signed_in? && event.venue&.owner_id.present?
