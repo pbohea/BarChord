@@ -78,6 +78,7 @@ gem "carrierwave"
 gem "cloudinary"
 gem "kaminari"
 gem "foreman"
+gem "timezone"
 
 group :development do
   gem "annotaterb"

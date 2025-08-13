@@ -43,6 +43,8 @@ Rails.application.routes.draw do
       #get :nearby
       get :map
       get :landing
+      get :time_options_ajax
+      get :end_time_options_ajax
     end
   end
 

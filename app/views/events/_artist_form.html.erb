@@ -1,7 +1,8 @@
 <!-- FORM 1: Artist Create Event Form -->
 <div class="container pt-4" style="max-width: 600px;">
 
-  <%= form_with model: event, local: true, class: "needs-validation" do |f| %>
+  <%= form_with model: event, local: true, class: "needs-validation", 
+                data: { controller: "time-options" } do |f| %>
 
     <!-- Hidden field to set the artist -->
     <%= f.hidden_field :artist_id, value: current_artist.id %>
@@ -19,7 +20,12 @@
 
       <ul class="list-group mt-1" data-venue-autocomplete-target="results"></ul>
 
-      <%= hidden_field_tag "event[venue_id]", nil, data: { venue_autocomplete_target: "hidden" } %>
+      <%= hidden_field_tag "event[venue_id]", nil, 
+          data: { 
+            venue_autocomplete_target: "hidden",
+            time_options_target: "venue",
+            action: "change->time-options#updateStartTimes"
+          } %>
 
       <div class="mt-2 text-center">
         <%= link_to "Can't find your venue? Add it here", new_venue_request_path, 
@@ -52,8 +58,6 @@
         <div class="text-danger small mt-2"><%= event.errors[:base].first %></div>
       <% end %>
 
-      <!-- MOVE ALL FORM FIELDS INSIDE THE VENUE-AUTOCOMPLETE CONTROLLER -->
-
       <!-- Category Dropdown -->
       <div class="mb-3">
         <%= f.label :category, class: "form-label" %>
@@ -75,19 +79,30 @@
           [date.strftime("%A, %B %-d"), date.to_s]
           },
           {},
-        class: "form-select", required: true %>
+        class: "form-select", required: true,
+        data: { 
+          time_options_target: "date",
+          action: "change->time-options#updateStartTimes"
+        } %>
       </div>
 
       <!-- Start Time Dropdown -->
       <div class="mb-3">
         <%= f.label :start_time, "Start Time", class: "form-label" %>
-        <%= f.select :start_time, time_options, {}, class: "form-select", required: true %>
+        <%= f.select :start_time, [["Select start time", ""]], {}, 
+            class: "form-select", required: true,
+            data: { 
+              time_options_target: "startTime",
+              action: "change->time-options#updateEndTimes"
+            } %>
       </div>
 
       <!-- End Time Dropdown -->
       <div class="mb-3">
         <%= f.label :end_time, "End Time", class: "form-label" %>
-        <%= f.select :end_time, time_options, {}, class: "form-select", required: true %>
+        <%= f.select :end_time, [["Select end time", ""]], {}, 
+            class: "form-select", required: true,
+            data: { time_options_target: "endTime" } %>
       </div>
 
       <!-- Cover Checkbox -->

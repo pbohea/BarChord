@@ -125,14 +125,13 @@ class EventsController < ApplicationController
 
   # PATCH/PUT /events/1
   def update
-    respond_to do |format|      if @event.update(event_params)
-        format.html { redirect_to @event, notice: "Event was successfully updated." }
-        format.json { render :show, status: :ok, location: @event }
-      else
-        format.html { render :edit, status: :unprocessable_entity }
-        format.json { render json: @event.errors, status: :unprocessable_entity }
-      end
-    end
+    respond_to do |format| if @event.update(event_params)
+      format.html { redirect_to @event, notice: "Event was successfully updated." }
+      format.json { render :show, status: :ok, location: @event }
+    else
+      format.html { render :edit, status: :unprocessable_entity }
+      format.json { render json: @event.errors, status: :unprocessable_entity }
+    end     end
   end
 
   # DELETE /events/1
@@ -198,6 +197,29 @@ class EventsController < ApplicationController
         radius: params[:radius],
         date_range: params[:date_range],
       )
+    end
+  end
+
+  def time_options_ajax
+    venue = Venue.find_by(id: params[:venue_id])
+    selected_date = params[:date]
+
+    start_times = helpers.time_options(venue, selected_date)
+
+    respond_to do |format|
+      format.json { render json: { start_times: start_times } }
+    end
+  end
+
+  def end_time_options_ajax
+    venue = Venue.find_by(id: params[:venue_id])
+    selected_date = params[:date]
+    start_time = params[:start_time]
+
+    end_times = helpers.end_time_options(venue, selected_date, start_time)
+
+    respond_to do |format|
+      format.json { render json: { end_times: end_times } }
     end
   end
 
@@ -454,21 +476,4 @@ class EventsController < ApplicationController
 
     false
   end
-
-  # notifications
-  # def notify_followers(event)
-  #   artist = event.artist
-  #   return unless artist
-
-  #   artist.followers.each do |user|
-  #     NewEventNotifier.with(event: event).deliver(user)
-  #   end
-  # end
-
-  # def notify_artist(event)
-  #   artist = event.artist
-  #   return unless artist
-
-  #   NewEventNotifier.with(event: event).deliver(artist)
-  # end
 end

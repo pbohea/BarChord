@@ -77,7 +77,7 @@ export default class extends Controller {
     // Show details
     this.showDetails(name, address)
 
-    // Trigger change event on hidden input to notify home-search controller
+    // Trigger change event on hidden input to notify other controllers (including time-options)
     this.hiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
 
     // Use setTimeout to ensure the input event has finished processing
@@ -123,7 +123,7 @@ export default class extends Controller {
     }
     if (this.hasHiddenTarget) {
       this.hiddenTarget.value = ""
-      // Trigger change event to notify home-search controller
+      // Trigger change event to notify other controllers
       this.hiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
     }
     // Reset verification and disable submit when hiding
@@ -141,6 +141,7 @@ export default class extends Controller {
     const parts = [venue.street_address, venue.city, venue.state, venue.zip_code].filter(Boolean)
     return parts.join(", ")
   }
+  
   toggleSubmit() {
     // Only update submit button if it exists (for forms that have one)
     if (this.hasSubmitButtonTarget && this.hasVerificationTarget && this.hasHiddenTarget) {
@@ -149,6 +150,7 @@ export default class extends Controller {
       this.submitButtonTarget.disabled = !(venueSelected && verified)
     }
   }
+  
   selectVenueForClaim(id, name, address) {
     console.log("Selecting venue for claim:", { id, name, address })
 
@@ -240,6 +242,7 @@ export default class extends Controller {
     //   }
     // }, 8000)
   }
+  
   clearSelection() {
     // Clear the input and dropdown
     this.inputTarget.value = ""
@@ -250,5 +253,8 @@ export default class extends Controller {
     if (this.hasDetailsTarget) {
       this.detailsTarget.classList.add("d-none")
     }
+
+    // Trigger change event to notify other controllers when clearing
+    this.hiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
   }
 }
