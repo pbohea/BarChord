@@ -211,6 +211,10 @@ class EventsController < ApplicationController
     followers = event.artist.followers
     NewEventNotifier.with(event: event).deliver(followers) if followers.any?
 
+    # Notify venue's followers (now includes Users, Owners, and Artists)
+    followers = event.venue.followers
+    NewVenueEventNotifier.with(event: event).deliver(followers) if followers.any?
+
     # Notify venue owner if venue has an owner and artist created the event
     if artist_signed_in? && event.venue&.owner_id.present?
       venue_owner = Owner.find_by(id: event.venue.owner_id)

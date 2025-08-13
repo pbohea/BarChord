@@ -26,12 +26,10 @@ class Venue < ApplicationRecord
   belongs_to :owner, optional: true
   has_many :events
   has_many :venue_follows, dependent: :destroy
-  has_many :followers, through: :venue_follows, source: :follower
 
   has_one_attached :image
 
   geocoded_by :full_address, latitude: :latitude, longitude: :longitude
-
 
   before_validation :normalize_website_url
 
@@ -41,18 +39,22 @@ class Venue < ApplicationRecord
 
   before_save :geocode_address, if: :address_changed?
 
- CATEGORIES = [
+  CATEGORIES = [
     "Bar",
     "Bar & Restaurant",
     "Cafe",
     "Jazz Club",
     "Nightclub",
     "Pub",
-    "Restaurant"
+    "Restaurant",
   ].freeze
-  
+
   def full_address
     [street_address, city, state, zip_code].compact.join(", ")
+  end
+
+  def followers
+    VenueFollow.where(venue: self).includes(:follower).map(&:follower)
   end
 
   private
