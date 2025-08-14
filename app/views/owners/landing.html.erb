@@ -4,16 +4,26 @@
   <div class="row justify-content-center">
     <div class="col-lg-8">
       <!-- Welcome Header -->
-      <div class="text-center mb-5">
+      <div class="text-center mb-2">
         <h1 class="display-4 fw-bold text-primary mb-3">Welcome to BarChord!</h1>
         <p class="lead text-muted">Manage your venues and host events</p>
+      </div>
+
+      <!-- Getting Started -->
+
+      <div class="card-body p-5 text-center">
+
+        <%= link_to owner_dashboard_path(current_owner), class: "btn btn-primary btn-lg px-5" do %>
+          Get Started
+          <i class="fas fa-arrow-right me-2"></i>
+        <% end %>
       </div>
 
       <!-- How It Works Section -->
       <div class="card shadow-sm mb-4">
         <div class="card-body p-5">
           <h2 class="h3 mb-4 text-center">How It Works for Venue Owners</h2>
-          
+
           <div class="row g-4">
             <div class="col-md-4 text-center">
               <div class="mb-3">
@@ -22,7 +32,7 @@
               <h4 class="h5">Claim Your Venues</h4>
               <p class="text-muted">Find and claim ownership if we have your venue listed, or add it to the app if it's not.</p>
             </div>
-            
+
             <div class="col-md-4 text-center">
               <div class="mb-3">
                 <i class="fas fa-calendar-alt fa-3x text-success"></i>
@@ -30,28 +40,14 @@
               <h4 class="h5">Host Events</h4>
               <p class="text-muted">Create events at your venues and collaborate with artists to fill your calendar.</p>
             </div>
-            
+
             <div class="col-md-4 text-center">
               <div class="mb-3">
                 <i class="fas fa-users fa-3x text-warning"></i>
               </div>
               <h4 class="h5">Build Your Following</h4>
-              <p class="text-muted">Attract venue followers who get notified about events happening at your locations.</p>
+              <p class="text-muted">Increase your ROI by attracting venue followers who get notified about events happening at your locations.</p>
             </div>
           </div>
-        </div>
-      </div>
-
-      
-      <!-- Getting Started -->
-      <div class="card shadow-sm mb-5">
-        <div class="card-body p-5 text-center">
-          <h3 class="h4 mb-3">Ready to Get Started?</h3>
-          <p class="text-muted mb-4">Head to your dashboard to start claiming venues, creating events, and managing your properties.</p>
-          
-          <%= link_to owner_dashboard_path(current_owner), class: "btn btn-primary btn-lg px-5" do %>
-            <i class="fas fa-arrow-right me-2"></i>
-            Go to My Dashboard
-          <% end %>
         </div>
       </div>
