@@ -215,7 +215,7 @@ export default class extends Controller {
         <div>
           <strong style="color: #856404;">Venue Unavailable</strong><br>
           <span style="color: #856404;">This venue already has an owner and cannot be claimed. Please contact 
-          <a href="mailto:placeholderemail@gmail.com" style="color: #856404; text-decoration: underline;">placeholderemail@gmail.com</a> 
+          <a href="mailto:admin@barchord.co" style="color: #856404; text-decoration: underline;">admin@barchord.co</a> 
           to dispute ownership.</span>
         </div>
         <button onclick="this.parentElement.parentElement.remove()" style="

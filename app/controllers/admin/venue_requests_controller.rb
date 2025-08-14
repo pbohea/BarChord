@@ -22,10 +22,12 @@ class Admin::VenueRequestsController < ApplicationController
     if venue
       # Send notification to owner if it's an ownership claim
       if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
-        owner = Owner.find_by(id: @venue_request.requester_id)
-        VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
-      end
-
+  owner = Owner.find_by(id: @venue_request.requester_id)
+  if owner
+    VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner)
+    VenueApprovalMailer.venue_approved(@venue_request).deliver_now
+  end
+end
       if @venue_request.requester_type == "artist"
         artist = Artist.find_by(id: @venue_request.requester_id)
         VenueRequestApprovedNotifier.with(venue_request: @venue_request).deliver(artist) if artist
@@ -64,10 +66,13 @@ class Admin::VenueRequestsController < ApplicationController
 
       if venue
         # Send notification to owner if it's an ownership claim
-        if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
-          owner = Owner.find_by(id: @venue_request.requester_id)
-          VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
-        end
+if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
+  owner = Owner.find_by(id: @venue_request.requester_id)
+  if owner
+    VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner)
+    VenueApprovalMailer.venue_approved(@venue_request).deliver_now
+  end
+end
 
         if @venue_request.requester_type == "artist"
           artist = Artist.find_by(id: @venue_request.requester_id)
@@ -101,10 +106,13 @@ class Admin::VenueRequestsController < ApplicationController
         @venue_request.update(status: :approved, venue_id: venue.id)
 
         # Send notification to owner if it's an ownership claim
-        if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
-          owner = Owner.find_by(id: @venue_request.requester_id)
-          VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner) if owner
-        end
+   if @venue_request.ownership_claim? && @venue_request.requester_type == "owner"
+  owner = Owner.find_by(id: @venue_request.requester_id)
+  if owner
+    VenueClaimApprovedNotifier.with(venue_request: @venue_request).deliver(owner)
+    VenueApprovalMailer.venue_approved(@venue_request).deliver_now
+  end
+end
 
         if @venue_request.requester_type == "artist"
           artist = Artist.find_by(id: @venue_request.requester_id)

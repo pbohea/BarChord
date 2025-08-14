@@ -1,0 +1,11 @@
+<!-- app/views/venue_approval_mailer/venue_approved.text.erb -->
+Hi <%= @owner.firstname.present? ? @owner.firstname : @owner.email %>,
+
+Great news! Your venue claim for <%= @venue.name %> has been approved.
+
+You can now manage your venue and view its page:
+<%= @venue_url %>
+
+Thank you for joining the BarChord community!
+
+— The BarChord Team
