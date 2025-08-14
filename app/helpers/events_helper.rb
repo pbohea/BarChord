@@ -1,18 +1,38 @@
 module EventsHelper
+  def date_options(venue = nil)
+    # Determine the timezone based on venue location
+    timezone = venue_timezone(venue)
+    venue_tz = ActiveSupport::TimeZone.new(timezone)
+    
+    # Generate dates starting from today in the venue's timezone
+    venue_today = venue_tz.now.to_date
+    
+    dates = []
+    (0..30).each do |i|
+      date = venue_today + i.days
+      dates << [date.strftime("%A, %B %-d"), date.to_s]
+    end
+    
+    dates
+  end
+
   def time_options(venue = nil, selected_date = nil)
     # Determine the timezone based on venue location
     timezone = venue_timezone(venue)
+    venue_tz = ActiveSupport::TimeZone.new(timezone)
     
-    # Parse the selected date or use today
-    event_date = selected_date.present? ? Date.parse(selected_date.to_s) : Date.current
-    is_today = event_date == Date.current
+    # Parse the selected date or use today IN THE VENUE'S TIMEZONE
+    event_date = selected_date.present? ? Date.parse(selected_date.to_s) : venue_tz.now.to_date
+    is_today = event_date == venue_tz.now.to_date  # Compare in venue's timezone
+    
+    Rails.logger.info "🕐 Venue timezone: #{timezone}, Venue date: #{venue_tz.now.to_date}, Event date: #{event_date}, Is today?: #{is_today}"
     
     times = []
     
     # Determine start time based on date
     if is_today
       # For today, start from the next 15-minute interval in venue timezone
-      current_time_in_venue_tz = Time.current.in_time_zone(timezone)
+      current_time_in_venue_tz = venue_tz.now
       # Round up to next 15-minute interval
       minutes = current_time_in_venue_tz.min
       rounded_minutes = ((minutes / 15.0).ceil * 15) % 60
@@ -82,7 +102,7 @@ module EventsHelper
     while current_time <= max_end_time
       # Only label times as "next day" if they're in the early morning hours (12 AM - 4 AM)
       if current_time.hour >= 0 && current_time.hour < 4 && current_time.day > min_end_time.day
-        display_time = "#{current_time.strftime('%-I:%M %p')}"
+        display_time = "#{current_time.strftime('%-I:%M %p')} (next day)"
       else
         display_time = current_time.strftime("%-I:%M %p")
       end

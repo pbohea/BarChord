@@ -45,6 +45,7 @@ Rails.application.routes.draw do
       get :landing
       get :time_options_ajax
       get :end_time_options_ajax
+      get :date_options_ajax
     end
   end
 

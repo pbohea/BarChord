@@ -200,6 +200,16 @@ class EventsController < ApplicationController
     end
   end
 
+  def date_options_ajax
+    venue = Venue.find_by(id: params[:venue_id])
+
+    date_options = helpers.date_options(venue)
+
+    respond_to do |format|
+      format.json { render json: { date_options: date_options } }
+    end
+  end
+
   def time_options_ajax
     venue = Venue.find_by(id: params[:venue_id])
     selected_date = params[:date]

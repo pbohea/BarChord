@@ -28,12 +28,20 @@ class Owner < ApplicationRecord
          :recoverable, :rememberable, :validatable
 
   has_many :venues
+  has_many :events, through: :venues
   has_many :notification_tokens
   has_many :artist_follows, as: :follower, dependent: :destroy
   has_many :followed_artists, through: :artist_follows, source: :artist
   has_many :venue_follows, as: :follower, dependent: :destroy
   has_many :followed_venues, through: :venue_follows, source: :venue
 
+  def upcoming_events
+    events.upcoming
+  end
+
+  def past_events
+    events.past
+  end
 
   def password_complexity
     return if password.blank?

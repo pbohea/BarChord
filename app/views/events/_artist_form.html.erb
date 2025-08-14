@@ -24,7 +24,7 @@
           data: { 
             venue_autocomplete_target: "hidden",
             time_options_target: "venue",
-            action: "change->time-options#updateStartTimes"
+            action: "change->time-options#venueChanged"
           } %>
 
       <div class="mt-2 text-center">
@@ -70,20 +70,15 @@
         <%= f.text_area :description, class: "form-control", placeholder: "Describe the event", rows: 3 %>
       </div>
 
-      <!-- Date Dropdown (Next 30 Days) -->
+      <!-- Date Dropdown - starts empty, populated by JavaScript -->
       <div class="mb-3">
         <%= f.label :date, class: "form-label" %>
-        <%= f.select :date,
-          (0..30).map { |i|
-          date = Date.today + i.days
-          [date.strftime("%A, %B %-d"), date.to_s]
-          },
-          {},
-        class: "form-select", required: true,
-        data: { 
-          time_options_target: "date",
-          action: "change->time-options#updateStartTimes"
-        } %>
+        <%= f.select :date, [["Select date", ""]], {},
+            class: "form-select", required: true,
+            data: { 
+              time_options_target: "date",
+              action: "change->time-options#updateStartTimes"
+            } %>
       </div>
 
       <!-- Start Time Dropdown -->

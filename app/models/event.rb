@@ -25,8 +25,17 @@ class Event < ApplicationRecord
   before_save :set_artist_name_from_artist
   before_save :set_category_from_artist
 
-  scope :upcoming, -> { where("date >= ?", Date.today).order(:date, :start_time) }
-  scope :past, -> { where("date < ?", Date.today).order(date: :desc, start_time: :desc) }
+  scope :upcoming, -> {
+          where("date > ? OR (date = ? AND start_time > ?)",
+                Date.current, Date.current, Time.current)
+            .order(:date, :start_time)
+        }
+
+  scope :past, -> {
+          where("date < ? OR (date = ? AND end_time < ?)",
+                Date.current, Date.current, Time.current)
+            .order(date: :desc, start_time: :desc)
+        }
   scope :today, -> { where(date: Date.today) }
   scope :next_7_days, -> { where(date: Date.today..(Date.today + 7)) }
 

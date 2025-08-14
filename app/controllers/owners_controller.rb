@@ -6,6 +6,8 @@ class OwnersController < ApplicationController
     @venues = @owner.venues
     @favorite_artists = @owner.followed_artists
     @favorite_venues = @owner.followed_venues
+    @upcoming_events = @owner.upcoming_events
+    @past_events = @owner.past_events
   end
 
   def venue_requests
