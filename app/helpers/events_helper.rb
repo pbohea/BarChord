@@ -102,7 +102,7 @@ module EventsHelper
     while current_time <= max_end_time
       # Only label times as "next day" if they're in the early morning hours (12 AM - 4 AM)
       if current_time.hour >= 0 && current_time.hour < 4 && current_time.day > min_end_time.day
-        display_time = "#{current_time.strftime('%-I:%M %p')} (next day)"
+        display_time = "#{current_time.strftime('%-I:%M %p')}"
       else
         display_time = current_time.strftime("%-I:%M %p")
       end

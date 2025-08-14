@@ -12,7 +12,7 @@ export default class extends Controller {
   // Called when venue changes - update both dates and start times
   venueChanged() {
     this.updateDateOptions()
-    this.updateStartTimes()
+    this.clearTimeOptions()  // Clear time options immediately when venue changes
   }
 
   // Called when date changes
@@ -68,13 +68,10 @@ export default class extends Controller {
     
     dates.forEach(([display, value]) => {
       const option = new Option(display, value)
-      if (value === currentValue) {
-        option.selected = true
-      }
       this.dateTarget.add(option)
     })
     
-    // Clear time options when dates change
+    // Always clear time options when dates are repopulated
     this.clearTimeOptions()
   }
 
