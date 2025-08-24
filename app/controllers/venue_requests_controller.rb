@@ -11,9 +11,9 @@ class VenueRequestsController < ApplicationController
       # Proceed to render the claim form
       return
     elsif artist_signed_in?
-      redirect_to artist_dashboard_path(current_artist), alert: "Only venue owners can claim venues."
+      redirect_to artist_dashboard_path, alert: "Only venue owners can claim venues."
     elsif user_signed_in?
-      redirect_to user_dashboard_path(current_user), alert: "Only venue owners can claim venues."
+      redirect_to user_dashboard_path, alert: "Only venue owners can claim venues."
     else
       redirect_to new_owner_session_path, alert: "You must sign in as an owner to claim a venue."
     end

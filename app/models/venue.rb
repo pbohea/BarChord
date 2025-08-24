@@ -32,6 +32,7 @@ class Venue < ApplicationRecord
   geocoded_by :full_address, latitude: :latitude, longitude: :longitude
 
   before_validation :normalize_website_url
+  before_validation :generate_slug
 
   validates :name, :street_address, :city, :state, :zip_code, presence: true
   validates :website, format: URI::DEFAULT_PARSER.make_regexp(%w[http https]), allow_blank: true
@@ -57,7 +58,28 @@ class Venue < ApplicationRecord
     VenueFollow.where(venue: self).includes(:follower).map(&:follower)
   end
 
+  def to_param
+    slug
+  end
+
   private
+
+  def generate_slug
+    return if name.blank?
+    
+    base_slug = name.downcase.gsub(/[^a-z0-9\-_]/, '-').gsub(/-+/, '-').strip('-')
+    base_slug = 'venue' if base_slug.blank?
+    
+    slug_candidate = base_slug
+    counter = 1
+    
+    while Venue.where(slug: slug_candidate).where.not(id: id).exists?
+      slug_candidate = "#{base_slug}-#{counter}"
+      counter += 1
+    end
+    
+    self.slug = slug_candidate
+  end
 
   def normalize_website_url
     return if website.blank?

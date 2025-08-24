@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_action :authenticate_user!
-  before_action :set_user
+  before_action :authenticate_user!, except: [:landing]
+  before_action :set_user, only: [:landing]
 
   def dashboard
     @user = current_user

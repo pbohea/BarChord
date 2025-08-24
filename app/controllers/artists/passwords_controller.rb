@@ -24,7 +24,7 @@ class Artists::PasswordsController < Devise::PasswordsController
   protected
 
   def after_resetting_password_path_for(resource)
-    artist_dashboard_path(current_artist)
+    artist_dashboard_path
   end
 
   # The path used after sending reset password instructions

@@ -139,9 +139,9 @@
   <!-- Action Buttons -->
   <div class="text-center mb-4">
     <% if owner_signed_in? %>
-      <%= link_to "Return to Dashboard", owner_dashboard_path(current_owner), class: "btn btn-primary me-3" %>
+      <%= link_to "Return to Dashboard", owner_dashboard_path, class: "btn btn-primary me-3" %>
     <% elsif artist_signed_in? %>
-      <%= link_to "Return to Dashboard", artist_dashboard_path(current_artist), class: "btn btn-primary me-3" %>
+      <%= link_to "Return to Dashboard", artist_dashboard_path, class: "btn btn-primary me-3" %>
     <% else %>
     <% end %>
   </div>

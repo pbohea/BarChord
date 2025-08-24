@@ -9,7 +9,7 @@ class VenueClaimApprovedNotifier < ApplicationNotifier
       puts "🚨 Formatting venue claim approved APN payload"
       apn.alert = "Your venue claim has been approved!"
       apn.custom_payload = {
-        path: venue_path(params[:venue_request].venue_id),
+        path: venue_path(params[:venue_request].venue),
         venue_id: params[:venue_request].venue_id,
         venue_name: params[:venue_request].name
       }

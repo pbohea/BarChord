@@ -12,7 +12,7 @@
                         class: "btn btn-outline-danger btn-sm",
                         data: { turbo_confirm: "Are you sure?" } %>
         <% else %>
-          <%= button_to "Add Favorite", venue_follows_path(venue_id: venue.id),
+          <%= button_to "Add Favorite", venue_follows_path(venue_id: venue),
                         method: :post,
                         class: "btn btn-success btn-sm" %>
         <% end %>

@@ -24,7 +24,7 @@ class Users::PasswordsController < Devise::PasswordsController
   protected
 
   def after_resetting_password_path_for(resource)
-    user_dashboard_path(current_user)
+    user_dashboard_path
   end
 
   # The path used after sending reset password instructions

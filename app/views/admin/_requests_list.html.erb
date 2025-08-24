@@ -74,7 +74,7 @@
                     } %>
               </div>
             <% elsif request.approved? && request.venue_id %>
-              <%= link_to "View Venue", venue_path(request.venue_id), class: "btn btn-primary btn-sm w-100" %>
+              <%= link_to "View Venue", venue_path(request.venue), class: "btn btn-primary btn-sm w-100" %>
             <% elsif request.rejected? %>
               <span class="text-muted">Rejected</span>
             <% end %>

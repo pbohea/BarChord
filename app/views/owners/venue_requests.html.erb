@@ -34,7 +34,7 @@
 
               <% if request.approved? && request.venue_id %>
                 <div class="mt-2">
-                  <%= link_to "View Venue", venue_path(request.venue_id), class: "btn btn-sm btn-primary" %>
+                  <%= link_to "View Venue", venue_path(request.venue), class: "btn btn-sm btn-primary" %>
                 </div>
               <% end %>
             </div>

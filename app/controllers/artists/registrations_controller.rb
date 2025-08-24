@@ -33,7 +33,7 @@ class Artists::RegistrationsController < Devise::RegistrationsController
   end
 
   def after_update_path_for(resource)
-    artist_dashboard_path(resource)
+    artist_dashboard_path
   end
 
   private

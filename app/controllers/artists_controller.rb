@@ -1,5 +1,6 @@
 class ArtistsController < ApplicationController
-  before_action :set_artist, only: [:show, :dashboard, :venue_requests] # Add venue_requests here
+  before_action :set_artist, only: [:show, :promo_flyer, :promo_flyer_print, :landing, :events]
+  before_action :authenticate_artist!, only: [:dashboard, :venue_requests]
 
   # def search
   #   query = params[:query].to_s.strip.downcase
@@ -77,6 +78,7 @@ class ArtistsController < ApplicationController
   end
 
   def venue_requests
+    @artist = current_artist
     @venue_requests = VenueRequest.where(requester_type: "artist", requester_id: @artist.id)
                                   .order(created_at: :desc)
   end
@@ -90,6 +92,6 @@ class ArtistsController < ApplicationController
   private
 
   def set_artist
-    @artist = Artist.find(params[:id])
+    @artist = Artist.find_by!(slug: params[:id])
   end
 end

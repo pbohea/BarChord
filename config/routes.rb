@@ -84,11 +84,12 @@ Rails.application.routes.draw do
   resources :notification_tokens, only: :create
 
   #misc routes
-  get "/owners/:id/dashboard", to: "owners#dashboard", as: :owner_dashboard
-  get "owners/:id/venue_requests", to: "owners#venue_requests", as: "owner_venue_requests"
-  get "/users/:id/dashboard", to: "users#dashboard", as: :user_dashboard
-  get "/artists/:id/dashboard", to: "artists#dashboard", as: :artist_dashboard
-  get "artists/:id/venue_requests", to: "artists#venue_requests", as: "artist_venue_requests"
+  # User-specific routes (no ID needed - uses current_user/current_owner/current_artist)
+  get "/owner/dashboard", to: "owners#dashboard", as: :owner_dashboard
+  get "/user/dashboard", to: "users#dashboard", as: :user_dashboard
+  get "/artist/dashboard", to: "artists#dashboard", as: :artist_dashboard
+  get "/owner/venue_requests", to: "owners#venue_requests", as: "owner_venue_requests"
+  get "/artist/venue_requests", to: "artists#venue_requests", as: "artist_venue_requests"
   get "/about", to: "pages#about"
   get "/owners_about", to: "pages#owners_about"
   get "/artists_about", to: "pages#artists_about"

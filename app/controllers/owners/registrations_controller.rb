@@ -33,7 +33,7 @@ class Owners::RegistrationsController < Devise::RegistrationsController
   end
 
   def after_update_path_for(resource)
-    owner_dashboard_path(resource)
+    owner_dashboard_path
   end
 
   private

@@ -36,7 +36,7 @@ end
   end
 
   def after_update_path_for(resource)
-    stored_location_for(resource) || user_dashboard_path(resource)
+    stored_location_for(resource) || user_dashboard_path
   end
 
   def respond_with(resource, _opts = {})

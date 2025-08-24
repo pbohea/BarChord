@@ -106,9 +106,9 @@ class EventsController < ApplicationController
       if @event.save
         # Redirect based on who created the event
         if artist_signed_in?
-          format.html { redirect_to artist_dashboard_path(current_artist), notice: "Event was successfully created." }
+          format.html { redirect_to artist_dashboard_path, notice: "Event was successfully created." }
         elsif owner_signed_in?
-          format.html { redirect_to owner_dashboard_path(current_owner), notice: "Event was successfully created." }
+          format.html { redirect_to owner_dashboard_path, notice: "Event was successfully created." }
         else
           format.html { redirect_to @event, notice: "Event was successfully created." }
         end
@@ -141,9 +141,9 @@ class EventsController < ApplicationController
     respond_to do |format|
       format.html {
         if artist_signed_in?
-          redirect_to artist_dashboard_path(current_artist), status: :see_other, notice: "Event has been cancelled successfully."
+          redirect_to artist_dashboard_path, status: :see_other, notice: "Event has been cancelled successfully."
         elsif owner_signed_in?
-          redirect_to owner_dashboard_path(current_owner), status: :see_other, notice: "Event has been cancelled successfully."
+          redirect_to owner_dashboard_path, status: :see_other, notice: "Event has been cancelled successfully."
         else
           redirect_to events_path, status: :see_other, notice: "Event has been cancelled successfully."
         end

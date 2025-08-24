@@ -201,7 +201,7 @@
                   <small class="text-muted"><%= time_ago_in_words(request.updated_at) %> ago</small>
                 </div>
                 <% if request.venue_id %>
-                  <%= link_to "View", venue_path(request.venue_id), class: "btn btn-sm btn-outline-primary" %>
+                  <%= link_to "View", venue_path(request.venue), class: "btn btn-sm btn-outline-primary" %>
                 <% end %>
               </div>
             <% end %>

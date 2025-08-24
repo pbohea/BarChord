@@ -8,7 +8,6 @@ class VenuesController < ApplicationController
   # GET /venues/1 or /venues/1.json
   def show
     @upcoming_events = @venue.events.upcoming
-    @venue = Venue.find(params[:id])
     @past_events = @venue.events.past.limit(10)
 
     respond_to do |format|
@@ -95,7 +94,7 @@ class VenuesController < ApplicationController
   private
 
   def set_venue
-    @venue = Venue.find(params.expect(:id))
+    @venue = Venue.find_by!(slug: params.expect(:id))
   end
 
   def venue_params

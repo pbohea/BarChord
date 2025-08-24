@@ -58,6 +58,7 @@ class Artist < ApplicationRecord
 
   # Normalize socials before validation
   before_validation :normalize_social_urls
+  before_validation :generate_slug
 
   # Instance Methods
   def upcoming_events
@@ -72,7 +73,28 @@ class Artist < ApplicationRecord
     ArtistFollow.where(artist: self).includes(:follower).map(&:follower)
   end
 
+  def to_param
+    slug
+  end
+
   private
+
+  def generate_slug
+    return if username.blank?
+    
+    base_slug = username.downcase.gsub(/[^a-z0-9\-_]/, '-').gsub(/-+/, '-').strip('-')
+    base_slug = 'artist' if base_slug.blank?
+    
+    slug_candidate = base_slug
+    counter = 1
+    
+    while Artist.where(slug: slug_candidate).where.not(id: id).exists?
+      slug_candidate = "#{base_slug}-#{counter}"
+      counter += 1
+    end
+    
+    self.slug = slug_candidate
+  end
 
   def password_complexity
     return if password.blank?
