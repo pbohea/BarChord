@@ -201,7 +201,7 @@ class EventsController < ApplicationController
   end
 
   def date_options_ajax
-    venue = Venue.find_by(id: params[:venue_id])
+    venue = Venue.find_by(slug: params[:slug])
 
     date_options = helpers.date_options(venue)
 
@@ -211,7 +211,7 @@ class EventsController < ApplicationController
   end
 
   def time_options_ajax
-    venue = Venue.find_by(id: params[:venue_id])
+    venue = Venue.find_by(slug: params[:slug])
     selected_date = params[:date]
 
     start_times = helpers.time_options(venue, selected_date)
@@ -222,7 +222,7 @@ class EventsController < ApplicationController
   end
 
   def end_time_options_ajax
-    venue = Venue.find_by(id: params[:venue_id])
+    venue = Venue.find_by(slug: params[:slug])
     selected_date = params[:date]
     start_time = params[:start_time]
 
@@ -455,7 +455,7 @@ class EventsController < ApplicationController
     params.require(:event).permit(
       :category, :cover, :cover_amount, :date, :description,
       :start_time, :end_time, :indoors,
-      :venue_id, :artist_id, :artist_name
+      :venue_id, :venue_slug, :artist_id, :artist_name
     )
   end
 
