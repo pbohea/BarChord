@@ -9,6 +9,7 @@
 #  latitude       :float
 #  longitude      :float
 #  name           :string
+#  slug           :string
 #  state          :string
 #  street_address :string
 #  website        :string
@@ -21,6 +22,7 @@
 # Indexes
 #
 #  index_venues_on_place_id  (place_id)
+#  index_venues_on_slug      (slug) UNIQUE
 #
 class Venue < ApplicationRecord
   belongs_to :owner, optional: true
@@ -67,7 +69,7 @@ class Venue < ApplicationRecord
   def generate_slug
     return if name.blank?
     
-    base_slug = name.downcase.gsub(/[^a-z0-9\-_]/, '-').gsub(/-+/, '-').strip('-')
+    base_slug = name.downcase.gsub(/[^a-z0-9\-_]/, '-').gsub(/-+/, '-').gsub(/^-+|-+$/, '')
     base_slug = 'venue' if base_slug.blank?
     
     slug_candidate = base_slug

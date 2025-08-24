@@ -15,6 +15,7 @@
 #  remember_created_at    :datetime
 #  reset_password_sent_at :datetime
 #  reset_password_token   :string
+#  slug                   :string
 #  spotify_url            :string
 #  tiktok_url             :string
 #  username               :string
@@ -27,6 +28,7 @@
 #
 #  index_artists_on_email                 (email) UNIQUE
 #  index_artists_on_reset_password_token  (reset_password_token) UNIQUE
+#  index_artists_on_slug                  (slug) UNIQUE
 #
 class Artist < ApplicationRecord
   require "net/http"
@@ -82,7 +84,7 @@ class Artist < ApplicationRecord
   def generate_slug
     return if username.blank?
     
-    base_slug = username.downcase.gsub(/[^a-z0-9\-_]/, '-').gsub(/-+/, '-').strip('-')
+     base_slug = username.downcase.gsub(/[^a-z0-9\-_]/, '-').gsub(/-+/, '-').gsub(/^-+|-+$/, '')
     base_slug = 'artist' if base_slug.blank?
     
     slug_candidate = base_slug

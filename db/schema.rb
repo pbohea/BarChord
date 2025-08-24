@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_08_12_231246) do
+ActiveRecord::Schema[8.0].define(version: 2025_08_24_000003) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -72,8 +72,10 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_231246) do
     t.string "youtube_url"
     t.string "tiktok_url"
     t.string "spotify_url"
+    t.string "slug"
     t.index ["email"], name: "index_artists_on_email", unique: true
     t.index ["reset_password_token"], name: "index_artists_on_reset_password_token", unique: true
+    t.index ["slug"], name: "index_artists_on_slug", unique: true
   end
 
   create_table "events", force: :cascade do |t|
@@ -359,7 +361,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_08_12_231246) do
     t.string "state"
     t.string "zip_code"
     t.string "place_id"
+    t.string "slug"
     t.index ["place_id"], name: "index_venues_on_place_id"
+    t.index ["slug"], name: "index_venues_on_slug", unique: true
   end
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
