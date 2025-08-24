@@ -14,73 +14,92 @@ export default class extends Controller {
   connect() {
     console.log("✅ home-search connected")
     this.updateState()
-    this.timer = setInterval(() => this.updateState(), 300)  // lightweight poll
+    this.timer = setInterval(() => this.updateState(), 300) // lightweight poll
   }
 
   disconnect() {
-    clearInterval(this.timer)
+    if (this.timer) clearInterval(this.timer)
   }
 
   /* ------------------------------------------------- */
   /*  State machine                                    */
   /* ------------------------------------------------- */
   updateState() {
-    const venueSelected  = this.venueHiddenTarget.value !== ""
-    const artistSelected = this.artistHiddenTarget.value !== ""
+    const venueSlug  = this.hasVenueHiddenTarget  ? (this.venueHiddenTarget.value || "").trim()  : ""
+    const artistSlug = this.hasArtistHiddenTarget ? (this.artistHiddenTarget.value || "").trim() : ""
+
+    const venueSelected  = venueSlug.length > 0
+    const artistSelected = artistSlug.length > 0
 
     // Show / hide buttons based on selection
-    this.venueButtonTarget.classList.toggle("d-none", !venueSelected)
-    this.artistButtonTarget.classList.toggle("d-none", !artistSelected)
+    if (this.hasVenueButtonTarget)  this.venueButtonTarget.classList.toggle("d-none", !venueSelected)
+    if (this.hasArtistButtonTarget) this.artistButtonTarget.classList.toggle("d-none", !artistSelected)
 
     // Show / hide clear icons (if present)
-    if (this.hasVenueClearTarget)  this.venueClearTarget.classList.toggle("d-none", !this.venueInputTarget.value)
-    if (this.hasArtistClearTarget) this.artistClearTarget.classList.toggle("d-none", !this.artistInputTarget.value)
+    if (this.hasVenueClearTarget && this.hasVenueInputTarget) {
+      this.venueClearTarget.classList.toggle("d-none", !(this.venueInputTarget.value || "").trim())
+    }
+    if (this.hasArtistClearTarget && this.hasArtistInputTarget) {
+      this.artistClearTarget.classList.toggle("d-none", !(this.artistInputTarget.value || "").trim())
+    }
 
-    // Grey-out other card
-    if (venueSelected) {
+    // Grey-out the other card (defensive guards)
+    if (venueSelected && this.hasArtistCardTarget && this.hasVenueCardTarget) {
       this.greyOut(this.artistCardTarget)
       this.unGrey(this.venueCardTarget)
-    } else if (artistSelected) {
+    } else if (artistSelected && this.hasVenueCardTarget && this.hasArtistCardTarget) {
       this.greyOut(this.venueCardTarget)
       this.unGrey(this.artistCardTarget)
     } else {
-      this.unGrey(this.venueCardTarget)
-      this.unGrey(this.artistCardTarget)
+      if (this.hasVenueCardTarget)  this.unGrey(this.venueCardTarget)
+      if (this.hasArtistCardTarget) this.unGrey(this.artistCardTarget)
     }
   }
 
   /* ------------------------------------------------- */
   /*  Actions                                          */
   /* ------------------------------------------------- */
-  goToVenue() { 
-    if (this.venueHiddenTarget.value) {
-      window.location.href = `/venues/${this.venueHiddenTarget.value}`
+  goToVenue() {
+    if (!this.hasVenueHiddenTarget) return
+    const slug = (this.venueHiddenTarget.value || "").trim()
+    if (slug) {
+      window.location.assign(`/venues/${encodeURIComponent(slug)}`)
     }
   }
-  
-  goToArtist() { 
-    if (this.artistHiddenTarget.value) {
-      window.location.href = `/artists/${this.artistHiddenTarget.value}`
+
+  goToArtist() {
+    if (!this.hasArtistHiddenTarget) return
+    const slug = (this.artistHiddenTarget.value || "").trim()
+    if (slug) {
+      window.location.assign(`/artists/${encodeURIComponent(slug)}`)
     }
   }
 
   clearVenue() {
-    this.venueInputTarget.value  = ""
-    this.venueHiddenTarget.value = ""
-    
-    // Trigger input event to clear autocomplete results and hide details
-    this.venueInputTarget.dispatchEvent(new Event('input', { bubbles: true }))
-    
+    if (this.hasVenueInputTarget)  this.venueInputTarget.value = ""
+    if (this.hasVenueHiddenTarget) {
+      this.venueHiddenTarget.value = ""
+      // Notify listeners (e.g., autocomplete controllers)
+      this.venueHiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
+    }
+    // Trigger input to let autocomplete clear its dropdown/details
+    if (this.hasVenueInputTarget) {
+      this.venueInputTarget.dispatchEvent(new Event('input', { bubbles: true }))
+    }
     this.updateState()
   }
 
   clearArtist() {
-    this.artistInputTarget.value  = ""
-    this.artistHiddenTarget.value = ""
-    
-    // Trigger input event to clear autocomplete results and hide details
-    this.artistInputTarget.dispatchEvent(new Event('input', { bubbles: true }))
-    
+    if (this.hasArtistInputTarget)  this.artistInputTarget.value = ""
+    if (this.hasArtistHiddenTarget) {
+      this.artistHiddenTarget.value = ""
+      // Notify listeners (e.g., autocomplete controllers)
+      this.artistHiddenTarget.dispatchEvent(new Event('change', { bubbles: true }))
+    }
+    // Trigger input to let autocomplete clear its dropdown/details
+    if (this.hasArtistInputTarget) {
+      this.artistInputTarget.dispatchEvent(new Event('input', { bubbles: true }))
+    }
     this.updateState()
   }
 
@@ -88,12 +107,15 @@ export default class extends Controller {
   /*  Helpers                                          */
   /* ------------------------------------------------- */
   greyOut(card) {
+    if (!card) return
     card.classList.add("opacity-50", "pointer-events-none")
-    card.querySelectorAll("input").forEach(el => (el.disabled = true))
+    // Disable text inputs within the card but leave hidden fields alone
+    card.querySelectorAll('input[type="text"], input[type="search"]').forEach(el => (el.disabled = true))
   }
 
   unGrey(card) {
+    if (!card) return
     card.classList.remove("opacity-50", "pointer-events-none")
-    card.querySelectorAll("input").forEach(el => (el.disabled = false))
+    card.querySelectorAll('input[type="text"], input[type="search"]').forEach(el => (el.disabled = false))
   }
 }

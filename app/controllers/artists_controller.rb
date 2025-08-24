@@ -11,6 +11,7 @@ class ArtistsController < ApplicationController
     artists_json = artists.map do |artist|
       {
         id: artist.id,
+        slug: artist.slug,
         username: artist.username,
         bio: artist.bio || "",
         image: artist.image.attached? ? url_for(artist.image) : nil,
