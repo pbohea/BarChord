@@ -29,7 +29,7 @@ class VenuesController < ApplicationController
   def search
     query = params[:query].to_s.strip.downcase
     venues = Venue.where("LOWER(name) LIKE ?", "%#{query}%")
-                  .select(:id, :name, :street_address, :city, :state, :zip_code)
+                  .select(:id, :slug, :name, :street_address, :city, :state, :zip_code)
                   .limit(5)
 
     render json: venues
@@ -84,7 +84,7 @@ class VenuesController < ApplicationController
   end
 
   def check_ownership
-    @venue = Venue.find(params[:id])
+    @venue = Venue.find_by!(slug: params[:id])
     render json: {
              has_owner: @venue.owner_id.present?,
              venue_id: @venue.id,

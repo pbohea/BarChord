@@ -36,7 +36,7 @@ class VenueRequestsController < ApplicationController
         @venue_request.request_type = "existing_venue_claim"
         @venue_request.existing_venue_id = params[:existing_venue_id]
 
-        if venue = Venue.find_by(id: params[:existing_venue_id])
+        if venue = Venue.find_by(slug: params[:existing_venue_id])
           @venue_request.name = venue.name
           @venue_request.street_address = venue.street_address
           @venue_request.city = venue.city

@@ -11,7 +11,7 @@
                         class: "btn btn-outline-danger btn-sm",
                         data: { turbo_confirm: "Unfollow this artist?" } %>
         <% else %>
-          <%= button_to "Follow", artist_follows_path(artist_id: artist),
+          <%= button_to "Follow", artist_follows_path(artist_id: artist.id),
                         method: :post,
                         class: "btn btn-success btn-sm" %>
         <% end %>

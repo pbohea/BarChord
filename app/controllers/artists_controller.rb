@@ -2,15 +2,6 @@ class ArtistsController < ApplicationController
   before_action :set_artist, only: [:show, :promo_flyer, :promo_flyer_print, :landing, :events]
   before_action :authenticate_artist!, only: [:dashboard, :venue_requests]
 
-  # def search
-  #   query = params[:query].to_s.strip.downcase
-  #   artists = Artist.where("LOWER(username) LIKE ?", "%#{query}%")
-  #                   .select(:id, :username)
-  #                   .limit(5)
-
-  #   render json: artists
-  # end
-
   def search
     query = params[:query].to_s.strip.downcase
     artists = Artist.where("LOWER(username) LIKE ?", "%#{query}%")
@@ -30,13 +21,11 @@ class ArtistsController < ApplicationController
   end
 
   def show
-    @artist = Artist.find(params[:id])
     @upcoming_events = @artist.events.upcoming
     @past_events = @artist.events.past.limit(10)
   end
 
   def events
-    @artist = Artist.find(params[:id])
     @upcoming_events = @artist.events.upcoming
     @past_events = @artist.events.past.limit(10)
   end

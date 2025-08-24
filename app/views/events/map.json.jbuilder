@@ -19,6 +19,7 @@ json.events @events do |event|
 
   json.venue do
     json.id event.venue.id
+    json.slug event.venue.slug
     json.name event.venue.name
     json.category event.venue.category
     json.city event.venue.city
@@ -36,6 +37,7 @@ json.artist do
   if event.artist.present?
     # Database artist - include full details
     json.id event.artist.id
+    json.slug event.artist.slug
     json.username event.artist.username
     json.is_database_artist true
     
