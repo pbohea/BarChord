@@ -30,6 +30,7 @@
 #  index_venue_requests_on_venue_id                         (venue_id)
 #
 class VenueRequest < ApplicationRecord
+  belongs_to :venue, optional: true
   has_one_attached :utility_bill
 
   validates :name, presence: true, length: { minimum: 2, maximum: 100 }
