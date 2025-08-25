@@ -463,21 +463,21 @@ class EventsController < ApplicationController
     @event = Event.find(params[:id])
   end
 
-  def event_params
-    ep = params.require(:event).permit(
-      :category, :cover, :cover_amount, :date, :description,
-      :start_time, :end_time, :indoors,
-      :venue_id, :artist_id, :artist_name
-    )
+def event_params
+  ep = params.require(:event).permit(
+    :category, :cover, :cover_amount, :date, :description,
+    :start_time, :end_time, :indoors,
+    :venue_id, :artist_id, :artist_name, :venue_slug
+  )
 
-    # Translate venue_slug into venue_id if provided
-    if params[:event][:venue_slug].present?
-      venue = Venue.find_by!(slug: params[:event][:venue_slug])
-      ep[:venue_id] = venue.id
-    end
-
-    ep
+  # Translate venue_slug into venue_id if provided
+  if ep[:venue_slug].present?
+    venue = Venue.find_by!(slug: ep.delete(:venue_slug)) # delete removes it
+    ep[:venue_id] = venue.id
   end
+
+  ep
+end
 
   # Authorization logic
   def authorize_owner_or_admin!
