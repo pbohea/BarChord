@@ -201,7 +201,11 @@ class EventsController < ApplicationController
   end
 
   def date_options_ajax
-    venue = Venue.find_by(slug: params[:venue_slug])
+    venue = if params[:venue_slug].present?
+        Venue.find_by!(slug: params[:venue_slug])
+      elsif params[:venue_id].present?
+        Venue.find(params[:venue_id])
+      end
 
     date_options = helpers.date_options(venue)
 
@@ -211,7 +215,11 @@ class EventsController < ApplicationController
   end
 
   def time_options_ajax
-    venue = Venue.find_by(slug: params[:venue_slug])
+    venue = if params[:venue_slug].present?
+        Venue.find_by!(slug: params[:venue_slug])
+      elsif params[:venue_id].present?
+        Venue.find(params[:venue_id])
+      end
     selected_date = params[:date]
 
     start_times = helpers.time_options(venue, selected_date)
@@ -222,7 +230,11 @@ class EventsController < ApplicationController
   end
 
   def end_time_options_ajax
-    venue = Venue.find_by(slug: params[:venue_slug])
+    venue = if params[:venue_slug].present?
+        Venue.find_by!(slug: params[:venue_slug])
+      elsif params[:venue_id].present?
+        Venue.find(params[:venue_id])
+      end
     selected_date = params[:date]
     start_time = params[:start_time]
 
