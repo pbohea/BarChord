@@ -6,13 +6,13 @@
 
     <!-- venue dropdown -->
     <div class="mb-3">
-      <%= f.label :venue_id, "Venue", class: "form-label" %>
-      <%= f.select :venue_id, current_owner.venues.pluck(:name, :id), {}, 
-          class: "form-select", required: true,
-          data: { 
-            time_options_target: "venue",
-            action: "change->time-options#venueChanged"
-          } %>
+      <%= f.label :venue_slug, "Venue", class: "form-label" %>
+      <%= f.select :venue_slug, current_owner.venues.pluck(:name, :slug), {},
+    class: "form-select", required: true,
+    data: {
+      time_options_target: "venue",
+      action: "change->time-options#venueChanged"
+    } %>
     </div>
 
     <!-- Search or select artist -->
