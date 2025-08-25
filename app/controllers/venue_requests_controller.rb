@@ -32,44 +32,53 @@ class VenueRequestsController < ApplicationController
       @venue_request.requester_id = current_owner.id
       @venue_request.ownership_claim = true
 
-      if params[:existing_venue_id].present?
-        @venue_request.request_type = "existing_venue_claim"
-        @venue_request.existing_venue_id = params[:existing_venue_id]
+     # Accept either a slug or an id (backwards-compatible)
+    slug_or_id = params[:existing_venue_slug].presence || params[:existing_venue_id].presence
 
-        if venue = Venue.find_by(slug: params[:existing_venue_id])
-          @venue_request.name = venue.name
-          @venue_request.street_address = venue.street_address
-          @venue_request.city = venue.city
-          @venue_request.state = venue.state
-          @venue_request.zip_code = venue.zip_code
-          @venue_request.website = venue.website
-          @venue_request.category = venue.category
+    if slug_or_id.present?
+      @venue_request.request_type = "existing_venue_claim"
+
+      venue =
+        if slug_or_id.to_s =~ /\A\d+\z/
+          Venue.find_by(id: slug_or_id.to_i)
+        else
+          Venue.find_by(slug: slug_or_id)
         end
+
+      if venue
+        # Store the numeric id so future lookups work
+        @venue_request.existing_venue_id = venue.id
+
+        # Copy venue details (so the request still captures a snapshot)
+        @venue_request.name           = venue.name
+        @venue_request.street_address = venue.street_address
+        @venue_request.city           = venue.city
+        @venue_request.state          = venue.state
+        @venue_request.zip_code       = venue.zip_code
+        @venue_request.website        = venue.website
+        @venue_request.category       = venue.category
       else
+        # If we can’t resolve it, fall back to new venue request
         @venue_request.request_type = "new_venue"
       end
     else
-      redirect_to root_path, alert: "You must be signed in."
-      return
+      @venue_request.request_type = "new_venue"
     end
+  else
+    redirect_to root_path, alert: "You must be signed in."
+    return
+  end
 
-    if @venue_request.save
-      redirect_to receipt_venue_request_path(@venue_request)
+  if @venue_request.save
+    redirect_to receipt_venue_request_path(@venue_request)
+  else
+    if params[:existing_venue_slug].present? || params[:existing_venue_id].present?
+      render :claim, status: :unprocessable_entity
     else
-      Rails.logger.error "VenueRequest validation errors: #{@venue_request.errors.full_messages}"
-      puts "=== VALIDATION ERRORS ==="
-      puts @venue_request.errors.full_messages
-      puts "=== VENUE REQUEST ATTRIBUTES ==="
-      puts @venue_request.attributes.inspect
-      puts "========================="
-      # Re-render the appropriate form based on request type
-      if params[:existing_venue_id].present?
-        render :claim, status: :unprocessable_entity
-      else
-        render :new, status: :unprocessable_entity
-      end
+      render :new, status: :unprocessable_entity
     end
   end
+end
 
   def receipt
     @venue_request = VenueRequest.find(params[:id])
