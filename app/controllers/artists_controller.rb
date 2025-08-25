@@ -42,7 +42,6 @@ class ArtistsController < ApplicationController
   def promo_flyer
     require "rqrcode"
 
-    @artist = Artist.find(params[:id])
     @qr_code = RQRCode::QRCode.new("https://apps.apple.com/us/app/your-app-placeholder/id123456789")
   rescue ActiveRecord::RecordNotFound
     @artist = nil
@@ -56,7 +55,6 @@ class ArtistsController < ApplicationController
   def promo_flyer_print
     require "rqrcode"
 
-    @artist = Artist.find(params[:id])
     @qr_code = RQRCode::QRCode.new("https://apps.apple.com/us/app/your-app-placeholder/id123456789")
     render layout: "print"
   rescue ActiveRecord::RecordNotFound
@@ -74,7 +72,7 @@ class ArtistsController < ApplicationController
   end
 
   def landing
-    @artist = Artist.find(params[:id])
+    #@artist = Artist.find(params[:id])
     # Add any authorization check if needed
     redirect_to root_path unless @artist == current_artist
   end
